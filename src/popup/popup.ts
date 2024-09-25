@@ -96,7 +96,7 @@ export class Popup {
         ok?.addEventListener('click',()=> {
             
             div.remove()
-            close()
+            this.close()
 
             if(callback){
                 callback(constYesNo.YES)
