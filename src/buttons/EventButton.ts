@@ -49,7 +49,7 @@ export class EventButton {
                 }''
                 
                 if(button.URL){
-                    let url = new URLRucula(this.managmentObject.getPropert, button.URL);
+                    let url = new URLRucula(this.managmentObject, button.URL);
                     object.detail.url = url.getURL();
                 }
                 

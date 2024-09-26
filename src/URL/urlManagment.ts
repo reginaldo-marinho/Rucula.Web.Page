@@ -1,14 +1,17 @@
 import { ruculaGlobal } from "../global/GlobalConfig"
+import { ManagmentObject } from "../object/ObjectManagment"
 
 
 export class URLRucula{
     
     private _URL?:{absolute:string, relative:string, params:string}
-    private callbackGetPropert:any
     
-    constructor(callbackGetPropert:any, URL?:{absolute:string, relative:string, params:string}){
+    private managmentObject: ManagmentObject    
+    
+    constructor(managmentObject: ManagmentObject, URL?:{absolute:string, relative:string, params:string}){
         this._URL = URL
-        this.callbackGetPropert = callbackGetPropert
+        
+        this.managmentObject = managmentObject
     }
 
     getURL(){
@@ -73,8 +76,7 @@ export class URLRucula{
         for (const match of matches) {
             
             var propertValue = match[3]
-
-             var value = this.callbackGetPropert(propertValue)
+            var value = this.managmentObject.getPropert(propertValue)
 
              path = path.replace(match[0],`${match[1]}${value}`)
         }
@@ -92,7 +94,7 @@ export class URLRucula{
             
             var propertValue = match[1]
 
-            var value = this.callbackGetPropert(propertValue)
+            var value = this.managmentObject.getPropert(propertValue)
 
             path = path.replace(match[0],`/${value}`)
         }
