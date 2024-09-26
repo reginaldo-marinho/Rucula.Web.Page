@@ -318,6 +318,7 @@ export class ManagmentObject {
         let fragmentField = this.fragment.fields_getForIdentity(identity)
 
         this.setValue(fragmentField,value)
+        this.tableDependency.toApplyOrRemoveDependency(fragmentField,value)
     }
 
     objectFull() {
