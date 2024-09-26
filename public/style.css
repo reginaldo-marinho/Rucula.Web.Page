@@ -585,11 +585,12 @@ form.r-f-items{
 
 .r-message {
     padding: 30px 10px 10px 10px;
-    width: 400px;
+    width: 300px;
     background-color: var(--bgc-frames);
     border-radius: 10px;
     box-shadow: 0px 0px 2px var(--color-border-default);
     z-index: 200;
+
 } 
 
 .r-message-header {
@@ -953,5 +954,3 @@ input:-internal-autofill-selected {
 .r-color-Purple	 {
     color: #800080;	
 } 
-
-

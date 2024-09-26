@@ -101,5 +101,6 @@ import { callbackYesNo } from "./src/popup/callback";
     })
     
     rucula.create();
-    rucula.setValue('ordemDeServico.dataConclusao','2024-12-01')
+    rucula.setValue('ordemDeServico.dataAbertura','2024-12-01')
+    rucula.setValue('ordemDeServico.status',true)
 })()

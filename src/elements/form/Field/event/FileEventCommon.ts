@@ -8,7 +8,6 @@ export class FileEventCommon extends FileEvent{
 
         this.input.addEventListener('focus',() => {
             
-            // fieldDOM.dependency.cleanFocusDependency(this.input)
             this.dispatchEvent(constPrefixEventField.BEFORE);
             this.set()
         })

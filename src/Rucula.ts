@@ -32,13 +32,14 @@ export class Rucula{
     public event:EventManagment
     public managmentObject:ManagmentObject
     public tableDependency:TableDependency
-    public button:Button
+    private button:Button
     private layoutFrame:LayoutFrame
     private fragment: Fragment
     private field:Field
     private eventButton:EventButton
     private frameEvent:FrameEvent
     private config:any
+    
     constructor(config: {
         global:globalConfiguration, 
         window:window, 
@@ -198,13 +199,14 @@ export class Rucula{
 
         let disabled = input.getAttribute(ATTR_DISABLED) == null ?  null : ATTR_DISABLED
 
+        let frag = this.fragment.fields_getForIdentity(identity)
+
         if(disabled){
             input.removeAttribute(ATTR_DISABLED)
         }
-
+        
         input.value = value
         input.focus({preventScroll: true}) //! This command forces the objectmanagment and tableDependecy processes to run
-        input.click()
         input.blur()
         
         if(disabled){
