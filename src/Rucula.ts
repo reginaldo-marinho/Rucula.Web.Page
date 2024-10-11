@@ -199,12 +199,9 @@ export class Rucula{
 
         let disabled = input.getAttribute(ATTR_DISABLED) == null ?  null : ATTR_DISABLED
 
-        let frag = this.fragment.fields_getForIdentity(identity)
-
         if(disabled){
             input.removeAttribute(ATTR_DISABLED)
         }
-        
         input.value = value
         input.focus({preventScroll: true}) //! This command forces the objectmanagment and tableDependecy processes to run
         input.blur()

@@ -1,5 +1,5 @@
 import { FieldInput } from "./FieldInput";
-import { FileEventCommon } from "./event/FileEventCommon";
+import { FileEventSelect } from "./event/FileEventSelect";
 
 export class FieldSelect extends FieldInput{
     
@@ -13,14 +13,6 @@ export class FieldSelect extends FieldInput{
 
         if(this.floatLabel == true){
             this.input.classList.add('did-floating-select')
-            
-            this.input.setAttribute('value','')
-            
-            this.input.addEventListener('click',(e) => {
-                
-                let value = (e.target as HTMLSelectElement).value
-                this.input.setAttribute('value',value );
-            })
         }
         
         this.field.combo?.forEach(item => {
@@ -31,12 +23,13 @@ export class FieldSelect extends FieldInput{
             select.appendChild(option)
             
         })
+        this.input.value = String(this.field.value)
         this.setEvents();
         
         return select
     }
 
     protected setEvents(): void {
-        new FileEventCommon(this.managmentObject, this.input, this.field)
+        new FileEventSelect(this.managmentObject, this.input, this.field)
     }
 }
