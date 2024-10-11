@@ -21,7 +21,6 @@ export class EventButton {
         buttons?.filter(b => b.type === "button")
         .forEach((button) => {
             
-            
             let element:HTMLElement = document?.getElementById(button.target) as HTMLElement
             
             let object =  {

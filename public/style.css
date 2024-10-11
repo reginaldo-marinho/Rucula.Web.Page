@@ -313,6 +313,7 @@ input.r-i-focus-dependency {
     background-color: var(--bgc-r-w);
     color: var(--color-default);
     scrollbar-color: rgba(93, 93, 93, 0.543) var(--bgc-r-w);
+    overflow: hidden;
 }
 
 .r-b
@@ -348,27 +349,39 @@ input.r-i-focus-dependency {
     background-color: var(--bgc-frames);
 }
 
-
 .r-w-body {
     display: flex;
     height: calc(100% - var(--heigth-r-facede-action));
 }
 
-form.r-f-items,
+.r-f-work.r-f-items{
+    overflow: auto;
+}
+.r-f-work.r-f-items,
 .r-vertical-actions {
     max-height: 100%;
 }
-form.r-f-items{
+
+.r-facede-action-crud{
+    padding: 10px;
+    margin-bottom: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+}
+.r-window-work{
+    padding-left: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 100%;
+    max-height: 100%;
+}
+
+.r-f-work{
     display: grid;
     width: 100%;
     grid-column-gap: 10px;
     grid-row-gap: 10px;
-    padding-right: 5px;
-    padding-left: 5px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    overflow: auto;
-    
 }
 .r-vertical-actions{
     width: 200px;
@@ -376,6 +389,7 @@ form.r-f-items{
     margin-top: 10px;
     margin-bottom: 10px;
     overflow-y: auto;
+    border-left: 1px solid var(--color-border-facede-action);;
 }
 
 .r-facede-action.top,
@@ -394,8 +408,6 @@ form.r-f-items{
     color: var(--color-write);
     z-index:1;
     width: 100%;
-    padding-left: 10px ;
-    padding-right: 10px;
 }
 
 .r-read-new,.r-act-opt {
@@ -824,7 +836,7 @@ input:-internal-autofill-selected {
         bottom: 0px;
     }
     
-    form.r-f-items{
+    .r-f-work.r-f-items{
         display: block;
         padding-bottom: var(--heigth-r-facede-action);
     }

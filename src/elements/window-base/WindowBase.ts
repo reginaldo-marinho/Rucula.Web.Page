@@ -27,6 +27,7 @@ export let windowBaseDOM = (() => {
         eraseWindow()
         alterTheme()
         openActionswindow()
+        actionCrudpreventDefault()
         menuContext.init()
         fieldMenuContext.init()
         
@@ -38,8 +39,8 @@ export let windowBaseDOM = (() => {
         }
 
     }
-    
-    function createNameWindow(name:string){
+
+     function createNameWindow(name:string){
         let window = document.querySelector(".r-w-t") as HTMLElement
         window.innerHTML = name
     }
@@ -136,17 +137,21 @@ export let windowBaseDOM = (() => {
                         </div>
                     </div>
                 </div>
-                <div class="r-head r-read-edit">
-                    <button id="r-a-save" class="r-a-b "><i class="bi bi-box-arrow-in-down"></i></button>
-                    <button id="r-a-alter" class="r-a-b"><i class="bi bi-pen"></i></button>
-                    <button id="r-a-delete" class="r-a-b"><i class="bi bi-trash"></i></button>    
-                    <button id=${constIdBaseWindow.BUTTONS_MENU_VERTICAL} class="r-a-b"><i class="bi bi-arrows"></i></button>    
-                </div>
                 </div>
             </div>
 
             <div class="r-w-body">
-                <form class="r-f-items" id="${constIdBaseWindow.FORM_RUCULA_JS}" autocomplete="off">
+                <form class="r-window-work" autocomplete="off">
+                    <div class="r-head r-read-edit r-facede-action-crud" id="r-facede-action-crud">
+                        <button id="r-a-save" class="r-a-b "><i class="bi bi-box-arrow-in-down"></i></button>
+                        <button id="r-a-alter" class="r-a-b"><i class="bi bi-pen"></i></button>
+                        <button id="r-a-delete" class="r-a-b"><i class="bi bi-trash"></i></button>    
+                        <button id="r-a-reload" class="r-a-b "><i class="bi bi-arrow-repeat"></i></button>
+                        <button id="erase-window" class="r-a-b "><i class="bi bi-eraser"></i></button>
+                        <button id="r-a-menu-vertical" class="r-a-b"><i class="bi bi-arrows"></i></button>    
+                    </div>
+                    <div class="r-f-work r-f-items" id="${constIdBaseWindow.FORM_RUCULA_JS}">
+                    </div>
                 </form>
                 <div class="r-vertical-actions">
                     <ol id=${constIdBaseWindow.BUTTONS_MENU_VERTICAL_LIST} class=""> 
@@ -239,7 +244,12 @@ export let windowBaseDOM = (() => {
             form.reset();
         })
     }
-        
+
+    function actionCrudpreventDefault(){
+        let facedeActionCrud = document.getElementById("r-facede-action-crud")
+        facedeActionCrud?.addEventListener('click', (e) => e.preventDefault())
+    }
+         
     function openActionswindow(){
 
         let actions = document.getElementById(constIdBaseWindow.ACTIONS_WINDOW)
