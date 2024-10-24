@@ -66,7 +66,11 @@ const constIdBaseWindow = {
     BUTTONS_MENU_VERTICAL: "r-a-menu-vertical",
     BUTTONS_MENU_VERTICAL_MOBILE: "r-a-menu-vertical-mobile",
     BUTTONS_MENU_VERTICAL_LIST: "r-a-menu-vertical-list",
-    TITLE: "r-window-title"
+    TITLE: "r-window-title",
+    FAVORITE: "r-favorite",
+    CHAT: "r-chat",
+    USER: "r-user",
+    FRAME_INFO: "r-frame-INFO",
 };
 const contextMenu = {
     INPUT: 'context-menu-input'
@@ -225,7 +229,7 @@ class Popup {
         let cancel = div.querySelector('button.cancel');
         ok?.addEventListener('click', () => {
             div.remove();
-            close();
+            this.close();
             if (callback) {
                 callback(constYesNo.YES);
             }
@@ -405,6 +409,7 @@ let windowBaseDOM = (() => {
         eraseWindow();
         alterTheme();
         openActionswindow();
+        actionCrudpreventDefault();
         menuContext.init();
         fieldMenuContext.init();
         function calculateHeightRuculaWindow() {
@@ -477,7 +482,7 @@ let windowBaseDOM = (() => {
             </div>
             <div class="r-head r-read-new r-facede-action top">
                
-                <div style="z-index: 10; width: 100%;">
+                <div style="z-index: 10;">
                     <button id="${constIdBaseWindow.ACTIONS_WINDOW}" class="r-a-b r-actions-window"><i class="bi bi-nut"></i></button>
                     <div class="r-display-inline-block r-actions-window r-actions-window-itens">
                         <div class="r-display-inline-block">
@@ -500,17 +505,30 @@ let windowBaseDOM = (() => {
                         </div>
                     </div>
                 </div>
-                <div class="r-head r-read-edit">
-                    <button id="r-a-save" class="r-a-b "><i class="bi bi-box-arrow-in-down"></i></button>
-                    <button id="r-a-alter" class="r-a-b"><i class="bi bi-pen"></i></button>
-                    <button id="r-a-delete" class="r-a-b"><i class="bi bi-trash"></i></button>    
-                    <button id=${constIdBaseWindow.BUTTONS_MENU_VERTICAL} class="r-a-b"><i class="bi bi-arrows"></i></button>    
-                </div>
+                 <div class="r-display-inline-block">
+                        <button id="${constIdBaseWindow.FAVORITE}" class="r-a-b"><i class="bi bi-star-fill"></i></button>
+                        <button id="${constIdBaseWindow.CHAT}" class="r-a-b"><i class="bi bi-chat-dots"></i></button>
+                        <button id="${constIdBaseWindow.USER}" class="r-a-b"><i class="bi bi-person-circle"></i></button>
+                    </div>
                 </div>
             </div>
 
             <div class="r-w-body">
-                <form class="r-f-items" id="${constIdBaseWindow.FORM_RUCULA_JS}" autocomplete="off">
+                <form class="r-window-work" autocomplete="off">
+                    <div class="r-head r-read-edit r-facede-action-crud" id="r-facede-action-crud">
+                        <h3 id="${constIdBaseWindow.FRAME_INFO}">                        
+                        </h3>                        
+                        <div>                        
+                            <button id="r-a-save" class="r-a-b "><i class="bi bi-box-arrow-in-down"></i></button>
+                            <button id="r-a-alter" class="r-a-b"><i class="bi bi-pen"></i></button>
+                            <button id="r-a-delete" class="r-a-b"><i class="bi bi-trash"></i></button>    
+                            <button id="r-a-reload" class="r-a-b "><i class="bi bi-arrow-repeat"></i></button>
+                            <button id="erase-window" class="r-a-b "><i class="bi bi-eraser"></i></button>
+                            <button id="r-a-menu-vertical" class="r-a-b"><i class="bi bi-arrows"></i></button>    
+                        </div>
+                    </div>
+                    <div class="r-f-work r-f-items" id="${constIdBaseWindow.FORM_RUCULA_JS}">
+                    </div>
                 </form>
                 <div class="r-vertical-actions">
                     <ol id=${constIdBaseWindow.BUTTONS_MENU_VERTICAL_LIST} class=""> 
@@ -576,6 +594,10 @@ let windowBaseDOM = (() => {
         erase?.addEventListener('click', () => {
             form.reset();
         });
+    }
+    function actionCrudpreventDefault() {
+        let facedeActionCrud = document.getElementById("r-facede-action-crud");
+        facedeActionCrud?.addEventListener('click', (e) => e.preventDefault());
     }
     function openActionswindow() {
         let actions = document.getElementById(constIdBaseWindow.ACTIONS_WINDOW);
@@ -677,10 +699,10 @@ let ruculaGlobal = (() => {
 
 class URLRucula {
     _URL;
-    callbackGetPropert;
-    constructor(callbackGetPropert, URL) {
+    managmentObject;
+    constructor(managmentObject, URL) {
         this._URL = URL;
-        this.callbackGetPropert = callbackGetPropert;
+        this.managmentObject = managmentObject;
     }
     getURL() {
         if (this._URL == undefined) {
@@ -722,7 +744,7 @@ class URLRucula {
         var matches = path.matchAll(regex);
         for (const match of matches) {
             var propertValue = match[3];
-            var value = this.callbackGetPropert(propertValue);
+            var value = this.managmentObject.getPropert(propertValue);
             path = path.replace(match[0], `${match[1]}${value}`);
         }
         return path;
@@ -732,7 +754,7 @@ class URLRucula {
         var matches = path.matchAll(regex);
         for (const match of matches) {
             var propertValue = match[1];
-            var value = this.callbackGetPropert(propertValue);
+            var value = this.managmentObject.getPropert(propertValue);
             path = path.replace(match[0], `/${value}`);
         }
         return path;
@@ -770,7 +792,7 @@ class EventButton {
                     return;
                 }
                 if (button.URL) {
-                    let url = new URLRucula(this.managmentObject.getPropert, button.URL);
+                    let url = new URLRucula(this.managmentObject, button.URL);
                     object.detail.url = url.getURL();
                 }
                 let option = button?.body;
@@ -1645,13 +1667,6 @@ class ManagmentObject {
         }
         this.tableDependency.toApplyOrRemoveDependency(fragmentField, value);
     }
-    getPropert(config) {
-        let entityConfiguration = this.createConfigurationField(config);
-        let fragmentField = this.fragment.fields_getForAliasAndPropert(entityConfiguration);
-        let fragmentObject = this.fragment.objects_getForIdentity(fragmentField.config.fragmentObjectIdentity);
-        let object = fragmentObject.config.object;
-        return fragmentObject.config.getValueInObjectFragment(object, entityConfiguration.propertDto, entityConfiguration.line);
-    }
     createConfigurationField(config) {
         let opt = config.split('.');
         let entityConfiguration = {
@@ -1695,6 +1710,7 @@ class ManagmentObject {
         value = convertValueType(value, type);
         let fragmentField = this.fragment.fields_getForIdentity(identity);
         this.setValue(fragmentField, value);
+        this.tableDependency.toApplyOrRemoveDependency(fragmentField, value);
     }
     objectFull() {
         return this.createObject();
@@ -1721,6 +1737,13 @@ class ManagmentObject {
         let objectFragment = this.fragment.objects_getForIdentity(identity);
         var indexOf = objectFragment.config.object.findIndex((c) => c.rucLine == line);
         objectFragment.config.object.splice(indexOf, 1);
+    }
+    getPropert(config) {
+        let entityConfiguration = this.createConfigurationField(config);
+        let fragmentField = this.fragment.fields_getForAliasAndPropert(entityConfiguration);
+        let fragmentObject = this.fragment.objects_getForIdentity(fragmentField.config.fragmentObjectIdentity);
+        let object = fragmentObject.config.object;
+        return fragmentObject.config.getValueInObjectFragment(object, entityConfiguration.propertDto, entityConfiguration.line);
     }
     getFragmentForIdentity(identity) {
         return this.fragment.fields_getForIdentity(identity);
@@ -2141,23 +2164,20 @@ class FileEventCheckBox extends FileEvent {
             }
             this.set();
         });
-    }
-}
-
-class FieldCheckbox extends FieldInput {
-    create() {
-        var input = document.createElement("input");
-        this.input = input;
-        input.type = "checkbox";
-        input.checked = false;
-        if (this.field.value == this.field.checkbox.on) {
-            input.checked = true;
-        }
-        this.setEvents();
-        return input;
-    }
-    setEvents() {
-        new FileEventCheckBox(this.managmentObject, this.input, this.field);
+        this.input.addEventListener('blur', (e) => {
+            let element = e.target;
+            let identity = element.getAttribute("identity");
+            let fragment = this.managmentObject.getFragmentForIdentity(identity);
+            let line = fragment.config.line;
+            let propert = `${fragment.config.alias}.${fragment.config.propertDto}${line == undefined ? '' : Number(line)}`;
+            let value = this.managmentObject.getPropert(propert);
+            if (value == this.field.checkbox.on) {
+                element.checked = true;
+            }
+            if (value == this.field.checkbox.off) {
+                element.checked = false;
+            }
+        });
     }
 }
 
@@ -2175,6 +2195,24 @@ class FileEventCommon extends FileEvent {
             this.dispatchEvent(constPrefixEventField.AFTER);
             this.set();
         });
+    }
+}
+
+class FieldCheckbox extends FieldInput {
+    create() {
+        var input = document.createElement("input");
+        this.input = input;
+        input.type = "checkbox";
+        input.checked = false;
+        if (this.field.value == this.field.checkbox.on) {
+            input.checked = true;
+        }
+        this.setEvents();
+        return input;
+    }
+    setEvents() {
+        new FileEventCommon(this.managmentObject, this.input, this.field);
+        new FileEventCheckBox(this.managmentObject, this.input, this.field);
     }
 }
 
@@ -2260,6 +2298,15 @@ class FieldRadio extends FieldInput {
     }
 }
 
+class FileEventSelect extends FileEvent {
+    setEventListener() {
+        this.input.addEventListener('change', (e) => {
+            this.dispatchEvent(constPrefixEventField.BEFORE);
+            this.set();
+        });
+    }
+}
+
 class FieldSelect extends FieldInput {
     create() {
         const select = document.createElement('select');
@@ -2267,11 +2314,6 @@ class FieldSelect extends FieldInput {
         this.setWidth();
         if (this.floatLabel == true) {
             this.input.classList.add('did-floating-select');
-            this.input.setAttribute('value', '');
-            this.input.addEventListener('click', (e) => {
-                let value = e.target.value;
-                this.input.setAttribute('value', value);
-            });
         }
         this.field.combo?.forEach(item => {
             const option = document.createElement('option');
@@ -2279,11 +2321,12 @@ class FieldSelect extends FieldInput {
             option.value = item["value"];
             select.appendChild(option);
         });
+        this.input.value = String(this.field.value);
         this.setEvents();
         return select;
     }
     setEvents() {
-        new FileEventCommon(this.managmentObject, this.input, this.field);
+        new FileEventSelect(this.managmentObject, this.input, this.field);
     }
 }
 
@@ -2667,7 +2710,7 @@ class Button {
                     }
                 };
                 this.popup.warning({
-                    text: 'A alteração de ambiente reiniciará a interface. Deseja continuar?'
+                    text: 'A alteração desejada reiniciará a interface. Deseja continuar?'
                 }, reload);
             });
         });
@@ -2732,7 +2775,6 @@ class Rucula {
     config;
     constructor(config) {
         config.id ??= 'rucula-js';
-        this.config = config;
         ruculaGlobal.initGlobalConfiguration(config.global);
         windowBaseDOM.setElementRoot(config.id);
         this.window = config.window;
@@ -2855,7 +2897,6 @@ class Rucula {
         }
         input.value = value;
         input.focus({ preventScroll: true });
-        input.click();
         input.blur();
         if (disabled) {
             input.setAttribute(ATTR_DISABLED, '');

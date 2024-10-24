@@ -5,7 +5,6 @@ import { EventManagment } from "./Event/event";
 import { URLRucula } from "./URL/urlManagment";
 import { ManagmentObject } from "./object/ObjectManagment";
 import { TableDependency } from "./table-dependency/TableDependency";
-import { Button } from "./buttons/Button";
 export declare class Rucula {
     private window;
     private elementRucula;
@@ -14,7 +13,7 @@ export declare class Rucula {
     event: EventManagment;
     managmentObject: ManagmentObject;
     tableDependency: TableDependency;
-    button: Button;
+    private button;
     private layoutFrame;
     private fragment;
     private field;

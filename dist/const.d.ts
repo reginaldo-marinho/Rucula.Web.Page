@@ -53,6 +53,10 @@ export declare const constIdBaseWindow: {
     BUTTONS_MENU_VERTICAL_MOBILE: string;
     BUTTONS_MENU_VERTICAL_LIST: string;
     TITLE: string;
+    FAVORITE: string;
+    CHAT: string;
+    USER: string;
+    FRAME_INFO: string;
 };
 export declare const contextMenu: {
     INPUT: string;

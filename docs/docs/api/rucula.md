@@ -1,32 +1,39 @@
 # Rucula
 
-## Instancia ({global:object, window:object, TargetElement:string})
-
-- [globalConfig]()
-- [windowConfig](./janelas.md)
-- TargetElement
-    
 ```js
 <div id="js">
 </div>
-let rucula = new Rucula({
-    global:global,
-    window: window,
-    id:'js'
-});
+
+<script>
+    let targetId = 'js'
+
+    let rucula = new Rucula({
+        global: global,
+        window: window,
+        id:targetId,
+        reload:callback
+    });
+</script>
 ```
+## Objeto de Instancia
+### global
+Configuração Global
+### window
+Configuração da Janela
+### id
+Elemento Target
+### reload
+callback que é chamado sempre que a ação reload é iniciada
 
 ## Propriedades
+### [managmentObject]()
+### [tableDependency]()
+  
 ### [popup](./popup.md)
 ### [event]()
-```js
-rucula.event.on
-```
 ### [buttons]()
-#### Exemplo
-```js
-rucula.buttons
-```
+### [url]()
+
 ## Métodos
 ### create
 ```js

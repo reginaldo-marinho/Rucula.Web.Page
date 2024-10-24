@@ -69,7 +69,11 @@ export const constIdBaseWindow =  {
     BUTTONS_MENU_VERTICAL: "r-a-menu-vertical",
     BUTTONS_MENU_VERTICAL_MOBILE: "r-a-menu-vertical-mobile",
     BUTTONS_MENU_VERTICAL_LIST: "r-a-menu-vertical-list",
-    TITLE:"r-window-title"
+    TITLE:"r-window-title",
+    FAVORITE:"r-favorite",
+    CHAT:"r-chat",
+    USER:"r-user",
+    FRAME_INFO:"r-frame-INFO",
 }
 
 export const contextMenu = {

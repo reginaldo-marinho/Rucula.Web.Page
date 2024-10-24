@@ -1,5 +1,5 @@
 import { Button } from "../../buttons/Button";
-import { constFrameLineActions } from "../../const";
+import { constFrameLineActions, constIdBaseWindow } from "../../const";
 import { frame } from "../../entities/form/frame";
 import { KeyEventAdd, KeyEventClear, KeyEventGetIndex } from "../../global/KeyEvents";
 import { ManagmentObject } from "../../object/ObjectManagment";
@@ -62,6 +62,7 @@ export class FrameElementLine extends FrameElement{
         this.eventKeyDownKeyUpLineFrame(rowDetail)         
         return frameLine
     }
+
 
     currentLineElement?:HTMLElement
     inputTargetEvent?:HTMLInputElement
@@ -207,5 +208,4 @@ export class FrameElementLine extends FrameElement{
 
         })
     }
-
 }

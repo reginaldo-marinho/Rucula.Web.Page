@@ -114,7 +114,7 @@ export let windowBaseDOM = (() => {
             </div>
             <div class="r-head r-read-new r-facede-action top">
                
-                <div style="z-index: 10; width: 100%;">
+                <div style="z-index: 10;">
                     <button id="${constIdBaseWindow.ACTIONS_WINDOW}" class="r-a-b r-actions-window"><i class="bi bi-nut"></i></button>
                     <div class="r-display-inline-block r-actions-window r-actions-window-itens">
                         <div class="r-display-inline-block">
@@ -137,18 +137,27 @@ export let windowBaseDOM = (() => {
                         </div>
                     </div>
                 </div>
+                 <div class="r-display-inline-block">
+                        <button id="${constIdBaseWindow.FAVORITE}" class="r-a-b"><i class="bi bi-star-fill"></i></button>
+                        <button id="${constIdBaseWindow.CHAT}" class="r-a-b"><i class="bi bi-chat-dots"></i></button>
+                        <button id="${constIdBaseWindow.USER}" class="r-a-b"><i class="bi bi-person-circle"></i></button>
+                    </div>
                 </div>
             </div>
 
             <div class="r-w-body">
                 <form class="r-window-work" autocomplete="off">
                     <div class="r-head r-read-edit r-facede-action-crud" id="r-facede-action-crud">
-                        <button id="r-a-save" class="r-a-b "><i class="bi bi-box-arrow-in-down"></i></button>
-                        <button id="r-a-alter" class="r-a-b"><i class="bi bi-pen"></i></button>
-                        <button id="r-a-delete" class="r-a-b"><i class="bi bi-trash"></i></button>    
-                        <button id="r-a-reload" class="r-a-b "><i class="bi bi-arrow-repeat"></i></button>
-                        <button id="erase-window" class="r-a-b "><i class="bi bi-eraser"></i></button>
-                        <button id="r-a-menu-vertical" class="r-a-b"><i class="bi bi-arrows"></i></button>    
+                        <h3 id="${constIdBaseWindow.FRAME_INFO}">                        
+                        </h3>                        
+                        <div>                        
+                            <button id="r-a-save" class="r-a-b "><i class="bi bi-box-arrow-in-down"></i></button>
+                            <button id="r-a-alter" class="r-a-b"><i class="bi bi-pen"></i></button>
+                            <button id="r-a-delete" class="r-a-b"><i class="bi bi-trash"></i></button>    
+                            <button id="r-a-reload" class="r-a-b "><i class="bi bi-arrow-repeat"></i></button>
+                            <button id="erase-window" class="r-a-b "><i class="bi bi-eraser"></i></button>
+                            <button id="r-a-menu-vertical" class="r-a-b"><i class="bi bi-arrows"></i></button>    
+                        </div>
                     </div>
                     <div class="r-f-work r-f-items" id="${constIdBaseWindow.FORM_RUCULA_JS}">
                     </div>
