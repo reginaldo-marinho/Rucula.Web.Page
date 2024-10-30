@@ -935,7 +935,7 @@ let buttonsBase = (function () {
         initButtonPlus: () => {
             buttonsPlus = document.getElementById(constIdBaseWindow.BUTTONS_MENU_VERTICAL);
             olButtonsPlus = document.getElementById(constIdBaseWindow.BUTTONS_MENU_VERTICAL_LIST);
-            if (olButtonsPlus.querySelectorAll("button").length == 0) {
+            if (olButtonsPlus.querySelectorAll("button,a").length == 0) {
                 buttonsPlus.remove();
                 olButtonsPlus.remove();
             }
