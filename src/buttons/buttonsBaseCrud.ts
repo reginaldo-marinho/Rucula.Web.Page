@@ -22,7 +22,7 @@ export let buttonsBase = (function (){
             buttonsPlus = document.getElementById(constIdBaseWindow.BUTTONS_MENU_VERTICAL) as HTMLButtonElement
             olButtonsPlus = document.getElementById(constIdBaseWindow.BUTTONS_MENU_VERTICAL_LIST) as HTMLOListElement     
 
-            if(olButtonsPlus.querySelectorAll("button").length == 0){
+            if(olButtonsPlus.querySelectorAll("button,a").length == 0){
                 buttonsPlus.remove();
                 olButtonsPlus.remove()
             }
