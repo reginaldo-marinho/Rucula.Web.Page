@@ -1,11 +1,14 @@
-import { windowBaseDOM } from "../elements/window-base/WindowBase"
+import { WindowBaseDOM } from "../elements/window-base/WindowBase"
 import { ManagmentObject } from "../object/ObjectManagment"
 
 export class EventManagment {
 
-    public managmentObject:ManagmentObject
-    constructor(managmentObject:ManagmentObject) {
+    private managmentObject:ManagmentObject
+    private windowBaseDOM:WindowBaseDOM
+    
+    constructor(managmentObject:ManagmentObject,windowBaseDOM:WindowBaseDOM) {
         this.managmentObject =  managmentObject
+        this.windowBaseDOM = windowBaseDOM
     }
     getFieldDetails (event:CustomEvent) {
     
@@ -26,7 +29,7 @@ export class EventManagment {
 
     on(event:string, callback:any, query?:string) {
             
-        let rucula = windowBaseDOM.getElementRoot()
+        let rucula = this.windowBaseDOM.getElementRoot()
 
         if(query == undefined){
             rucula.addEventListener(event, (e) => callback(e))

@@ -2,6 +2,7 @@ import { constGroupFormat, constInputClass, constTypeInput } from "../../const";
 import { field } from "../../entities/form/field";
 import { ruculaGlobal } from "../../global/GlobalConfig";
 import { ManagmentObject } from "../../object/ObjectManagment";
+import { WindowBaseDOM } from "../window-base/WindowBase";
 import { eventsCustom } from "./Field/EventsFieldsCustom";
 import { FieldCheckbox } from "./Field/FieldCheckbox";
 import { FieldCommon } from "./Field/FieldCommon";
@@ -15,8 +16,10 @@ export class Field  {
 
     private managmentObject:ManagmentObject
 
-    constructor(managmentObject:ManagmentObject) {
+    windowBaseDOM:WindowBaseDOM
+    constructor(managmentObject:ManagmentObject, windowBaseDOM:WindowBaseDOM) {
         this.managmentObject = managmentObject
+        this.windowBaseDOM = windowBaseDOM
     }
     createSpanLabelIsRequerid():HTMLSpanElement{
         const floatLabel = ruculaGlobal.getConfigurationGlobal().floatLabel
@@ -145,23 +148,23 @@ export class Field  {
         this.checkTypeField(field.type)
         
         if(this.isSimple(field.type)){
-            fieldStrategy.setStrategy(new FieldCommon(field, this.managmentObject))
+            fieldStrategy.setStrategy(new FieldCommon(field, this.managmentObject, this.windowBaseDOM))
         }
         
         if(this.isSelect(field.type)) {
-            fieldStrategy.setStrategy(new FieldSelect(field, this.managmentObject))
+            fieldStrategy.setStrategy(new FieldSelect(field, this.managmentObject,  this.windowBaseDOM))
         }
 
         if(isCheckBox()){
-            fieldStrategy.setStrategy(new FieldCheckbox(field, this.managmentObject))
+            fieldStrategy.setStrategy(new FieldCheckbox(field, this.managmentObject, this.windowBaseDOM))
         }
 
         if(this.isTextArea(field.type)){
-            fieldStrategy.setStrategy(new FieldTextArea(field, this.managmentObject))
+            fieldStrategy.setStrategy(new FieldTextArea(field, this.managmentObject, this.windowBaseDOM))
         }
         
         if(isRadio()) {
-            fieldStrategy.setStrategy(new FieldRadio(field, this.managmentObject))
+            fieldStrategy.setStrategy(new FieldRadio(field, this.managmentObject,  this.windowBaseDOM))
         }
 
         element = fieldStrategy.create();

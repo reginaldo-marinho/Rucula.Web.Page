@@ -23,8 +23,8 @@ export class FieldCheckbox extends FieldInput{
         return input;
     }
     protected setEvents(): void {
-        new FileEventCommon(this.managmentObject, this.input, this.field)
-        new FileEventCheckBox(this.managmentObject, this.input, this.field)
+        new FileEventCommon(this.managmentObject, this.input, this.field, this.windowBaseDOM)
+        new FileEventCheckBox(this.managmentObject, this.input, this.field, this.windowBaseDOM)
     }
 
 }

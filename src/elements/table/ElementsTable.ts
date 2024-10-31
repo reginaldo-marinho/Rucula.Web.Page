@@ -4,7 +4,7 @@ import { frame } from "../../entities/form/frame";
 import { ManagmentObject } from "../../object/ObjectManagment";
 import { configWindow } from "../../window/Window";
 import { Field } from "../form/Field";
-import { fieldMenuContext } from "../form/Field/fieldMenuContext";
+import { FieldMenuContext } from "../form/Field/fieldMenuContext";
 import { FrameElementLine } from "../frame/FrameElementLine";
 import { FrameEvent } from "../frame/FrameEvent";
 
@@ -15,13 +15,15 @@ export class FameLineTable {
     private frameEvent:FrameEvent
     private frameElementLine:FrameElementLine
     private callbackSetValuesDefined:any
+    private fieldMenuContext:FieldMenuContext
 
-    constructor(managmentObject:ManagmentObject,field:Field, frameElementLine:FrameElementLine, frameEvent:FrameEvent, callbackSetValuesDefined:any) {
+    constructor(managmentObject:ManagmentObject,field:Field, frameElementLine:FrameElementLine, frameEvent:FrameEvent, callbackSetValuesDefined:any, fieldMenuContext:FieldMenuContext) {
         this.managmentObject = managmentObject
         this.field = field
         this.frameEvent = frameEvent
         this.frameElementLine = frameElementLine
         this.callbackSetValuesDefined = callbackSetValuesDefined
+        this.fieldMenuContext = fieldMenuContext
     }
 
     getCellActions(tr:HTMLTableRowElement){
@@ -101,7 +103,7 @@ export class FameLineTable {
 
             tr.appendChild(td)
 
-            fieldMenuContext.info.set({
+            this.fieldMenuContext.infoSet({
                 identity: field.identity,
                 field: field
             })

@@ -1,10 +1,15 @@
 import { constPagination } from "../const";
-import { windowBaseDOM } from "../elements/window-base/WindowBase";
+import { WindowBaseDOM } from "../elements/window-base/WindowBase";
 
-export let paginationEvents  = (function () {
+export class PaginationEvents  {
 
-    return {
-        headerSearch: function (gridSearch:boolean){
+    
+    windowBaseDOM:WindowBaseDOM
+    constructor(windowBaseDOM:WindowBaseDOM) {
+        this.windowBaseDOM = windowBaseDOM
+    }
+    
+    headerSearch (gridSearch:boolean){
 
             let search = document.getElementById(constPagination.FIND)
             
@@ -12,7 +17,7 @@ export let paginationEvents  = (function () {
                 search?.remove();
             }
 
-            let elementRoot = windowBaseDOM.getElementRoot() 
+            let elementRoot = this.windowBaseDOM.getElementRoot() 
 
             let body = {
                 detail: {
@@ -33,14 +38,14 @@ export let paginationEvents  = (function () {
                 elementRoot.dispatchEvent(event)
 
             })
-        },
-        fotter: function (gridFooter:boolean){
+        }
+    fotter (gridFooter:boolean){
             
             if(gridFooter == false){
                 document.getElementById('r-act-grid-footer')?.remove()
             }
 
-            let elementRoot = windowBaseDOM.getElementRoot() 
+            let elementRoot = this.windowBaseDOM.getElementRoot() 
 
             let pagination = {
                 detail: {
@@ -77,4 +82,3 @@ export let paginationEvents  = (function () {
             });
         }
     }
-})

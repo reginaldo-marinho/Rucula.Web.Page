@@ -3,6 +3,7 @@ import { constTypeFrame } from "../../const";
 import { frame } from "../../entities/form/frame";
 import { ManagmentObject } from "../../object/ObjectManagment";
 import { Field } from "../form/Field";
+import { FieldMenuContext } from "../form/Field/fieldMenuContext";
 import { FrameEvent } from "./FrameEvent";
 
 export class FrameElement{
@@ -11,12 +12,14 @@ export class FrameElement{
     protected field:Field
     protected frameEvent:FrameEvent
     protected button:Button
+    protected fieldMenuContext:FieldMenuContext
     
-    constructor(managmentObject:ManagmentObject,field:Field,frameEvent:FrameEvent, button:Button) {
+    constructor(managmentObject:ManagmentObject,field:Field,frameEvent:FrameEvent, button:Button,fieldMenuContext:FieldMenuContext) {
         this.managmentObject = managmentObject
         this.field = field
         this.frameEvent = frameEvent
         this.button =  button
+        this.fieldMenuContext = fieldMenuContext
     }
     
     protected createbase(frame:frame){

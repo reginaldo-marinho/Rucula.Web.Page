@@ -34,6 +34,6 @@ export class FieldTextArea extends FieldInput{
     }
     
     protected setEvents(): void {
-        new FileEventCommon(this.managmentObject, this.input, this.field)
+        new FileEventCommon(this.managmentObject, this.input, this.field, this.windowBaseDOM)
     }
 }

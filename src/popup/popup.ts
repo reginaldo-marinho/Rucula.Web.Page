@@ -24,6 +24,11 @@ type configCommon = {
 
 export class Popup {
 
+    private prefix
+    constructor(prefix:string) {
+        this.prefix = prefix
+    }
+    
     boxShow!:HTMLElement;
 
     boxShowAppendChield(element:HTMLElement){

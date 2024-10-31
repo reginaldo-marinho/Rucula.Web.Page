@@ -2,14 +2,15 @@ import { Button } from "../../buttons/Button";
 import { frame } from "../../entities/form/frame";
 import { ManagmentObject } from "../../object/ObjectManagment";
 import { Field } from "../form/Field";
-import { fieldMenuContext } from "../form/Field/fieldMenuContext";
+import { FieldMenuContext } from "../form/Field/fieldMenuContext";
 import { FrameElement } from "./FrameElement";
 import { FrameEvent } from "./FrameEvent";
     
 export class FrameElementBlock extends FrameElement{
     
-    constructor(managmentObject:ManagmentObject,field:Field, frameEvent:FrameEvent, button:Button) {
-        super(managmentObject,field,frameEvent,button);
+    constructor(managmentObject:ManagmentObject,field:Field, frameEvent:FrameEvent, button:Button, fieldMenuContext:FieldMenuContext) {
+        super(managmentObject,field,frameEvent,button, fieldMenuContext);
+
     }
     create(frame:frame){
     
@@ -37,7 +38,7 @@ export class FrameElementBlock extends FrameElement{
             let groupElement = this.field.createGroupOfInput(field, fieldElement) as HTMLDivElement
             div.appendChild(groupElement)
     
-            fieldMenuContext.info.set({
+            this.fieldMenuContext.infoSet({
                 identity: field.identity,
                 field: field
             })

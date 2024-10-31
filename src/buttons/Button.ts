@@ -1,6 +1,4 @@
 import { button } from '../entities/form/button';
-import { window } from '../entities/form/window';
-
 import { ElementStrategy } from './ElementEstrategy';
 import { ElementButton } from './ElementButton';
 import { ElementLink } from './ElementLink';
@@ -8,20 +6,19 @@ import { constIdBaseWindow, constTargetButtonCrudDefault } from '../const';
 import { ruculaGlobal } from '../global/GlobalConfig';
 import { enviroment } from '../global/entities/Enviroments';
 import { cookie } from '../common/coockie/coockie';
-import { globalConfiguration } from '../global/entities/GlobalConfiguration';
-import { Rucula } from '../Rucula';
 import { Popup } from '../popup/popup';
 import { callbackYesNo } from "../popup/callback"
 
 export class  Button  {
     
     
-    private popup = new Popup();
-    
     private callbackReaload:() => void
     
-    constructor(callbackReaload:() => void) {
+    popup:Popup
+
+    constructor(callbackReaload:() => void,popup:Popup) {
         this.callbackReaload = callbackReaload
+        this.popup = popup
     }
     elementStrategy!:ElementStrategy;
     

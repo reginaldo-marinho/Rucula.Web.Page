@@ -1,8 +1,12 @@
-import { windowBaseDOM } from "../elements/window-base/WindowBase";
+import { WindowBaseDOM } from "../elements/window-base/WindowBase";
 import { window } from "../entities/form/window";
 
 export class LayoutFrame {
 
+    windowBaseDOM:WindowBaseDOM
+    constructor(windowBaseDOM:WindowBaseDOM) {
+        this.windowBaseDOM = windowBaseDOM
+    }
     configureLayout(window:window){
     
         if(window.layout.items === undefined){
@@ -47,7 +51,7 @@ export class LayoutFrame {
 
     private setGridContainer(tamplateColumns:number,tamplateRows:number){
         
-        let form = windowBaseDOM.getPrincipalElementRucula()
+        let form = this.windowBaseDOM.getPrincipalElementRucula()
         form.style.gridTemplateColumns = `repeat(${tamplateColumns},1fr)` 
         form.style.gridTemplateRows = `repeat(${tamplateRows},1fr )`
     }

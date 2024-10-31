@@ -1,6 +1,6 @@
 import { button } from '../entities/form/button';
 import { Field } from '../elements/form/Field';
-import { windowBaseDOM } from '../elements/window-base/WindowBase';
+import { WindowBaseDOM } from '../elements/window-base/WindowBase';
 import { constIdBaseWindow } from '../const';
 import { URLRucula } from '../URL/urlManagment';
 import { ManagmentObject } from '../object/ObjectManagment';
@@ -10,13 +10,16 @@ export class EventButton {
     field:Field
     managmentObject: ManagmentObject
 
-    constructor(field:Field, managmentObject: ManagmentObject) {
+    windowBaseDOM:WindowBaseDOM
+    
+    constructor(field:Field, managmentObject: ManagmentObject,windowBaseDOM:WindowBaseDOM) {
         this.field = field
         this.managmentObject = managmentObject
+        this.windowBaseDOM = windowBaseDOM
     }
     eventButton(pathController:string, buttons:button[]){
         
-        let rucula = windowBaseDOM.getElementRoot()
+        let rucula = this.windowBaseDOM.getElementRoot()
 
         buttons?.filter(b => b.type === "button")
         .forEach((button) => {

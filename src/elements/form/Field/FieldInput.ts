@@ -2,6 +2,7 @@ import { constTypeInput } from "../../../const";
 import { field } from "../../../entities/form/field";
 import { ruculaGlobal } from "../../../global/GlobalConfig";
 import { ManagmentObject } from "../../../object/ObjectManagment";
+import { WindowBaseDOM } from "../../window-base/WindowBase";
 
 export abstract class FieldInput{
     
@@ -10,10 +11,12 @@ export abstract class FieldInput{
 
     protected field:field
     public input!: HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement
+    protected windowBaseDOM:WindowBaseDOM
 
-    constructor(field:field, managmentObject:ManagmentObject) {
+    constructor(field:field, managmentObject:ManagmentObject,windowBaseDOM:WindowBaseDOM) {
         this.field = field;
         this.managmentObject = managmentObject
+        this.windowBaseDOM = windowBaseDOM
     }
 
     protected abstract create():void;

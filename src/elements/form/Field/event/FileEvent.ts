@@ -1,6 +1,6 @@
 import { field } from "../../../../entities/form/field";
 import { ManagmentObject } from "../../../../object/ObjectManagment";
-import { windowBaseDOM } from "../../../window-base/WindowBase";
+import { WindowBaseDOM } from "../../../window-base/WindowBase";
 import { eventsCustom } from "../../Field/EventsFieldsCustom";
 
 export abstract class FileEvent{
@@ -8,11 +8,13 @@ export abstract class FileEvent{
     protected input: HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement
     protected field: field //? This property is used to support some events
     
-    protected ruculaForm = windowBaseDOM.getElementRoot()
+    
+    protected ruculaForm
 
     protected managmentObject:ManagmentObject
-    constructor(managmentObject:ManagmentObject, input: HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement,field: field) {
+    constructor(managmentObject:ManagmentObject, input: HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement,field: field,windowBaseDOM:WindowBaseDOM) {
 
+        this.ruculaForm = windowBaseDOM.getElementRoot()
         this.managmentObject = managmentObject
         this.input = input
         this.field = field

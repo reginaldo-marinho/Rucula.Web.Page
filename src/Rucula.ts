@@ -1,5 +1,5 @@
 import { window } from "./entities/form/window";
-import { windowBaseDOM } from "./elements/window-base/WindowBase";
+import { WindowBaseDOM } from "./elements/window-base/WindowBase";
 import { constIdBaseWindow, constTypeFrame } from "./const";
 import { EventButton } from "./buttons/EventButton";
 import { configWindow } from "./window/Window";
@@ -12,7 +12,6 @@ import { loaderManagment } from "./elements/loader/loader";
 import { Popup } from "./popup/popup";
 import { RuculaLogs } from "./console/Console";
 import { EventManagment } from "./Event/event";
-import { exportPaginationEvents } from "./exports";
 import { URLRucula } from "./URL/urlManagment";
 import { FrameElementBlock } from "./elements/frame/FrameElementBlock";
 import { FrameElementLine } from "./elements/frame/FrameElementLine";
@@ -22,16 +21,21 @@ import { Fragment } from "./fragment/fragment";
 import { Field } from "./elements/form/Field";
 import { FrameEvent } from "./elements/frame/FrameEvent";
 import { Button } from "./buttons/Button";
+import { FieldMenuContext } from "./elements/form/Field/fieldMenuContext";
+import { PaginationEvents } from "./pagination/pagination";
 
 export class Rucula{
     
+    public  prefix = `ruculajs_${Date.now()}`
+
+    private windowBaseDOM!:WindowBaseDOM
     private window: window
     private elementRucula: HTMLElement
     private elementFormRucula!: HTMLFormElement
     public popup:Popup
     public event:EventManagment
     public managmentObject:ManagmentObject
-    public tableDependency:TableDependency
+    private tableDependency:TableDependency
     private button:Button
     private layoutFrame:LayoutFrame
     private fragment: Fragment
@@ -39,7 +43,8 @@ export class Rucula{
     private eventButton:EventButton
     private frameEvent:FrameEvent
     private config:any
-    
+    private fieldMenuContext:FieldMenuContext
+    private paginationEvents:PaginationEvents
     constructor(config: {
         global:globalConfiguration, 
         window:window, 
@@ -48,24 +53,28 @@ export class Rucula{
     }){
         config.id ??= 'rucula-js';
         ruculaGlobal.initGlobalConfiguration(config.global)
-        windowBaseDOM.setElementRoot(config.id)
+        
         this.window = config.window
         this.elementRucula = document.getElementById(config.id)!
-        this.popup = new Popup()
-        this.layoutFrame = new LayoutFrame()
+        this.popup = new Popup(this.prefix)
+        this.fieldMenuContext= new FieldMenuContext(this.popup)
+        this.windowBaseDOM = new WindowBaseDOM(this.fieldMenuContext)
+        this.windowBaseDOM.setElementRoot(config.id)
+        this.layoutFrame = new LayoutFrame(this.windowBaseDOM)
         this.fragment = new Fragment();
         this.tableDependency = new TableDependency();
         this.managmentObject = new ManagmentObject(this.fragment, this.tableDependency);
-        this.event = new EventManagment(this.managmentObject);
-        this.field = new Field(this.managmentObject)
-        this.eventButton = new EventButton(this.field, this.managmentObject)
+        this.event = new EventManagment(this.managmentObject,this.windowBaseDOM);
+        this.field = new Field(this.managmentObject, this.windowBaseDOM)
+        this.eventButton = new EventButton(this.field, this.managmentObject, this.windowBaseDOM)
         this.frameEvent = new FrameEvent(this.managmentObject)
-
+        this.paginationEvents = new PaginationEvents(this.windowBaseDOM)
+        
         this.button = new Button(() => {
             let rucula = new Rucula(config)
             rucula.create()
             this.config?.reload()
-        })
+        }, this.popup)
     }
 
     create(){
@@ -73,18 +82,18 @@ export class Rucula{
         let eventInit = new Event('rucula.init')
         let eventLoad = new Event('rucula.load')
         
-        let rucula = windowBaseDOM.getElementRoot()
+        let rucula = this.windowBaseDOM.getElementRoot()
         rucula.dispatchEvent(eventInit)
         configWindow.set(this.window)
         defaultValues.setDefault(this.window)
-        windowBaseDOM.createWindowBase(this.elementRucula.id)
+        this.windowBaseDOM.createWindowBase(this.elementRucula.id)
         this.addHomeWindow();
         this.managmentObject.initObjects(this.window.frames)
-        windowBaseDOM.createNameWindow(this.window.name)
-        windowBaseDOM.closeLeftGrid(this.window.grid)
-        this.elementFormRucula = windowBaseDOM.getPrincipalElementRucula() as HTMLFormElement
-        exportPaginationEvents.headerSearch(this.window.gridSearch);
-        exportPaginationEvents.fotter(this.window.gridFooter);
+        this.windowBaseDOM.createNameWindow(this.window.name)
+        this.windowBaseDOM.closeLeftGrid(this.window.grid)
+        this.elementFormRucula = this.windowBaseDOM.getPrincipalElementRucula() as HTMLFormElement
+        this.paginationEvents.headerSearch(this.window.gridSearch);
+        this.paginationEvents.fotter(this.window.gridFooter);
         this.layoutFrame.configureLayout(this.window)
         this.createFrames()
         this.createButtons()
@@ -137,8 +146,8 @@ export class Rucula{
 
     private createFrames(){
         
-        let frameBlock = new FrameElementBlock(this.managmentObject,this.field, this.frameEvent, this.button);
-        let frameLine = new FrameElementLine(this.managmentObject,this.field,this.frameEvent, this.button);
+        let frameBlock = new FrameElementBlock(this.managmentObject,this.field, this.frameEvent, this.button, this.fieldMenuContext);
+        let frameLine = new FrameElementLine(this.managmentObject,this.field,this.frameEvent, this.button, this.fieldMenuContext);
 
         this.window.frames?.forEach(frame => {
             
@@ -146,17 +155,17 @@ export class Rucula{
 
                 const block = frameBlock.create(frame)
                 this.elementFormRucula.appendChild(block)
-                eventCreated(block) 
+                eventCreated(block,this.windowBaseDOM.getElementRoot()) 
             }
             
             if(frame.type == constTypeFrame.LINE){
                             
                 const line = frameLine.create(frame)
                 this.elementFormRucula.appendChild(line)
-                eventCreated(line)
+                eventCreated(line,this.windowBaseDOM.getElementRoot())
             }  
             
-            function eventCreated(frameElement:HTMLDivElement){
+            function eventCreated(frameElement:HTMLDivElement, elementRoot: HTMLElement){
                 
                 var eventName = `frame.${frame.alias}.complete`
                 let event = new CustomEvent(eventName, {
@@ -167,7 +176,7 @@ export class Rucula{
                         width: frameElement.offsetWidth
                     }
                 })
-                let rucula = windowBaseDOM.getElementRoot();
+                let rucula = elementRoot
                 
                 rucula.dispatchEvent(event)
             }

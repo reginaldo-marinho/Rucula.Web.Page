@@ -1,20 +1,26 @@
 import { cookie } from "../../common/coockie/coockie";
 import { constIdBaseWindow, constPagination } from "../../const";
 import { menuContext } from "../../menu-context/menu-context";
-import { fieldMenuContext } from "../form/Field/fieldMenuContext";
+import { FieldMenuContext } from "../form/Field/fieldMenuContext";
 
-export let windowBaseDOM = (() => {
+export class WindowBaseDOM {
 
-    let elementRoot:HTMLElement
-    function createWindowBase(id:string){
+    private fieldMenuContext:FieldMenuContext
+    constructor(fieldMenuContext:FieldMenuContext) {
+        this.fieldMenuContext = fieldMenuContext
+
+    }
+    private elementRoot! :HTMLElement
+    
+    createWindowBase(id:string){
 
         const ruculaWindow = document.createElement("div");
         ruculaWindow.classList.add("r-w");
     
-        const actions = componentActions();    
+        const actions = this.componentActions();    
         ruculaWindow.appendChild(actions)
     
-        const contentForm = createComponentCreateOrEdit()
+        const contentForm = this.createComponentCreateOrEdit()
         
         ruculaWindow.appendChild(contentForm.childNodes[0] as HTMLDivElement)
         ruculaWindow.appendChild(contentForm.childNodes[1] as HTMLDivElement)
@@ -22,14 +28,14 @@ export let windowBaseDOM = (() => {
         const div = document.getElementById(id)
         div?.appendChild(ruculaWindow);
         calculateHeightRuculaWindow()
-        prepareEventsButtonsCrud()
-        maximizeWindow()
-        eraseWindow()
-        alterTheme()
-        openActionswindow()
-        actionCrudpreventDefault()
+        this.prepareEventsButtonsCrud()
+        this.maximizeWindow()
+        this.eraseWindow()
+        this.alterTheme()
+        this.openActionswindow()
+        this.actionCrudpreventDefault()
         menuContext.init()
-        fieldMenuContext.init()
+        this.fieldMenuContext.init()
         
         function calculateHeightRuculaWindow(){
             
@@ -40,12 +46,12 @@ export let windowBaseDOM = (() => {
 
     }
 
-     function createNameWindow(name:string){
+    createNameWindow(name:string){
         let window = document.querySelector(".r-w-t") as HTMLElement
         window.innerHTML = name
     }
 
-    function componentActions(){
+    componentActions(){
 
         const actions = document.createElement("div");
         actions.className = "r-left-block"
@@ -91,7 +97,7 @@ export let windowBaseDOM = (() => {
         return actions.cloneNode(true);
     }
     
-    function createComponentCreateOrEdit(){
+    createComponentCreateOrEdit(){
     
         const contentForm = document.createElement("div");
 
@@ -179,7 +185,7 @@ export let windowBaseDOM = (() => {
         return contentForm.cloneNode(true);
     }
     
-    function prepareEventsButtonsCrud(){
+    prepareEventsButtonsCrud(){
     
         let rNew = document.getElementById(constIdBaseWindow.NEW)
             
@@ -192,18 +198,18 @@ export let windowBaseDOM = (() => {
             
             let value = cookie.read("frames-on") == "true"
             document.cookie=`frames-on=${!value}`
+            this.openCloseContainer();
             openClose()
             
         })
         
         function openClose(){
-            openCloseContainer();
             rNew!.classList.toggle("r-btn-new-convert-close")
             rNew!.classList.toggle("r-btn-new-cancel-close")
         }
     }
     
-    function openCloseContainer(){
+    openCloseContainer(){
         
         let itemContainer = document.querySelectorAll(".js-open-close-container")
         
@@ -213,7 +219,7 @@ export let windowBaseDOM = (() => {
     }
     
     
-    function closeLeftGrid(grid:boolean){
+    closeLeftGrid(grid:boolean){
         
         if(grid == false){
             
@@ -233,7 +239,7 @@ export let windowBaseDOM = (() => {
         }
     }
 
-    function maximizeWindow(){
+    maximizeWindow(){
 
         let maximize = document.getElementById(constIdBaseWindow.MAXIMIZE_WINDOW);
         
@@ -244,22 +250,22 @@ export let windowBaseDOM = (() => {
         })
     }
     
-    function eraseWindow(){
+    eraseWindow(){
     
         let erase = document.getElementById(constIdBaseWindow.ERASE_WINDOW)
-        let form = windowBaseDOM.getPrincipalElementRucula()
+        let form = this.getPrincipalElementRucula()
         
         erase?.addEventListener('click', () => {
             form.reset();
         })
     }
 
-    function actionCrudpreventDefault(){
+    actionCrudpreventDefault(){
         let facedeActionCrud = document.getElementById("r-facede-action-crud")
         facedeActionCrud?.addEventListener('click', (e) => e.preventDefault())
     }
          
-    function openActionswindow(){
+    openActionswindow(){
 
         let actions = document.getElementById(constIdBaseWindow.ACTIONS_WINDOW)
 
@@ -269,7 +275,7 @@ export let windowBaseDOM = (() => {
         })
     }
 
-    function alterTheme(){
+    alterTheme(){
 
         let rw = document.querySelector('.r-w')
 
@@ -293,23 +299,14 @@ export let windowBaseDOM = (() => {
             }
         })
     }
-
-    return {
-        createWindowBase: (id:string) => {
-            createWindowBase(id)
-        },
-        createNameWindow: (name:string) => {
-            createNameWindow(name)
-        },
-        setElementRoot:(id:string) => {
-            elementRoot = document.getElementById(id)!
-        },
-        getElementRoot:() => {
-           return elementRoot
-        },
-        getPrincipalElementRucula:() => {
-            return document.getElementById(constIdBaseWindow.FORM_RUCULA_JS) as HTMLFormElement
-        },
-        closeLeftGrid: (grid:boolean) => closeLeftGrid(grid)
+       
+    setElementRoot (id:string){
+            this.elementRoot = document.getElementById(id)!
     }
-})()
+    getElementRoot() {
+           return this.elementRoot
+    }
+    getPrincipalElementRucula(){
+            return document.getElementById(constIdBaseWindow.FORM_RUCULA_JS) as HTMLFormElement
+    }
+}
