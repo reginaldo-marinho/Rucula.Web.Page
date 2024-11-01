@@ -1,12 +1,17 @@
 import { contextMenu } from "../const"
 import { button } from "../entities/form/button"
 
-export let menuContext = (() => {
+export class MenuContext{
         
-    let menusContext:{id:string,element:HTMLDivElement}[] = []
-    let elemetInFocu: HTMLElement
+    P:string
+    constructor(P:string) {
+       this. P = P
+        
+    }
+    menusContext:{id:string,element:HTMLDivElement}[] = []
+    elemetInFocu!: HTMLElement
 
-    function createMenuContext(id:string){
+    private createMenuContext(id:string){
         
         let div = document.createElement('div')
         div.classList.add('context-menu')
@@ -16,22 +21,22 @@ export let menuContext = (() => {
 
         div.appendChild(ol)
 
-        menusContext.push({id:id,element:div})
+        this.menusContext.push({id:id,element:div})
  
         return div
     }
 
-    function findMenu(id:string){
+    private  findMenu(id:string){
 
-        let menu = menusContext.find(c=> c.id == contextMenu.INPUT)!
+        let menu = this.menusContext.find(c=> c.id == contextMenu.INPUT)!
 
         return menu.element
 
     }
 
-    function addItem(idMenuContext:string, buttonConfig:button){
+    private  addItem(idMenuContext:string, buttonConfig:button){
 
-        let menu = findMenu(idMenuContext).querySelector('ol')!
+        let menu = this.findMenu(idMenuContext).querySelector('ol')!
 
         var li = document.createElement('li')
         var button = document.createElement('button')
@@ -44,7 +49,7 @@ export let menuContext = (() => {
         menu.appendChild(li)
     }
 
-    function menuContextInput(){
+    private  menuContextInput(){
         
         let detailsInput:button =  {
             target:'input-check-details',
@@ -52,25 +57,28 @@ export let menuContext = (() => {
             type:'button',
         }
 
-        let menu = createMenuContext(contextMenu.INPUT)
-        addItem(contextMenu.INPUT,detailsInput )
+        let menu = this.createMenuContext(contextMenu.INPUT)
+        this.addItem(contextMenu.INPUT,detailsInput )
 
         return menu
 
     }
 
-    return {
        
-        init:function (){
-            let menuInput = menuContextInput()
-            let rw = document.querySelector('.r-w')
+    elemetInFocus(){
+        return this.elemetInFocu
+    }
+        init (){
+            
+            let menuInput = this.menuContextInput()
+            let rw = document.querySelector(`.${this.P}r-w`)
 
             rw?.appendChild(menuInput)
             rw?.addEventListener('contextmenu', (event:any) => {
                 
                 event.preventDefault()
                 let target = event.target as HTMLElement
-                elemetInFocu = target
+                this.elemetInFocu = target
 
                 if(target.classList.contains('r-q-b') || target.classList.contains('r-q-l')){
                     return
@@ -85,25 +93,20 @@ export let menuContext = (() => {
                 }
 
                 if(target.nodeName == 'INPUT' || target.nodeName == 'SELECT' || target.nodeName == 'TEXTAREA'){
-                    let menuActions = findMenu(contextMenu.INPUT)
+                    let menuActions = this.findMenu(contextMenu.INPUT)
                     menuActions.style.display = 'block';
                     menuActions.style.left = `${event.pageX}px`;
                     menuActions.style.top = `${event.pageY}px`;
                 }
             })
 
-            document.addEventListener('click', function(event) {
+            document.addEventListener('click', (event) => {
                 
                 if (event.button !== 2) {
-                    let menuInput = findMenu(contextMenu.INPUT);
+                    let menuInput = this.findMenu(contextMenu.INPUT);
                     menuInput.style.display = 'none'
                     //todo Inplementar menus frame e header
                 }
             });
-        },
-
-        elemetInFocu:function(){
-            return elemetInFocu
         }
-    }
-    })()
+}

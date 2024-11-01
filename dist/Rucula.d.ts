@@ -1,5 +1,6 @@
 import { window } from "./entities/form/window";
 import { globalConfiguration } from "./global/entities/GlobalConfiguration";
+import { LoaderManagment } from "./elements/loader/loader";
 import { Popup } from "./popup/popup";
 import { EventManagment } from "./Event/event";
 import { URLRucula } from "./URL/urlManagment";
@@ -10,6 +11,7 @@ export declare class Rucula {
     private window;
     private elementRucula;
     private elementFormRucula;
+    private menuContext;
     popup: Popup;
     event: EventManagment;
     managmentObject: ManagmentObject;
@@ -24,6 +26,7 @@ export declare class Rucula {
     private fieldMenuContext;
     private paginationEvents;
     private buttonsBase;
+    loader: LoaderManagment;
     constructor(config: {
         global: globalConfiguration;
         window: window;
@@ -36,10 +39,6 @@ export declare class Rucula {
     private cleanRucula;
     private createButtons;
     private createFrames;
-    loader: {
-        enable: () => void;
-        disable: () => void;
-    };
     url: (URL?: {
         absolute: string;
         relative: string;

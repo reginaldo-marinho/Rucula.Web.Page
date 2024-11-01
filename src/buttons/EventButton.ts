@@ -85,7 +85,7 @@ export class EventButton {
     openCloseRightListButtons(){
         
         const openClose = document.getElementById(`${this.P}r-a-menu-vertical`) as HTMLElement
-        const listRight = document.querySelector(".r-vertical-actions") as HTMLElement
+        const listRight = document.querySelector(`.${this.P}r-vertical-actions`) as HTMLElement
         
         const openClosemobile = document.getElementById(`${this.P}${constIdBaseWindow.BUTTONS_MENU_VERTICAL_MOBILE}`)
         

@@ -43,7 +43,7 @@ export class  Button  {
         return this.elementStrategy.createElement(button);
     } 
 
-    getButton(target:string) {
+    private getButton(target:string) {
         return document.getElementById(target)
     }
 
@@ -148,7 +148,7 @@ export class  Button  {
         let buttons = button?.filter(c=> this.buttonIsNotDefault(c.target))
         
         if(buttons?.length == 0 || buttons == undefined){
-            document.querySelector('.r-vertical-actions')?.classList.add('r-display-none')
+            document.querySelector(`.${this.P}r-vertical-actions`)?.classList.add('r-display-none')
         }
         
         buttons?.forEach(b => {
@@ -181,8 +181,8 @@ export class  Button  {
         let button = this.getButton(target)
         button?.classList.add('r-display-none')
     }
-    destroy (target:string) {
 
+    destroy (target:string) {
         let button = this.getButton(target)
         button?.remove()
     }

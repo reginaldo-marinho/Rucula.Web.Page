@@ -1,27 +1,27 @@
-export let loaderManagment = (() => {
+export class LoaderManagment {
 
-    let loaderBkp:HTMLDivElement = document.createElement('div')
+    loaderBkp:HTMLDivElement = document.createElement('div')
+    loaderElement = document.createElement('div');
+    boxShow!:HTMLDivElement
+    P:string
 
-    let loaderElement = document.createElement('div');
-    loaderElement.classList.add('r-loader')
-    loaderElement.classList.add('js-r-loader')
-    loaderElement.classList.add('r-item-center')
-
-    let boxShow:HTMLDivElement
-
-    return {
-        enable: function (){
-            boxShow = document.getElementById('r-box-show') as HTMLDivElement
-            boxShow?.classList.add('r-box-show-center')
-            boxShow?.appendChild(loaderElement)
-        
-        },
-        disable: function (){            
-
-            let loader = document.querySelector('.js-r-loader') as HTMLDivElement
-            loaderBkp.appendChild(loader)
-            boxShow?.classList.remove('r-box-show-center')
-    
-        }
+    constructor(P:string) {
+        this.P = P
+        this.loaderElement.classList.add('r-loader')
+        this.loaderElement.classList.add(`${this.P}js-r-loader`)
+        this.loaderElement.classList.add('r-item-center')
     }
-})()
+    
+    enable (){
+        this.boxShow = document.getElementById('r-box-show') as HTMLDivElement
+        this.boxShow?.classList.add('r-box-show-center')
+        this.boxShow?.appendChild(this.loaderElement)
+        
+    }
+    disable (){            
+        let loader = document.querySelector(`.${this.P}js-r-loader`) as HTMLDivElement
+        this.loaderBkp.appendChild(loader)
+        this.boxShow?.classList.remove('r-box-show-center')
+    
+    }
+}

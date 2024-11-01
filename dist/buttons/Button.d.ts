@@ -9,7 +9,7 @@ export declare class Button {
     elementStrategy: ElementStrategy;
     buttonIsNotDefault(target: string): boolean;
     createButtonOrLink(button: button): HTMLButtonElement | HTMLAnchorElement;
-    getButton(target: string): HTMLElement;
+    private getButton;
     prepareLocalizations(): void;
     prepareEnviroments(): void;
     prepareButtonsInLeftBox(button: button[]): void;

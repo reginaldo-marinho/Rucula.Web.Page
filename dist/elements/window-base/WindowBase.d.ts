@@ -1,8 +1,10 @@
+import { MenuContext } from "../../menu-context/menu-context";
 import { FieldMenuContext } from "../form/Field/fieldMenuContext";
 export declare class WindowBaseDOM {
     private fieldMenuContext;
+    private menuContext;
     private P;
-    constructor(fieldMenuContext: FieldMenuContext, prefix: string);
+    constructor(fieldMenuContext: FieldMenuContext, menuContext: MenuContext, prefix: string);
     private elementRoot;
     createWindowBase(id: string): void;
     createNameWindow(name: string): void;

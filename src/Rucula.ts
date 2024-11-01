@@ -8,7 +8,7 @@ import { LayoutFrame } from "./Layout/layout";
 import { ButtonsBase } from "./buttons/buttonsBaseCrud";
 import { globalConfiguration } from "./global/entities/GlobalConfiguration";
 import { ruculaGlobal } from "./global/GlobalConfig";
-import { loaderManagment } from "./elements/loader/loader";
+import { LoaderManagment } from "./elements/loader/loader";
 import { Popup } from "./popup/popup";
 import { RuculaLogs } from "./console/Console";
 import { EventManagment } from "./Event/event";
@@ -23,6 +23,7 @@ import { FrameEvent } from "./elements/frame/FrameEvent";
 import { Button } from "./buttons/Button";
 import { FieldMenuContext } from "./elements/form/Field/fieldMenuContext";
 import { PaginationEvents } from "./pagination/pagination";
+import { MenuContext } from "./menu-context/menu-context";
 
 export class Rucula{
     
@@ -32,6 +33,7 @@ export class Rucula{
     private window: window
     private elementRucula: HTMLElement
     private elementFormRucula!: HTMLFormElement
+    private menuContext:MenuContext
     public popup:Popup
     public event:EventManagment
     public managmentObject:ManagmentObject
@@ -46,6 +48,7 @@ export class Rucula{
     private fieldMenuContext:FieldMenuContext
     private paginationEvents:PaginationEvents
     private buttonsBase:ButtonsBase
+    public loader:LoaderManagment
     constructor(config: {
         global:globalConfiguration, 
         window:window, 
@@ -58,8 +61,9 @@ export class Rucula{
         this.window = config.window
         this.elementRucula = document.getElementById(config.id)!
         this.popup = new Popup(this.P)
-        this.fieldMenuContext= new FieldMenuContext(this.popup, this.P)
-        this.windowBaseDOM = new WindowBaseDOM(this.fieldMenuContext, this.P)
+        this.menuContext = new MenuContext(this.P)
+        this.fieldMenuContext= new FieldMenuContext(this.popup, this.menuContext, this.P)
+        this.windowBaseDOM = new WindowBaseDOM(this.fieldMenuContext, this.menuContext, this.P)
         this.windowBaseDOM.setElementRoot(config.id)
         this.layoutFrame = new LayoutFrame(this.windowBaseDOM,this.P)
         this.fragment = new Fragment();
@@ -71,6 +75,7 @@ export class Rucula{
         this.frameEvent = new FrameEvent(this.managmentObject)
         this.paginationEvents = new PaginationEvents(this.windowBaseDOM)
         this.buttonsBase = new ButtonsBase(this.P)
+        this.loader = new LoaderManagment(this.P)
         
         this.button = new Button(() => {
             let rucula = new Rucula(config)
@@ -122,7 +127,7 @@ export class Rucula{
             title.textContent = this.window?.messageHome
         }
         
-        let titles = document.querySelectorAll(`.${constIdBaseWindow.TITLE}`)
+        let titles = document.querySelectorAll(`.${this.P}${constIdBaseWindow.TITLE}`)
         titles?.forEach(title => {
             title.textContent = this.window.name
         })
@@ -185,8 +190,6 @@ export class Rucula{
             }
         })
     }
-
-    public loader = loaderManagment
 
     public url = (URL?: { absolute: string; relative: string; params: string; }) => new URLRucula(this.managmentObject, URL);
             

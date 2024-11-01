@@ -1,14 +1,16 @@
 import { cookie } from "../../common/coockie/coockie";
 import { constIdBaseWindow, constPagination } from "../../const";
-import { menuContext } from "../../menu-context/menu-context";
+import { MenuContext } from "../../menu-context/menu-context";
 import { FieldMenuContext } from "../form/Field/fieldMenuContext";
 
 export class WindowBaseDOM {
 
     private fieldMenuContext:FieldMenuContext
+    private menuContext:MenuContext
     private P:string
-    constructor(fieldMenuContext:FieldMenuContext,prefix:string) {
+    constructor(fieldMenuContext:FieldMenuContext,menuContext:MenuContext,prefix:string) {
         this.fieldMenuContext = fieldMenuContext
+        this.menuContext = menuContext
         this.P = prefix
     }
     private elementRoot! :HTMLElement
@@ -17,6 +19,7 @@ export class WindowBaseDOM {
 
         const ruculaWindow = document.createElement("div");
         ruculaWindow.classList.add("r-w");
+        ruculaWindow.classList.add(`${this.P}r-w`);
     
         const actions = this.componentActions();    
         ruculaWindow.appendChild(actions)
@@ -35,7 +38,7 @@ export class WindowBaseDOM {
         this.alterTheme()
         this.openActionswindow()
         this.actionCrudpreventDefault()
-        menuContext.init()
+        this.menuContext.init()
         this.fieldMenuContext.init()
         
         function calculateHeightRuculaWindow(){
@@ -102,7 +105,7 @@ export class WindowBaseDOM {
         const contentForm = document.createElement("div");
 
         const CREATE_OR_EDIT =  
-        `<div class="container-r-f  js-open-close-container">
+        `<div class="container-r-f  ${this.P}js-open-close-container">
             <div class="r-act-opt r-head" id="${this.P}w-title">
             </div>
             <div class="r-f-items r-f-home">
@@ -112,7 +115,7 @@ export class WindowBaseDOM {
                 <h3 id="${this.P}r-f-home-title"></h3>
             </div>
         </div>
-        <div autocomplete="off" class="r-f container-r-f r-display-none js-open-close-container">
+        <div autocomplete="off" class="${this.P}r-f container-r-f r-display-none ${this.P}js-open-close-container">
            
         <div class="r-facede-action top">
             <div class="r-window-name r-facede-action top">
@@ -168,7 +171,7 @@ export class WindowBaseDOM {
                     <div class="r-f-work r-f-items" id="${this.P}${constIdBaseWindow.FORM_RUCULA_JS}">
                     </div>
                 </form>
-                <div class="r-vertical-actions">
+                <div class="r-vertical-actions ${this.P}r-vertical-actions">
                     <ol id=${this.P}${constIdBaseWindow.BUTTONS_MENU_VERTICAL_LIST} class=""> 
                     </ol>
                     <button id=${this.P}${constIdBaseWindow.BUTTONS_MENU_VERTICAL_MOBILE} class="r-a-b actions-mobile"><i class="bi bi-arrows"></i></button>    
@@ -211,7 +214,7 @@ export class WindowBaseDOM {
     
     openCloseContainer(){
         
-        let itemContainer = document.querySelectorAll(".js-open-close-container")
+        let itemContainer = document.querySelectorAll(`.${this.P}js-open-close-container`)
         
         itemContainer.forEach(item => {
             item.classList.toggle("r-display-none")
@@ -223,7 +226,7 @@ export class WindowBaseDOM {
         
         if(grid == false){
             
-            let rf = document.querySelector('.r-f.r-display-none')
+            let rf = document.querySelector(`.${this.P}r-f.r-display-none`)
             
             if(rf != null){
                 let buttonNew = document.getElementById(`${this.P}${constIdBaseWindow.NEW}`);
@@ -277,7 +280,7 @@ export class WindowBaseDOM {
 
     alterTheme(){
 
-        let rw = document.querySelector('.r-w')
+        let rw = document.querySelector(`.${this.P}r-w`)
 
         let actions = document.getElementById(`${this.P}${constIdBaseWindow.ALTER_THEME}`)
 

@@ -1,19 +1,22 @@
 import { contextMenu } from "../../../const"
 import { field } from "../../../entities/form/field"
-import { menuContext } from "../../../menu-context/menu-context"
+import { MenuContext } from "../../../menu-context/menu-context"
 import { Popup } from "../../../popup/popup"
 
 export class FieldMenuContext {
 
     
-    constructor(popup:Popup, P:string) {
+    
+    constructor(popup:Popup, menuContext:MenuContext, P:string) {
         this.popup = popup
+        this.menuContext = menuContext
         this.P = P
     }
     private P:string
     private  popup:Popup
     private  fieldsInfo: { identity: string, field: field }[] = []
     private lastDetail!:HTMLElement
+    private menuContext:MenuContext
 
     init() {
 
@@ -28,7 +31,7 @@ export class FieldMenuContext {
 
             this.lastDetail = ol
 
-            let identity = menuContext.elemetInFocu().getAttribute('identity') as string
+            let identity = this.menuContext.elemetInFocus().getAttribute('identity') as string
 
             let field = this.infoGet(identity)?.field
 

@@ -103,87 +103,20 @@ const constPagination = {
     NEXT: "r-pagination-next"
 };
 
-let menuContext = (() => {
-    let menusContext = [];
-    let elemetInFocu;
-    function createMenuContext(id) {
-        let div = document.createElement('div');
-        div.classList.add('context-menu');
-        div.setAttribute('id', id);
-        let ol = document.createElement('ol');
-        div.appendChild(ol);
-        menusContext.push({ id: id, element: div });
-        return div;
-    }
-    function findMenu(id) {
-        let menu = menusContext.find(c => c.id == contextMenu.INPUT);
-        return menu.element;
-    }
-    function addItem(idMenuContext, buttonConfig) {
-        let menu = findMenu().querySelector('ol');
-        var li = document.createElement('li');
-        var button = document.createElement('button');
-        button.classList.add('r-b-i');
-        button.setAttribute('id', buttonConfig.target);
-        button.textContent = buttonConfig.text;
-        li.appendChild(button);
-        menu.appendChild(li);
-    }
-    function menuContextInput() {
-        let detailsInput = {
-            target: 'input-check-details',
-            text: 'detalhe do campo',
-            type: 'button',
-        };
-        let menu = createMenuContext(contextMenu.INPUT);
-        addItem(contextMenu.INPUT, detailsInput);
-        return menu;
-    }
-    return {
-        init: function () {
-            let menuInput = menuContextInput();
-            let rw = document.querySelector('.r-w');
-            rw?.appendChild(menuInput);
-            rw?.addEventListener('contextmenu', (event) => {
-                event.preventDefault();
-                let target = event.target;
-                elemetInFocu = target;
-                if (target.classList.contains('r-q-b') || target.classList.contains('r-q-l')) {
-                    return;
-                }
-                if (target.classList.contains('r-head')) ;
-                if (target.classList.contains('r-vertical-actions')) ;
-                if (target.nodeName == 'INPUT' || target.nodeName == 'SELECT' || target.nodeName == 'TEXTAREA') {
-                    let menuActions = findMenu();
-                    menuActions.style.display = 'block';
-                    menuActions.style.left = `${event.pageX}px`;
-                    menuActions.style.top = `${event.pageY}px`;
-                }
-            });
-            document.addEventListener('click', function (event) {
-                if (event.button !== 2) {
-                    let menuInput = findMenu();
-                    menuInput.style.display = 'none';
-                }
-            });
-        },
-        elemetInFocu: function () {
-            return elemetInFocu;
-        }
-    };
-})();
-
 class WindowBaseDOM {
     fieldMenuContext;
+    menuContext;
     P;
-    constructor(fieldMenuContext, prefix) {
+    constructor(fieldMenuContext, menuContext, prefix) {
         this.fieldMenuContext = fieldMenuContext;
+        this.menuContext = menuContext;
         this.P = prefix;
     }
     elementRoot;
     createWindowBase(id) {
         const ruculaWindow = document.createElement("div");
         ruculaWindow.classList.add("r-w");
+        ruculaWindow.classList.add(`${this.P}r-w`);
         const actions = this.componentActions();
         ruculaWindow.appendChild(actions);
         const contentForm = this.createComponentCreateOrEdit();
@@ -198,7 +131,7 @@ class WindowBaseDOM {
         this.alterTheme();
         this.openActionswindow();
         this.actionCrudpreventDefault();
-        menuContext.init();
+        this.menuContext.init();
         this.fieldMenuContext.init();
         function calculateHeightRuculaWindow() {
             let offsetTop = Number(ruculaWindow.offsetTop);
@@ -252,7 +185,7 @@ class WindowBaseDOM {
     }
     createComponentCreateOrEdit() {
         const contentForm = document.createElement("div");
-        const CREATE_OR_EDIT = `<div class="container-r-f  js-open-close-container">
+        const CREATE_OR_EDIT = `<div class="container-r-f  ${this.P}js-open-close-container">
             <div class="r-act-opt r-head" id="${this.P}w-title">
             </div>
             <div class="r-f-items r-f-home">
@@ -262,7 +195,7 @@ class WindowBaseDOM {
                 <h3 id="${this.P}r-f-home-title"></h3>
             </div>
         </div>
-        <div autocomplete="off" class="r-f container-r-f r-display-none js-open-close-container">
+        <div autocomplete="off" class="${this.P}r-f container-r-f r-display-none ${this.P}js-open-close-container">
            
         <div class="r-facede-action top">
             <div class="r-window-name r-facede-action top">
@@ -318,7 +251,7 @@ class WindowBaseDOM {
                     <div class="r-f-work r-f-items" id="${this.P}${constIdBaseWindow.FORM_RUCULA_JS}">
                     </div>
                 </form>
-                <div class="r-vertical-actions">
+                <div class="r-vertical-actions ${this.P}r-vertical-actions">
                     <ol id=${this.P}${constIdBaseWindow.BUTTONS_MENU_VERTICAL_LIST} class=""> 
                     </ol>
                     <button id=${this.P}${constIdBaseWindow.BUTTONS_MENU_VERTICAL_MOBILE} class="r-a-b actions-mobile"><i class="bi bi-arrows"></i></button>    
@@ -351,14 +284,14 @@ class WindowBaseDOM {
         }
     }
     openCloseContainer() {
-        let itemContainer = document.querySelectorAll(".js-open-close-container");
+        let itemContainer = document.querySelectorAll(`.${this.P}js-open-close-container`);
         itemContainer.forEach(item => {
             item.classList.toggle("r-display-none");
         });
     }
     closeLeftGrid(grid) {
         if (grid == false) {
-            let rf = document.querySelector('.r-f.r-display-none');
+            let rf = document.querySelector(`.${this.P}r-f.r-display-none`);
             if (rf != null) {
                 let buttonNew = document.getElementById(`${this.P}${constIdBaseWindow.NEW}`);
                 buttonNew?.click();
@@ -395,7 +328,7 @@ class WindowBaseDOM {
         });
     }
     alterTheme() {
-        let rw = document.querySelector('.r-w');
+        let rw = document.querySelector(`.${this.P}r-w`);
         let actions = document.getElementById(`${this.P}${constIdBaseWindow.ALTER_THEME}`);
         let theme = cookie.read('theme');
         if (theme == 'dark') {
@@ -598,7 +531,7 @@ class EventButton {
     }
     openCloseRightListButtons() {
         const openClose = document.getElementById(`${this.P}r-a-menu-vertical`);
-        const listRight = document.querySelector(".r-vertical-actions");
+        const listRight = document.querySelector(`.${this.P}r-vertical-actions`);
         const openClosemobile = document.getElementById(`${this.P}${constIdBaseWindow.BUTTONS_MENU_VERTICAL_MOBILE}`);
         openClose?.addEventListener("click", () => {
             listRight?.classList.toggle("r-display-none");
@@ -779,26 +712,28 @@ class ButtonsBase {
     }
 }
 
-let loaderManagment = (() => {
-    let loaderBkp = document.createElement('div');
-    let loaderElement = document.createElement('div');
-    loaderElement.classList.add('r-loader');
-    loaderElement.classList.add('js-r-loader');
-    loaderElement.classList.add('r-item-center');
-    let boxShow;
-    return {
-        enable: function () {
-            boxShow = document.getElementById('r-box-show');
-            boxShow?.classList.add('r-box-show-center');
-            boxShow?.appendChild(loaderElement);
-        },
-        disable: function () {
-            let loader = document.querySelector('.js-r-loader');
-            loaderBkp.appendChild(loader);
-            boxShow?.classList.remove('r-box-show-center');
-        }
-    };
-})();
+class LoaderManagment {
+    loaderBkp = document.createElement('div');
+    loaderElement = document.createElement('div');
+    boxShow;
+    P;
+    constructor(P) {
+        this.P = P;
+        this.loaderElement.classList.add('r-loader');
+        this.loaderElement.classList.add(`${this.P}js-r-loader`);
+        this.loaderElement.classList.add('r-item-center');
+    }
+    enable() {
+        this.boxShow = document.getElementById('r-box-show');
+        this.boxShow?.classList.add('r-box-show-center');
+        this.boxShow?.appendChild(this.loaderElement);
+    }
+    disable() {
+        let loader = document.querySelector(`.${this.P}js-r-loader`);
+        this.loaderBkp.appendChild(loader);
+        this.boxShow?.classList.remove('r-box-show-center');
+    }
+}
 
 class Popup {
     prefix;
@@ -2635,7 +2570,7 @@ class Button {
         const ListRightButtons = document.getElementById(`${this.P}r-a-menu-vertical-list`);
         let buttons = button?.filter(c => this.buttonIsNotDefault(c.target));
         if (buttons?.length == 0 || buttons == undefined) {
-            document.querySelector('.r-vertical-actions')?.classList.add('r-display-none');
+            document.querySelector(`.${this.P}r-vertical-actions`)?.classList.add('r-display-none');
         }
         buttons?.forEach(b => {
             const li = document.createElement("li");
@@ -2666,14 +2601,16 @@ class Button {
 }
 
 class FieldMenuContext {
-    constructor(popup, P) {
+    constructor(popup, menuContext, P) {
         this.popup = popup;
+        this.menuContext = menuContext;
         this.P = P;
     }
     P;
     popup;
     fieldsInfo = [];
     lastDetail;
+    menuContext;
     init() {
         let menuOInput = document.getElementById(`${this.P}${contextMenu.INPUT}`);
         menuOInput?.addEventListener('click', () => {
@@ -2682,7 +2619,7 @@ class FieldMenuContext {
             }
             let ol = document.createElement('ol');
             this.lastDetail = ol;
-            let identity = menuContext.elemetInFocu().getAttribute('identity');
+            let identity = this.menuContext.elemetInFocus().getAttribute('identity');
             let field = this.infoGet(identity)?.field;
             let details = `  
             <table>
@@ -2792,12 +2729,85 @@ class PaginationEvents {
     }
 }
 
+class MenuContext {
+    P;
+    constructor(P) {
+        this.P = P;
+    }
+    menusContext = [];
+    elemetInFocu;
+    createMenuContext(id) {
+        let div = document.createElement('div');
+        div.classList.add('context-menu');
+        div.setAttribute('id', id);
+        let ol = document.createElement('ol');
+        div.appendChild(ol);
+        this.menusContext.push({ id: id, element: div });
+        return div;
+    }
+    findMenu(id) {
+        let menu = this.menusContext.find(c => c.id == contextMenu.INPUT);
+        return menu.element;
+    }
+    addItem(idMenuContext, buttonConfig) {
+        let menu = this.findMenu(idMenuContext).querySelector('ol');
+        var li = document.createElement('li');
+        var button = document.createElement('button');
+        button.classList.add('r-b-i');
+        button.setAttribute('id', buttonConfig.target);
+        button.textContent = buttonConfig.text;
+        li.appendChild(button);
+        menu.appendChild(li);
+    }
+    menuContextInput() {
+        let detailsInput = {
+            target: 'input-check-details',
+            text: 'detalhe do campo',
+            type: 'button',
+        };
+        let menu = this.createMenuContext(contextMenu.INPUT);
+        this.addItem(contextMenu.INPUT, detailsInput);
+        return menu;
+    }
+    elemetInFocus() {
+        return this.elemetInFocu;
+    }
+    init() {
+        let menuInput = this.menuContextInput();
+        let rw = document.querySelector(`.${this.P}r-w`);
+        rw?.appendChild(menuInput);
+        rw?.addEventListener('contextmenu', (event) => {
+            event.preventDefault();
+            let target = event.target;
+            this.elemetInFocu = target;
+            if (target.classList.contains('r-q-b') || target.classList.contains('r-q-l')) {
+                return;
+            }
+            if (target.classList.contains('r-head')) ;
+            if (target.classList.contains('r-vertical-actions')) ;
+            if (target.nodeName == 'INPUT' || target.nodeName == 'SELECT' || target.nodeName == 'TEXTAREA') {
+                let menuActions = this.findMenu(contextMenu.INPUT);
+                menuActions.style.display = 'block';
+                menuActions.style.left = `${event.pageX}px`;
+                menuActions.style.top = `${event.pageY}px`;
+            }
+        });
+        document.addEventListener('click', (event) => {
+            if (event.button !== 2) {
+                let menuInput = this.findMenu(contextMenu.INPUT);
+                menuInput.style.display = 'none';
+            }
+        });
+    }
+}
+
 class Rucula {
     P = `ruculajs_${Date.now()}`;
     windowBaseDOM;
     window;
     elementRucula;
     elementFormRucula;
+    menuContext;
     popup;
     event;
     managmentObject;
@@ -2812,14 +2822,16 @@ class Rucula {
     fieldMenuContext;
     paginationEvents;
     buttonsBase;
+    loader;
     constructor(config) {
         config.id ??= 'rucula-js';
         ruculaGlobal.initGlobalConfiguration(config.global);
         this.window = config.window;
         this.elementRucula = document.getElementById(config.id);
         this.popup = new Popup(this.P);
-        this.fieldMenuContext = new FieldMenuContext(this.popup, this.P);
-        this.windowBaseDOM = new WindowBaseDOM(this.fieldMenuContext, this.P);
+        this.menuContext = new MenuContext(this.P);
+        this.fieldMenuContext = new FieldMenuContext(this.popup, this.menuContext, this.P);
+        this.windowBaseDOM = new WindowBaseDOM(this.fieldMenuContext, this.menuContext, this.P);
         this.windowBaseDOM.setElementRoot(config.id);
         this.layoutFrame = new LayoutFrame(this.windowBaseDOM, this.P);
         this.fragment = new Fragment();
@@ -2831,6 +2843,7 @@ class Rucula {
         this.frameEvent = new FrameEvent(this.managmentObject);
         this.paginationEvents = new PaginationEvents(this.windowBaseDOM);
         this.buttonsBase = new ButtonsBase(this.P);
+        this.loader = new LoaderManagment(this.P);
         this.button = new Button(() => {
             let rucula = new Rucula(config);
             rucula.create();
@@ -2871,7 +2884,7 @@ class Rucula {
             let title = document.getElementById(`${this.P}r-f-home-title`);
             title.textContent = this.window?.messageHome;
         }
-        let titles = document.querySelectorAll(`.${constIdBaseWindow.TITLE}`);
+        let titles = document.querySelectorAll(`.${this.P}${constIdBaseWindow.TITLE}`);
         titles?.forEach(title => {
             title.textContent = this.window.name;
         });
@@ -2919,7 +2932,6 @@ class Rucula {
             }
         });
     }
-    loader = loaderManagment;
     url = (URL) => new URLRucula(this.managmentObject, URL);
     objectUnique(alias) {
         return this.managmentObject.objectUnique(alias);
