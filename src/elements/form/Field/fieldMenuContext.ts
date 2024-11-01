@@ -5,17 +5,19 @@ import { Popup } from "../../../popup/popup"
 
 export class FieldMenuContext {
 
-    constructor(popup:Popup) {
-        this.popup = popup
-    }
     
+    constructor(popup:Popup, P:string) {
+        this.popup = popup
+        this.P = P
+    }
+    private P:string
     private  popup:Popup
     private  fieldsInfo: { identity: string, field: field }[] = []
     private lastDetail!:HTMLElement
 
     init() {
 
-        let menuOInput = document.getElementById(contextMenu.INPUT)
+        let menuOInput = document.getElementById(`${this.P}${contextMenu.INPUT}` )
         
         menuOInput?.addEventListener('click', () => {
             

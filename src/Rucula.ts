@@ -5,7 +5,7 @@ import { EventButton } from "./buttons/EventButton";
 import { configWindow } from "./window/Window";
 import { defaultValues } from "./elements/Defaults";
 import { LayoutFrame } from "./Layout/layout";
-import { buttonsBase } from "./buttons/buttonsBaseCrud";
+import { ButtonsBase } from "./buttons/buttonsBaseCrud";
 import { globalConfiguration } from "./global/entities/GlobalConfiguration";
 import { ruculaGlobal } from "./global/GlobalConfig";
 import { loaderManagment } from "./elements/loader/loader";
@@ -26,7 +26,7 @@ import { PaginationEvents } from "./pagination/pagination";
 
 export class Rucula{
     
-    public  prefix = `ruculajs_${Date.now()}`
+    public  P = `ruculajs_${Date.now()}`
 
     private windowBaseDOM!:WindowBaseDOM
     private window: window
@@ -45,6 +45,7 @@ export class Rucula{
     private config:any
     private fieldMenuContext:FieldMenuContext
     private paginationEvents:PaginationEvents
+    private buttonsBase:ButtonsBase
     constructor(config: {
         global:globalConfiguration, 
         window:window, 
@@ -56,25 +57,27 @@ export class Rucula{
         
         this.window = config.window
         this.elementRucula = document.getElementById(config.id)!
-        this.popup = new Popup(this.prefix)
-        this.fieldMenuContext= new FieldMenuContext(this.popup)
-        this.windowBaseDOM = new WindowBaseDOM(this.fieldMenuContext)
+        this.popup = new Popup(this.P)
+        this.fieldMenuContext= new FieldMenuContext(this.popup, this.P)
+        this.windowBaseDOM = new WindowBaseDOM(this.fieldMenuContext, this.P)
         this.windowBaseDOM.setElementRoot(config.id)
-        this.layoutFrame = new LayoutFrame(this.windowBaseDOM)
+        this.layoutFrame = new LayoutFrame(this.windowBaseDOM,this.P)
         this.fragment = new Fragment();
         this.tableDependency = new TableDependency();
         this.managmentObject = new ManagmentObject(this.fragment, this.tableDependency);
         this.event = new EventManagment(this.managmentObject,this.windowBaseDOM);
         this.field = new Field(this.managmentObject, this.windowBaseDOM)
-        this.eventButton = new EventButton(this.field, this.managmentObject, this.windowBaseDOM)
+        this.eventButton = new EventButton(this.field, this.managmentObject, this.windowBaseDOM, this.P)
         this.frameEvent = new FrameEvent(this.managmentObject)
         this.paginationEvents = new PaginationEvents(this.windowBaseDOM)
+        this.buttonsBase = new ButtonsBase(this.P)
         
         this.button = new Button(() => {
             let rucula = new Rucula(config)
             rucula.create()
             this.config?.reload()
-        }, this.popup)
+        }, this.popup,
+    this.P)
     }
 
     create(){
@@ -97,9 +100,9 @@ export class Rucula{
         this.layoutFrame.configureLayout(this.window)
         this.createFrames()
         this.createButtons()
-        buttonsBase.initButtonsTypeCrudDefault();
-        buttonsBase.initButtonPlus();
-        buttonsBase.buttonsTypeCrud.crud(this.window?.crud);        
+        this.buttonsBase.initButtonsTypeCrudDefault();
+        this.buttonsBase.initButtonPlus();
+        this.buttonsBase.crud(this.window?.crud);        
         rucula.dispatchEvent(eventLoad);
         
         (window as any).rucula = new RuculaLogs(this.managmentObject);
@@ -109,13 +112,13 @@ export class Rucula{
      
         if(this.window?.iconHome){
             
-            let icon = document.getElementById("r-f-home-icon")!
+            let icon = document.getElementById(`${this.P}r-f-home-icon`)!
             icon?.classList.add(this.window.iconHome)
         }
 
         if(this.window?.messageHome){
         
-            let title = document.getElementById("r-f-home-title")!
+            let title = document.getElementById(`${this.P}r-f-home-title`)!
             title.textContent = this.window?.messageHome
         }
         

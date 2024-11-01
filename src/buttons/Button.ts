@@ -15,10 +15,11 @@ export class  Button  {
     private callbackReaload:() => void
     
     popup:Popup
-
-    constructor(callbackReaload:() => void,popup:Popup) {
+    P:string
+    constructor(callbackReaload:() => void,popup:Popup, P:string) {
         this.callbackReaload = callbackReaload
         this.popup = popup
+        this.P = P
     }
     elementStrategy!:ElementStrategy;
     
@@ -49,8 +50,8 @@ export class  Button  {
     prepareLocalizations(){
      
 
-        let globalization = document.getElementById(constIdBaseWindow.GLOBALIZATION)
-        let olliGlobalization = document.getElementById(constIdBaseWindow.OLLI_GLOBALIZATION)
+        let globalization = document.getElementById(`${this.P}${constIdBaseWindow.GLOBALIZATION}`)
+        let olliGlobalization = document.getElementById(`${this.P}${constIdBaseWindow.OLLI_GLOBALIZATION}`)
 
         globalization?.addEventListener("click", () => {
             olliGlobalization?.classList.toggle("r-display-none")
@@ -74,8 +75,8 @@ export class  Button  {
 
     prepareEnviroments(){
      
-        let baseEnvironments = document.getElementById(constIdBaseWindow.ENVIROMENT)!
-        let olliEnviroment = document.getElementById(constIdBaseWindow.OLLI_ENVIROMENT)
+        let baseEnvironments = document.getElementById(`${this.P}${constIdBaseWindow.ENVIROMENT}`)!
+        let olliEnviroment = document.getElementById(`${this.P}${constIdBaseWindow.OLLI_ENVIROMENT}`)
         let description = baseEnvironments.querySelector('.description')!
         let icon = baseEnvironments.querySelector('i')!
         
@@ -142,7 +143,7 @@ export class  Button  {
         
     prepareButtonsInLeftBox (button:button[]) {
             
-        const ListRightButtons = document.getElementById("r-a-menu-vertical-list")
+        const ListRightButtons = document.getElementById(`${this.P}r-a-menu-vertical-list`)
         
         let buttons = button?.filter(c=> this.buttonIsNotDefault(c.target))
         

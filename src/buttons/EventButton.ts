@@ -11,11 +11,12 @@ export class EventButton {
     managmentObject: ManagmentObject
 
     windowBaseDOM:WindowBaseDOM
-    
-    constructor(field:Field, managmentObject: ManagmentObject,windowBaseDOM:WindowBaseDOM) {
+    P:string
+    constructor(field:Field, managmentObject: ManagmentObject,windowBaseDOM:WindowBaseDOM,P:string) {
         this.field = field
         this.managmentObject = managmentObject
         this.windowBaseDOM = windowBaseDOM
+        this.P = P
     }
     eventButton(pathController:string, buttons:button[]){
         
@@ -24,7 +25,7 @@ export class EventButton {
         buttons?.filter(b => b.type === "button")
         .forEach((button) => {
             
-            let element:HTMLElement = document?.getElementById(button.target) as HTMLElement
+            let element:HTMLElement = document?.getElementById(`${this.P}${button.target}` ) as HTMLElement
             
             let object =  {
                 detail:{
@@ -83,10 +84,10 @@ export class EventButton {
     
     openCloseRightListButtons(){
         
-        const openClose = document.getElementById("r-a-menu-vertical") as HTMLElement
+        const openClose = document.getElementById(`${this.P}r-a-menu-vertical`) as HTMLElement
         const listRight = document.querySelector(".r-vertical-actions") as HTMLElement
         
-        const openClosemobile = document.getElementById(constIdBaseWindow.BUTTONS_MENU_VERTICAL_MOBILE)
+        const openClosemobile = document.getElementById(`${this.P}${constIdBaseWindow.BUTTONS_MENU_VERTICAL_MOBILE}`)
         
         openClose?.addEventListener("click",() => {
             listRight?.classList.toggle("r-display-none");

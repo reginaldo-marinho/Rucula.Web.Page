@@ -6,9 +6,10 @@ import { FieldMenuContext } from "../form/Field/fieldMenuContext";
 export class WindowBaseDOM {
 
     private fieldMenuContext:FieldMenuContext
-    constructor(fieldMenuContext:FieldMenuContext) {
+    private P:string
+    constructor(fieldMenuContext:FieldMenuContext,prefix:string) {
         this.fieldMenuContext = fieldMenuContext
-
+        this.P = prefix
     }
     private elementRoot! :HTMLElement
     
@@ -52,29 +53,28 @@ export class WindowBaseDOM {
     }
 
     componentActions(){
-
         const actions = document.createElement("div");
         actions.className = "r-left-block"
 
         const ACTIONS = 
-            `<div class="r-act" id="actions">
-                <div class="r-act-opt r-head" id="w-title">
-                    <button id="${constIdBaseWindow.NEW}" class="r-a-b r-btn-new-cancel-close"><i class="bi bi-plus-lg"></i></button>
+            `<div class="r-act" id="${this.P}actions">
+                <div class="r-act-opt r-head" id="${this.P}w-title">
+                    <button id="${this.P}${constIdBaseWindow.NEW}" class="r-a-b r-btn-new-cancel-close"><i class="bi bi-plus-lg"></i></button>
                     <div class="r-w-t">
                     </div>
-                    <button id="r-a-many" class="r-a-b"><i class="bi bi-list"></i></button>
+                    <button id="${this.P}r-a-many" class="r-a-b"><i class="bi bi-list"></i></button>
                 </div>
-                <div class="r-left-block-grid" id="w-grid">
-                    <form class="searh-items-grid" id="${constPagination.FIND}" autocomplete=off>
+                <div class="r-left-block-grid" id="${this.P}w-grid">
+                    <form class="searh-items-grid" id="${this.P}${constPagination.FIND}" autocomplete=off>
                         <input name="r-find-value" type="text"/>
                         <button><i class="bi bi-search"></i></button>
                     </form>
                     <div class="r-act-grid-body">
                     </div>
-                    <div class="r-act-grid-footer" id="r-act-grid-footer">
+                    <div class="r-act-grid-footer" id="${this.P}r-act-grid-footer">
                         <div>
                             <span>N. Linha</span>
-                            <select id="${constPagination.ROW_NUMBER}" name="len-page">
+                            <select id="${this.P}${constPagination.ROW_NUMBER}" name="len-page">
                                 <option value="10">10</option>
                                 <option value="25">25</option>
                                 <option value="50">50</option>
@@ -83,10 +83,10 @@ export class WindowBaseDOM {
                             </select>
                         </div>
                          <div>
-                            <button id="${constPagination.FIRST}" class="r-a-b"><i class="bi bi-arrow-up"></i></button>
-                            <button id="${constPagination.LAST}" class="r-a-b"><i class="bi bi-arrow-down"></i></button>
-                            <button id="${constPagination.PREVIOUS}" class="r-a-b"><i class="bi bi-arrow-left"></i></button>
-                            <button id="${constPagination.NEXT}" class="r-a-b"><i class="bi bi-arrow-right"></i></button>
+                            <button id="${this.P}${constPagination.FIRST}" class="r-a-b"><i class="bi bi-arrow-up"></i></button>
+                            <button id="${this.P}${constPagination.LAST}" class="r-a-b"><i class="bi bi-arrow-down"></i></button>
+                            <button id="${this.P}${constPagination.PREVIOUS}" class="r-a-b"><i class="bi bi-arrow-left"></i></button>
+                            <button id="${this.P}${constPagination.NEXT}" class="r-a-b"><i class="bi bi-arrow-right"></i></button>
                         </div>
                     </div>
                 </div>
@@ -98,18 +98,18 @@ export class WindowBaseDOM {
     }
     
     createComponentCreateOrEdit(){
-    
+
         const contentForm = document.createElement("div");
 
         const CREATE_OR_EDIT =  
         `<div class="container-r-f  js-open-close-container">
-            <div class="r-act-opt r-head" id="w-title">
+            <div class="r-act-opt r-head" id="${this.P}w-title">
             </div>
             <div class="r-f-items r-f-home">
                 <div class="r-f-home-round">
-                    <i id="r-f-home-icon"class="bi" ></i>
+                    <i id="${this.P}r-f-home-icon"class="bi" ></i>
                 </div>
-                <h3 id="r-f-home-title"></h3>
+                <h3 id="${this.P}r-f-home-title"></h3>
             </div>
         </div>
         <div autocomplete="off" class="r-f container-r-f r-display-none js-open-close-container">
@@ -121,62 +121,62 @@ export class WindowBaseDOM {
             <div class="r-head r-read-new r-facede-action top">
                
                 <div style="z-index: 10;">
-                    <button id="${constIdBaseWindow.ACTIONS_WINDOW}" class="r-a-b r-actions-window"><i class="bi bi-nut"></i></button>
+                    <button id="${this.P}${constIdBaseWindow.ACTIONS_WINDOW}" class="r-a-b r-actions-window"><i class="bi bi-nut"></i></button>
                     <div class="r-display-inline-block r-actions-window r-actions-window-itens">
                         <div class="r-display-inline-block">
-                            <button id="${constIdBaseWindow.MAXIMIZE_WINDOW}" class="r-a-b"><i class="bi bi-arrows"></i></button>
-                            <button id="${constIdBaseWindow.RELOAD}" class="r-a-b "><i class="bi bi-arrow-repeat"></i></button>
-                            <button id="${constIdBaseWindow.ERASE_WINDOW}" class="r-a-b "><i class="bi bi-eraser"></i></button>
-                            <button id="${constIdBaseWindow.ALTER_THEME}" class="r-a-b "><i class="bi bi-circle-half"></i></button>
+                            <button id="${this.P}${constIdBaseWindow.MAXIMIZE_WINDOW}" class="r-a-b"><i class="bi bi-arrows"></i></button>
+                            <button id="${this.P}${constIdBaseWindow.RELOAD}" class="r-a-b "><i class="bi bi-arrow-repeat"></i></button>
+                            <button id="${this.P}${constIdBaseWindow.ERASE_WINDOW}" class="r-a-b "><i class="bi bi-eraser"></i></button>
+                            <button id="${this.P}${constIdBaseWindow.ALTER_THEME}" class="r-a-b "><i class="bi bi-circle-half"></i></button>
                         </div>
                         <div class="actions-view">
-                            <button id="${constIdBaseWindow.GLOBALIZATION}" class="r-a-b">
+                            <button id="${this.P}${constIdBaseWindow.GLOBALIZATION}" class="r-a-b">
                                 <i class="bi bi-globe-americas"></i>
-                                <ol id="${constIdBaseWindow.OLLI_GLOBALIZATION}" class="${constIdBaseWindow.OLLI_GLOBALIZATION} list-vertical-buttons list-vertical-buttons-pp-left r-display-none">
+                                <ol id="${this.P}${constIdBaseWindow.OLLI_GLOBALIZATION}" class="${constIdBaseWindow.OLLI_GLOBALIZATION} list-vertical-buttons list-vertical-buttons-pp-left r-display-none">
                                 </ol>                        
                             </button> 
-                            <button id="${constIdBaseWindow.ENVIROMENT}" class="r-a-b">
+                            <button id="${this.P}${constIdBaseWindow.ENVIROMENT}" class="r-a-b">
                                 <div class="desc-environment"><i class="bi bi-fire"></i> <span class="description"></span> </div>
-                                <ol id="${constIdBaseWindow.OLLI_ENVIROMENT}" class="${constIdBaseWindow.OLLI_ENVIROMENT} list-vertical-buttons list-vertical-buttons-pp-left r-display-none">
+                                <ol id="${this.P}${constIdBaseWindow.OLLI_ENVIROMENT}" class="${constIdBaseWindow.OLLI_ENVIROMENT} list-vertical-buttons list-vertical-buttons-pp-left r-display-none">
                                 </ol>                        
                             </button>    
                         </div>
                     </div>
                 </div>
                  <div class="r-display-inline-block">
-                        <button id="${constIdBaseWindow.FAVORITE}" class="r-a-b"><i class="bi bi-star-fill"></i></button>
-                        <button id="${constIdBaseWindow.CHAT}" class="r-a-b"><i class="bi bi-chat-dots"></i></button>
-                        <button id="${constIdBaseWindow.USER}" class="r-a-b"><i class="bi bi-person-circle"></i></button>
+                        <button id="${this.P}${constIdBaseWindow.FAVORITE}" class="r-a-b"><i class="bi bi-star-fill"></i></button>
+                        <button id="${this.P}${constIdBaseWindow.CHAT}" class="r-a-b"><i class="bi bi-chat-dots"></i></button>
+                        <button id="${this.P}${constIdBaseWindow.USER}" class="r-a-b"><i class="bi bi-person-circle"></i></button>
                     </div>
                 </div>
             </div>
 
             <div class="r-w-body">
                 <form class="r-window-work" autocomplete="off">
-                    <div class="r-head r-read-edit r-facede-action-crud" id="r-facede-action-crud">
-                        <h3 id="${constIdBaseWindow.FRAME_INFO}">                        
+                    <div class="r-head r-read-edit r-facede-action-crud" id="${this.P}r-facede-action-crud">
+                        <h3 id="${this.P}${constIdBaseWindow.FRAME_INFO}">                        
                         </h3>                        
                         <div>                        
-                            <button id="r-a-save" class="r-a-b "><i class="bi bi-box-arrow-in-down"></i></button>
-                            <button id="r-a-alter" class="r-a-b"><i class="bi bi-pen"></i></button>
-                            <button id="r-a-delete" class="r-a-b"><i class="bi bi-trash"></i></button>    
-                            <button id="r-a-reload" class="r-a-b "><i class="bi bi-arrow-repeat"></i></button>
-                            <button id="erase-window" class="r-a-b "><i class="bi bi-eraser"></i></button>
-                            <button id="r-a-menu-vertical" class="r-a-b"><i class="bi bi-arrows"></i></button>    
+                            <button id="${this.P}r-a-save" class="r-a-b "><i class="bi bi-box-arrow-in-down"></i></button>
+                            <button id="${this.P}r-a-alter" class="r-a-b"><i class="bi bi-pen"></i></button>
+                            <button id="${this.P}r-a-delete" class="r-a-b"><i class="bi bi-trash"></i></button>    
+                            <button id="${this.P}r-a-reload" class="r-a-b "><i class="bi bi-arrow-repeat"></i></button>
+                            <button id="${this.P}erase-window" class="r-a-b "><i class="bi bi-eraser"></i></button>
+                            <button id="${this.P}r-a-menu-vertical" class="r-a-b"><i class="bi bi-arrows"></i></button>    
                         </div>
                     </div>
-                    <div class="r-f-work r-f-items" id="${constIdBaseWindow.FORM_RUCULA_JS}">
+                    <div class="r-f-work r-f-items" id="${this.P}${constIdBaseWindow.FORM_RUCULA_JS}">
                     </div>
                 </form>
                 <div class="r-vertical-actions">
-                    <ol id=${constIdBaseWindow.BUTTONS_MENU_VERTICAL_LIST} class=""> 
+                    <ol id=${this.P}${constIdBaseWindow.BUTTONS_MENU_VERTICAL_LIST} class=""> 
                     </ol>
-                    <button id=${constIdBaseWindow.BUTTONS_MENU_VERTICAL_MOBILE} class="r-a-b actions-mobile"><i class="bi bi-arrows"></i></button>    
+                    <button id=${this.P}${constIdBaseWindow.BUTTONS_MENU_VERTICAL_MOBILE} class="r-a-b actions-mobile"><i class="bi bi-arrows"></i></button>    
                 </div>
             </div>
             <div class="r-facede-action bottom">
             </div>
-            <div class="r-box-show" id="r-box-show"> 
+            <div class="r-box-show" id="${this.P}r-box-show"> 
             </div>
         </div>
         `
@@ -187,7 +187,7 @@ export class WindowBaseDOM {
     
     prepareEventsButtonsCrud(){
     
-        let rNew = document.getElementById(constIdBaseWindow.NEW)
+        let rNew = document.getElementById(`${this.P}${constIdBaseWindow.NEW}`)
             
         let framesOn = cookie.read("frames-on"); 
         if(framesOn != "false"){
@@ -226,14 +226,14 @@ export class WindowBaseDOM {
             let rf = document.querySelector('.r-f.r-display-none')
             
             if(rf != null){
-                let buttonNew = document.getElementById(constIdBaseWindow.NEW);
+                let buttonNew = document.getElementById(`${this.P}${constIdBaseWindow.NEW}`);
                 buttonNew?.click()
             }
             
-            let actions = document.getElementById("actions");
+            let actions = document.getElementById(`${this.P}actions`);
             actions?.remove()
 
-            let maximizeWindow = document.getElementById(constIdBaseWindow.MAXIMIZE_WINDOW)
+            let maximizeWindow = document.getElementById(`${this.P}${constIdBaseWindow.MAXIMIZE_WINDOW}`)
             maximizeWindow?.remove()
 
         }
@@ -241,7 +241,7 @@ export class WindowBaseDOM {
 
     maximizeWindow(){
 
-        let maximize = document.getElementById(constIdBaseWindow.MAXIMIZE_WINDOW);
+        let maximize = document.getElementById(`${this.P}${constIdBaseWindow.MAXIMIZE_WINDOW}`);
         
         
         maximize?.addEventListener('click',() => {
@@ -252,7 +252,7 @@ export class WindowBaseDOM {
     
     eraseWindow(){
     
-        let erase = document.getElementById(constIdBaseWindow.ERASE_WINDOW)
+        let erase = document.getElementById(`${this.P}${constIdBaseWindow.ERASE_WINDOW}`)
         let form = this.getPrincipalElementRucula()
         
         erase?.addEventListener('click', () => {
@@ -261,13 +261,13 @@ export class WindowBaseDOM {
     }
 
     actionCrudpreventDefault(){
-        let facedeActionCrud = document.getElementById("r-facede-action-crud")
+        let facedeActionCrud = document.getElementById(`${this.P}r-facede-action-crud`)
         facedeActionCrud?.addEventListener('click', (e) => e.preventDefault())
     }
          
     openActionswindow(){
 
-        let actions = document.getElementById(constIdBaseWindow.ACTIONS_WINDOW)
+        let actions = document.getElementById(`${this.P}${constIdBaseWindow.ACTIONS_WINDOW}`)
 
         actions?.addEventListener('click', (e) => {
             actions?.nextElementSibling?.classList.toggle('r-actions-window-active')
@@ -279,7 +279,7 @@ export class WindowBaseDOM {
 
         let rw = document.querySelector('.r-w')
 
-        let actions = document.getElementById(constIdBaseWindow.ALTER_THEME)
+        let actions = document.getElementById(`${this.P}${constIdBaseWindow.ALTER_THEME}`)
 
         let theme = cookie.read('theme')
 
@@ -307,6 +307,6 @@ export class WindowBaseDOM {
            return this.elementRoot
     }
     getPrincipalElementRucula(){
-            return document.getElementById(constIdBaseWindow.FORM_RUCULA_JS) as HTMLFormElement
+            return document.getElementById(`${this.P}${constIdBaseWindow.FORM_RUCULA_JS}`) as HTMLFormElement
     }
 }

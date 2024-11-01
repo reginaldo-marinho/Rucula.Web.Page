@@ -1,8 +1,10 @@
 import { field } from "../../entities/form/field";
 import { ManagmentObject } from "../../object/ObjectManagment";
+import { WindowBaseDOM } from "../window-base/WindowBase";
 export declare class Field {
     private managmentObject;
-    constructor(managmentObject: ManagmentObject);
+    windowBaseDOM: WindowBaseDOM;
+    constructor(managmentObject: ManagmentObject, windowBaseDOM: WindowBaseDOM);
     createSpanLabelIsRequerid(): HTMLSpanElement;
     createGroupOfButton(element: HTMLButtonElement | HTMLAnchorElement): HTMLDivElement;
     createGroupOfInput(field: field, element: HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement): HTMLDivElement;

@@ -1,9 +1,11 @@
 import { button } from '../entities/form/button';
 import { ElementStrategy } from './ElementEstrategy';
+import { Popup } from '../popup/popup';
 export declare class Button {
-    private popup;
     private callbackReaload;
-    constructor(callbackReaload: () => void);
+    popup: Popup;
+    P: string;
+    constructor(callbackReaload: () => void, popup: Popup, P: string);
     elementStrategy: ElementStrategy;
     buttonIsNotDefault(target: string): boolean;
     createButtonOrLink(button: button): HTMLButtonElement | HTMLAnchorElement;

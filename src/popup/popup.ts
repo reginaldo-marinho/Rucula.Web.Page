@@ -32,7 +32,7 @@ export class Popup {
     boxShow!:HTMLElement;
 
     boxShowAppendChield(element:HTMLElement){
-        this.boxShow = document.querySelector('.r-box-show') as HTMLElement
+        this.boxShow = document.getElementById(`${this.prefix}r-box-show`) as HTMLElement
         this.boxShow.appendChild(element)
         this.boxShow.classList.add('r-box-show-center')
     }

@@ -18,6 +18,8 @@ type configCommon = {
     disableadHeader?: boolean;
 };
 export declare class Popup {
+    private prefix;
+    constructor(prefix: string);
     boxShow: HTMLElement;
     boxShowAppendChield(element: HTMLElement): void;
     messageElement(config: config): HTMLDivElement;

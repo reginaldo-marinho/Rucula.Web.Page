@@ -173,10 +173,641 @@ let menuContext = (() => {
     };
 })();
 
+class WindowBaseDOM {
+    fieldMenuContext;
+    P;
+    constructor(fieldMenuContext, prefix) {
+        this.fieldMenuContext = fieldMenuContext;
+        this.P = prefix;
+    }
+    elementRoot;
+    createWindowBase(id) {
+        const ruculaWindow = document.createElement("div");
+        ruculaWindow.classList.add("r-w");
+        const actions = this.componentActions();
+        ruculaWindow.appendChild(actions);
+        const contentForm = this.createComponentCreateOrEdit();
+        ruculaWindow.appendChild(contentForm.childNodes[0]);
+        ruculaWindow.appendChild(contentForm.childNodes[1]);
+        const div = document.getElementById(id);
+        div?.appendChild(ruculaWindow);
+        calculateHeightRuculaWindow();
+        this.prepareEventsButtonsCrud();
+        this.maximizeWindow();
+        this.eraseWindow();
+        this.alterTheme();
+        this.openActionswindow();
+        this.actionCrudpreventDefault();
+        menuContext.init();
+        this.fieldMenuContext.init();
+        function calculateHeightRuculaWindow() {
+            let offsetTop = Number(ruculaWindow.offsetTop);
+            let height = Number(window.innerHeight);
+            ruculaWindow.style.height = `${height - offsetTop}px`;
+        }
+    }
+    createNameWindow(name) {
+        let window = document.querySelector(".r-w-t");
+        window.innerHTML = name;
+    }
+    componentActions() {
+        const actions = document.createElement("div");
+        actions.className = "r-left-block";
+        const ACTIONS = `<div class="r-act" id="${this.P}actions">
+                <div class="r-act-opt r-head" id="${this.P}w-title">
+                    <button id="${this.P}${constIdBaseWindow.NEW}" class="r-a-b r-btn-new-cancel-close"><i class="bi bi-plus-lg"></i></button>
+                    <div class="r-w-t">
+                    </div>
+                    <button id="${this.P}r-a-many" class="r-a-b"><i class="bi bi-list"></i></button>
+                </div>
+                <div class="r-left-block-grid" id="${this.P}w-grid">
+                    <form class="searh-items-grid" id="${this.P}${constPagination.FIND}" autocomplete=off>
+                        <input name="r-find-value" type="text"/>
+                        <button><i class="bi bi-search"></i></button>
+                    </form>
+                    <div class="r-act-grid-body">
+                    </div>
+                    <div class="r-act-grid-footer" id="${this.P}r-act-grid-footer">
+                        <div>
+                            <span>N. Linha</span>
+                            <select id="${this.P}${constPagination.ROW_NUMBER}" name="len-page">
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                                <option value="1000">1000</option>
+                            </select>
+                        </div>
+                         <div>
+                            <button id="${this.P}${constPagination.FIRST}" class="r-a-b"><i class="bi bi-arrow-up"></i></button>
+                            <button id="${this.P}${constPagination.LAST}" class="r-a-b"><i class="bi bi-arrow-down"></i></button>
+                            <button id="${this.P}${constPagination.PREVIOUS}" class="r-a-b"><i class="bi bi-arrow-left"></i></button>
+                            <button id="${this.P}${constPagination.NEXT}" class="r-a-b"><i class="bi bi-arrow-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+             </div>`;
+        actions.innerHTML = ACTIONS;
+        return actions.cloneNode(true);
+    }
+    createComponentCreateOrEdit() {
+        const contentForm = document.createElement("div");
+        const CREATE_OR_EDIT = `<div class="container-r-f  js-open-close-container">
+            <div class="r-act-opt r-head" id="${this.P}w-title">
+            </div>
+            <div class="r-f-items r-f-home">
+                <div class="r-f-home-round">
+                    <i id="${this.P}r-f-home-icon"class="bi" ></i>
+                </div>
+                <h3 id="${this.P}r-f-home-title"></h3>
+            </div>
+        </div>
+        <div autocomplete="off" class="r-f container-r-f r-display-none js-open-close-container">
+           
+        <div class="r-facede-action top">
+            <div class="r-window-name r-facede-action top">
+                <h3 class="${constIdBaseWindow.TITLE}"></h3>
+            </div>
+            <div class="r-head r-read-new r-facede-action top">
+               
+                <div style="z-index: 10;">
+                    <button id="${this.P}${constIdBaseWindow.ACTIONS_WINDOW}" class="r-a-b r-actions-window"><i class="bi bi-nut"></i></button>
+                    <div class="r-display-inline-block r-actions-window r-actions-window-itens">
+                        <div class="r-display-inline-block">
+                            <button id="${this.P}${constIdBaseWindow.MAXIMIZE_WINDOW}" class="r-a-b"><i class="bi bi-arrows"></i></button>
+                            <button id="${this.P}${constIdBaseWindow.RELOAD}" class="r-a-b "><i class="bi bi-arrow-repeat"></i></button>
+                            <button id="${this.P}${constIdBaseWindow.ERASE_WINDOW}" class="r-a-b "><i class="bi bi-eraser"></i></button>
+                            <button id="${this.P}${constIdBaseWindow.ALTER_THEME}" class="r-a-b "><i class="bi bi-circle-half"></i></button>
+                        </div>
+                        <div class="actions-view">
+                            <button id="${this.P}${constIdBaseWindow.GLOBALIZATION}" class="r-a-b">
+                                <i class="bi bi-globe-americas"></i>
+                                <ol id="${this.P}${constIdBaseWindow.OLLI_GLOBALIZATION}" class="${constIdBaseWindow.OLLI_GLOBALIZATION} list-vertical-buttons list-vertical-buttons-pp-left r-display-none">
+                                </ol>                        
+                            </button> 
+                            <button id="${this.P}${constIdBaseWindow.ENVIROMENT}" class="r-a-b">
+                                <div class="desc-environment"><i class="bi bi-fire"></i> <span class="description"></span> </div>
+                                <ol id="${this.P}${constIdBaseWindow.OLLI_ENVIROMENT}" class="${constIdBaseWindow.OLLI_ENVIROMENT} list-vertical-buttons list-vertical-buttons-pp-left r-display-none">
+                                </ol>                        
+                            </button>    
+                        </div>
+                    </div>
+                </div>
+                 <div class="r-display-inline-block">
+                        <button id="${this.P}${constIdBaseWindow.FAVORITE}" class="r-a-b"><i class="bi bi-star-fill"></i></button>
+                        <button id="${this.P}${constIdBaseWindow.CHAT}" class="r-a-b"><i class="bi bi-chat-dots"></i></button>
+                        <button id="${this.P}${constIdBaseWindow.USER}" class="r-a-b"><i class="bi bi-person-circle"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="r-w-body">
+                <form class="r-window-work" autocomplete="off">
+                    <div class="r-head r-read-edit r-facede-action-crud" id="${this.P}r-facede-action-crud">
+                        <h3 id="${this.P}${constIdBaseWindow.FRAME_INFO}">                        
+                        </h3>                        
+                        <div>                        
+                            <button id="${this.P}r-a-save" class="r-a-b "><i class="bi bi-box-arrow-in-down"></i></button>
+                            <button id="${this.P}r-a-alter" class="r-a-b"><i class="bi bi-pen"></i></button>
+                            <button id="${this.P}r-a-delete" class="r-a-b"><i class="bi bi-trash"></i></button>    
+                            <button id="${this.P}r-a-reload" class="r-a-b "><i class="bi bi-arrow-repeat"></i></button>
+                            <button id="${this.P}erase-window" class="r-a-b "><i class="bi bi-eraser"></i></button>
+                            <button id="${this.P}r-a-menu-vertical" class="r-a-b"><i class="bi bi-arrows"></i></button>    
+                        </div>
+                    </div>
+                    <div class="r-f-work r-f-items" id="${this.P}${constIdBaseWindow.FORM_RUCULA_JS}">
+                    </div>
+                </form>
+                <div class="r-vertical-actions">
+                    <ol id=${this.P}${constIdBaseWindow.BUTTONS_MENU_VERTICAL_LIST} class=""> 
+                    </ol>
+                    <button id=${this.P}${constIdBaseWindow.BUTTONS_MENU_VERTICAL_MOBILE} class="r-a-b actions-mobile"><i class="bi bi-arrows"></i></button>    
+                </div>
+            </div>
+            <div class="r-facede-action bottom">
+            </div>
+            <div class="r-box-show" id="${this.P}r-box-show"> 
+            </div>
+        </div>
+        `;
+        contentForm.innerHTML = CREATE_OR_EDIT;
+        return contentForm.cloneNode(true);
+    }
+    prepareEventsButtonsCrud() {
+        let rNew = document.getElementById(`${this.P}${constIdBaseWindow.NEW}`);
+        let framesOn = cookie.read("frames-on");
+        if (framesOn != "false") {
+            openClose();
+        }
+        rNew.addEventListener("click", () => {
+            let value = cookie.read("frames-on") == "true";
+            document.cookie = `frames-on=${!value}`;
+            this.openCloseContainer();
+            openClose();
+        });
+        function openClose() {
+            rNew.classList.toggle("r-btn-new-convert-close");
+            rNew.classList.toggle("r-btn-new-cancel-close");
+        }
+    }
+    openCloseContainer() {
+        let itemContainer = document.querySelectorAll(".js-open-close-container");
+        itemContainer.forEach(item => {
+            item.classList.toggle("r-display-none");
+        });
+    }
+    closeLeftGrid(grid) {
+        if (grid == false) {
+            let rf = document.querySelector('.r-f.r-display-none');
+            if (rf != null) {
+                let buttonNew = document.getElementById(`${this.P}${constIdBaseWindow.NEW}`);
+                buttonNew?.click();
+            }
+            let actions = document.getElementById(`${this.P}actions`);
+            actions?.remove();
+            let maximizeWindow = document.getElementById(`${this.P}${constIdBaseWindow.MAXIMIZE_WINDOW}`);
+            maximizeWindow?.remove();
+        }
+    }
+    maximizeWindow() {
+        let maximize = document.getElementById(`${this.P}${constIdBaseWindow.MAXIMIZE_WINDOW}`);
+        maximize?.addEventListener('click', () => {
+            let actions = document.getElementById("actions");
+            actions?.classList.toggle("r-close-grid");
+        });
+    }
+    eraseWindow() {
+        let erase = document.getElementById(`${this.P}${constIdBaseWindow.ERASE_WINDOW}`);
+        let form = this.getPrincipalElementRucula();
+        erase?.addEventListener('click', () => {
+            form.reset();
+        });
+    }
+    actionCrudpreventDefault() {
+        let facedeActionCrud = document.getElementById(`${this.P}r-facede-action-crud`);
+        facedeActionCrud?.addEventListener('click', (e) => e.preventDefault());
+    }
+    openActionswindow() {
+        let actions = document.getElementById(`${this.P}${constIdBaseWindow.ACTIONS_WINDOW}`);
+        actions?.addEventListener('click', (e) => {
+            actions?.nextElementSibling?.classList.toggle('r-actions-window-active');
+            actions?.nextElementSibling?.classList.toggle('r-actions-window');
+        });
+    }
+    alterTheme() {
+        let rw = document.querySelector('.r-w');
+        let actions = document.getElementById(`${this.P}${constIdBaseWindow.ALTER_THEME}`);
+        let theme = cookie.read('theme');
+        if (theme == 'dark') {
+            rw?.classList.add('dark-theme');
+        }
+        actions?.addEventListener('click', (e) => {
+            rw?.classList.toggle('dark-theme');
+            if (rw?.classList.contains('dark-theme')) {
+                document.cookie = "theme=dark";
+            }
+            else {
+                document.cookie = "theme=light";
+            }
+        });
+    }
+    setElementRoot(id) {
+        this.elementRoot = document.getElementById(id);
+    }
+    getElementRoot() {
+        return this.elementRoot;
+    }
+    getPrincipalElementRucula() {
+        return document.getElementById(`${this.P}${constIdBaseWindow.FORM_RUCULA_JS}`);
+    }
+}
+
+let ruculaGlobal = (() => {
+    let configuration;
+    function checkLocalizations(localizations) {
+        if (localizations.length == 0) {
+            throw new Error("🌿 localization must be informed");
+        }
+    }
+    function checkEnvironments(environments) {
+        if (environments.length == 0) {
+            throw new Error("🌿 environment must be informed");
+        }
+    }
+    return {
+        initGlobalConfiguration: function (config) {
+            configuration = config;
+            ruculaGlobal.setEnviroment();
+            ruculaGlobal.setLocalization();
+        },
+        setLocalization: function (locales = 0) {
+            checkLocalizations(configuration.localizations);
+            if (typeof locales === "number") {
+                configuration.chosenLocalization = configuration.localizations[0];
+                return;
+            }
+            let loc = configuration.localizations.find(c => c.locales === locales);
+            if (loc == undefined || loc == null) {
+                throw new Error("🌿 localization not found");
+            }
+            configuration.chosenLocalization = loc;
+        },
+        setEnviroment: function (enviroment = 0) {
+            checkEnvironments(configuration.environments);
+            if (typeof enviroment === "number") {
+                configuration.chosenEnvironment = configuration.environments[0];
+                return;
+            }
+            let env = configuration.environments.find(c => c.env === enviroment);
+            if (env == undefined || env == null) {
+                throw new Error("🌿 environment not found");
+            }
+            configuration.chosenEnvironment = env;
+        },
+        getEnvironment: function () {
+            return configuration.chosenEnvironment;
+        },
+        getLocalization: function () {
+            return configuration.chosenLocalization;
+        },
+        getConfigurationGlobal: function () {
+            return configuration;
+        }
+    };
+})();
+
+class URLRucula {
+    _URL;
+    managmentObject;
+    constructor(managmentObject, URL) {
+        this._URL = URL;
+        this.managmentObject = managmentObject;
+    }
+    getURL() {
+        if (this._URL == undefined) {
+            return this.domain();
+        }
+        let URL = this._URL;
+        if (URL?.absolute?.length > 0) {
+            let url = this.path(URL.absolute);
+            return url;
+        }
+        let url = this.domain();
+        if (URL?.relative?.length > 0) {
+            let path = this.path(URL.relative);
+            url = `${url}/${path}`;
+        }
+        let params = '';
+        if (URL?.params?.length > 0) {
+            params = this.path(URL.params);
+            url = `${url}?${params}`;
+            return url;
+        }
+        return url;
+    }
+    domain(env = '') {
+        ruculaGlobal.getEnvironment();
+        let enviroment = ruculaGlobal.getEnvironment();
+        if (enviroment.port) {
+            return `${enviroment.hostname}:${enviroment.port}`;
+        }
+        return `${enviroment.hostname}`;
+    }
+    path(path) {
+        path = this.createWithParams(path);
+        path = this.createWithoutParams(path);
+        return path;
+    }
+    createWithParams(path) {
+        var regex = /([^&]+=)({([^}&]+)})/g;
+        var matches = path.matchAll(regex);
+        for (const match of matches) {
+            var propertValue = match[3];
+            var value = this.managmentObject.getPropert(propertValue);
+            path = path.replace(match[0], `${match[1]}${value}`);
+        }
+        return path;
+    }
+    createWithoutParams(path) {
+        var regex = /\/{([^}&]+)}/gm;
+        var matches = path.matchAll(regex);
+        for (const match of matches) {
+            var propertValue = match[1];
+            var value = this.managmentObject.getPropert(propertValue);
+            path = path.replace(match[0], `/${value}`);
+        }
+        return path;
+    }
+}
+
+class EventButton {
+    field;
+    managmentObject;
+    windowBaseDOM;
+    P;
+    constructor(field, managmentObject, windowBaseDOM, P) {
+        this.field = field;
+        this.managmentObject = managmentObject;
+        this.windowBaseDOM = windowBaseDOM;
+        this.P = P;
+    }
+    eventButton(pathController, buttons) {
+        let rucula = this.windowBaseDOM.getElementRoot();
+        buttons?.filter(b => b.type === "button")
+            .forEach((button) => {
+            let element = document?.getElementById(`${this.P}${button.target}`);
+            let object = {
+                detail: {
+                    url: '',
+                    body: {}
+                }
+            };
+            let dependency = {
+                detail: {}
+            };
+            let eventButton = new CustomEvent(`${button.target}`, object);
+            let eventButtonDependency = new CustomEvent(`${button.target}.dependency`, dependency);
+            element?.addEventListener("click", () => {
+                let dependencyCount = this.managmentObject.tableDependency.dependenciesCount();
+                if (dependencyCount > 0) {
+                    this.field.focusFieldsWithDependency();
+                    rucula.dispatchEvent(eventButtonDependency);
+                    return;
+                }
+                if (button.URL) {
+                    let url = new URLRucula(this.managmentObject, button.URL);
+                    object.detail.url = url.getURL();
+                }
+                let option = button?.body;
+                if (option == undefined) {
+                    rucula.dispatchEvent(eventButton);
+                    return;
+                }
+                if (option == '') {
+                    object.detail.body = this.managmentObject.objectSeparate();
+                }
+                if (option == '.') {
+                    object.detail.body = this.managmentObject.objectFull();
+                }
+                if (['', '.', undefined].find(c => c != option) == undefined) {
+                    object.detail.body = this.managmentObject.objectUnique(option);
+                }
+                rucula.dispatchEvent(eventButton);
+            });
+        });
+    }
+    openCloseRightListButtons() {
+        const openClose = document.getElementById(`${this.P}r-a-menu-vertical`);
+        const listRight = document.querySelector(".r-vertical-actions");
+        const openClosemobile = document.getElementById(`${this.P}${constIdBaseWindow.BUTTONS_MENU_VERTICAL_MOBILE}`);
+        openClose?.addEventListener("click", () => {
+            listRight?.classList.toggle("r-display-none");
+        });
+        openClosemobile?.addEventListener("click", () => {
+            listRight?.classList.toggle("r-display-none");
+        });
+    }
+}
+
+let configWindow = (() => {
+    let _window;
+    return {
+        set: (window) => {
+            if (_window) {
+                return;
+            }
+            _window = window;
+        },
+        get: () => {
+            return _window;
+        },
+        frame: {
+            get: (identity) => {
+                return _window.frames.find(c => c.identity == identity);
+            }
+        }
+    };
+})();
+
+let defaultValues = (() => {
+    const configFrameDefault = {
+        TYPE_FRAME: constTypeFrame.BLOCK,
+        VERTICAL: true,
+        REQUERID: true
+    };
+    const configInputDefault = {
+        TYPE: constTypeInput.TEXT,
+        REQUERID_TRUE: true,
+        REQUERID_FALSE: false,
+        DISABLE: false
+    };
+    function setDefaultFrame(frame) {
+        frame.type ??= configFrameDefault.TYPE_FRAME;
+        frame.vertical ??= configFrameDefault.VERTICAL;
+        frame.requerid ??= configFrameDefault.REQUERID;
+    }
+    function setDefaultInput(field) {
+        field.type ??= configInputDefault.TYPE;
+        field.disable ??= configInputDefault.DISABLE;
+        field.requerid ??= configInputDefault.REQUERID_FALSE;
+    }
+    return {
+        setDefault: (window) => {
+            window.grid ??= true;
+            window.gridFooter ??= true;
+            window.gridSearch ??= true;
+            window.frames.forEach(frame => {
+                setDefaultFrame(frame);
+                frame.fields?.forEach(field => {
+                    setDefaultInput(field);
+                });
+            });
+        }
+    };
+})();
+
+class LayoutFrame {
+    windowBaseDOM;
+    P;
+    constructor(windowBaseDOM, P) {
+        this.windowBaseDOM = windowBaseDOM;
+        this.P = P;
+    }
+    configureLayout(window) {
+        if (window.layout.items === undefined) {
+            return;
+        }
+        let rowLength = window.layout.items.length;
+        let colLength = window.layout.items[0].length;
+        window.layout.tamplateColumns = colLength;
+        window.layout.tamplateRow = rowLength;
+        this.setGridContainer(window.layout.tamplateColumns, window.layout.tamplateRow);
+        for (let row = 1; row <= rowLength; row++) {
+            for (let col = 1; col <= colLength; col++) {
+                let item = window.frames.find(c => c.alias == window.layout.items[row - 1][col - 1]);
+                if (item == undefined) {
+                    continue;
+                }
+                if (item.layout === undefined) {
+                    item.layout = { row: { start: -1, end: -1 }, col: { start: -1, end: -1 } };
+                }
+                if (item.layout.row.start === -1) {
+                    item.layout.row.start = row;
+                }
+                if (item.layout.col.start === -1) {
+                    item.layout.col.start = col;
+                }
+                item.layout.row.end = row + 1;
+                item.layout.col.end = col + 1;
+            }
+        }
+    }
+    setGridContainer(tamplateColumns, tamplateRows) {
+        let form = this.windowBaseDOM.getPrincipalElementRucula();
+        form.style.gridTemplateColumns = `repeat(${tamplateColumns},1fr)`;
+        form.style.gridTemplateRows = `repeat(${tamplateRows},1fr )`;
+    }
+}
+
+class ButtonsBase {
+    buttonCreate;
+    buttonAlter;
+    buttonDelete;
+    buttonsPlus;
+    olButtonsPlus;
+    P;
+    constructor(P) {
+        this.P = P;
+    }
+    initButtonsTypeCrudDefault() {
+        this.buttonCreate = document.getElementById(`${this.P}${constTargetButtonCrudDefault.SAVE}`);
+        this.buttonAlter = document.getElementById(`${this.P}${constTargetButtonCrudDefault.ALTER}`);
+        this.buttonDelete = document.getElementById(`${this.P}${constTargetButtonCrudDefault.DELETE}`);
+    }
+    initButtonPlus() {
+        this.buttonsPlus = document.getElementById(`${this.P}${constIdBaseWindow.BUTTONS_MENU_VERTICAL}`);
+        this.olButtonsPlus = document.getElementById(`${this.P}${constIdBaseWindow.BUTTONS_MENU_VERTICAL_LIST}`);
+        if (this.olButtonsPlus.querySelectorAll("button,a").length == 0) {
+            this.buttonsPlus.remove();
+            this.olButtonsPlus.remove();
+        }
+    }
+    clickCreate() {
+        this.buttonCreate.click();
+    }
+    clickAlter() {
+        this.buttonAlter.click();
+    }
+    clickDelete() {
+        this.buttonDelete.click();
+    }
+    removeCreate() {
+        this.buttonCreate.remove();
+    }
+    removeAlter() {
+        this.buttonAlter.remove();
+    }
+    removeDelete() {
+        this.buttonDelete.remove();
+    }
+    crud(crud) {
+        if (crud == "" || crud == undefined) {
+            this.buttonCreate.remove();
+            this.buttonAlter.remove();
+            this.buttonDelete.remove();
+            return;
+        }
+        let options = "crud";
+        for (let index = 0; index < crud.length; index++) {
+            let indexof = options.indexOf(crud[index]);
+            options = options.replace(options[indexof], "");
+        }
+        if (options.length < 1 || (options.length == 1 && options[0] == "r")) {
+            return;
+        }
+        for (let index = 0; index < options.length; index++) {
+            if (options[index] == "c") {
+                this.buttonCreate.remove();
+            }
+            if (options[index] == "u") {
+                this.buttonAlter.remove();
+            }
+            if (options[index] == "d") {
+                this.buttonDelete.remove();
+            }
+        }
+    }
+}
+
+let loaderManagment = (() => {
+    let loaderBkp = document.createElement('div');
+    let loaderElement = document.createElement('div');
+    loaderElement.classList.add('r-loader');
+    loaderElement.classList.add('js-r-loader');
+    loaderElement.classList.add('r-item-center');
+    let boxShow;
+    return {
+        enable: function () {
+            boxShow = document.getElementById('r-box-show');
+            boxShow?.classList.add('r-box-show-center');
+            boxShow?.appendChild(loaderElement);
+        },
+        disable: function () {
+            let loader = document.querySelector('.js-r-loader');
+            loaderBkp.appendChild(loader);
+            boxShow?.classList.remove('r-box-show-center');
+        }
+    };
+})();
+
 class Popup {
+    prefix;
+    constructor(prefix) {
+        this.prefix = prefix;
+    }
     boxShow;
     boxShowAppendChield(element) {
-        this.boxShow = document.querySelector('.r-box-show');
+        this.boxShow = document.getElementById(`${this.prefix}r-box-show`);
         this.boxShow.appendChild(element);
         this.boxShow.classList.add('r-box-show-center');
     }
@@ -322,687 +953,6 @@ class Popup {
     }
 }
 
-let fieldMenuContext = (() => {
-    let fieldsInfo = [];
-    let lastDetail;
-    let popup = new Popup();
-    return {
-        init: function () {
-            let menuOInput = document.getElementById(contextMenu.INPUT);
-            menuOInput?.addEventListener('click', () => {
-                if (lastDetail) {
-                    lastDetail.remove();
-                }
-                let ol = document.createElement('ol');
-                lastDetail = ol;
-                let identity = menuContext.elemetInFocu().getAttribute('identity');
-                let field = fieldMenuContext.info.get(identity)?.field;
-                let details = `  
-                <table>
-                    <tr>
-                        <td>Descrição</td>
-                        <td>${field?.description ?? ''}</td>
-                    </tr>
-                    <tr>
-                        <td>Propriedade</td>
-                        <td>${field?.propertDto}</td>
-                    </tr>
-                    <tr>
-                        <td>Obrigatório</td>
-                        <td><input type="checkbox" ${(field?.requerid ?? false) == true ? 'checked' : ''} disabled/></td>
-                    </tr>
-                    <tr>
-                        <td>Desabilitado</td>
-                        <td><input type="checkbox" ${(field?.disable ?? false) == true ? 'checked' : ''} disabled/></td>
-                    </tr>
-                    <tr>
-                        <td>Máximo</td>
-                        <td>${field?.max ?? 0}</td>
-                    </tr>
-                    <tr>
-                        <td>Minimo</td>
-                        <td>${field?.min ?? 0}</td>
-                    </tr>
-                    <tr>
-                        <td>Comprimento</td>
-                        <td>${field?.maxLength ?? 0}</td>
-                    </tr>
-                    <tr>
-                        <td>Informação</td>
-                        <td>${field?.information ?? ''}</td>
-                    </tr>
-              </table>
-            `;
-                ol.innerHTML = details;
-                popup.info({
-                    text: 'Detalhamento',
-                    htmlBody: ol
-                });
-            });
-        },
-        info: {
-            set: function (fieldInfo) {
-                fieldsInfo.push(fieldInfo);
-            },
-            get: function (identity) {
-                return fieldsInfo.find(c => c.identity == identity);
-            }
-        }
-    };
-})();
-
-let windowBaseDOM = (() => {
-    let elementRoot;
-    function createWindowBase(id) {
-        const ruculaWindow = document.createElement("div");
-        ruculaWindow.classList.add("r-w");
-        const actions = componentActions();
-        ruculaWindow.appendChild(actions);
-        const contentForm = createComponentCreateOrEdit();
-        ruculaWindow.appendChild(contentForm.childNodes[0]);
-        ruculaWindow.appendChild(contentForm.childNodes[1]);
-        const div = document.getElementById(id);
-        div?.appendChild(ruculaWindow);
-        calculateHeightRuculaWindow();
-        prepareEventsButtonsCrud();
-        maximizeWindow();
-        eraseWindow();
-        alterTheme();
-        openActionswindow();
-        actionCrudpreventDefault();
-        menuContext.init();
-        fieldMenuContext.init();
-        function calculateHeightRuculaWindow() {
-            let offsetTop = Number(ruculaWindow.offsetTop);
-            let height = Number(window.innerHeight);
-            ruculaWindow.style.height = `${height - offsetTop}px`;
-        }
-    }
-    function createNameWindow(name) {
-        let window = document.querySelector(".r-w-t");
-        window.innerHTML = name;
-    }
-    function componentActions() {
-        const actions = document.createElement("div");
-        actions.className = "r-left-block";
-        const ACTIONS = `<div class="r-act" id="actions">
-                <div class="r-act-opt r-head" id="w-title">
-                    <button id="${constIdBaseWindow.NEW}" class="r-a-b r-btn-new-cancel-close"><i class="bi bi-plus-lg"></i></button>
-                    <div class="r-w-t">
-                    </div>
-                    <button id="r-a-many" class="r-a-b"><i class="bi bi-list"></i></button>
-                </div>
-                <div class="r-left-block-grid" id="w-grid">
-                    <form class="searh-items-grid" id="${constPagination.FIND}" autocomplete=off>
-                        <input name="r-find-value" type="text"/>
-                        <button><i class="bi bi-search"></i></button>
-                    </form>
-                    <div class="r-act-grid-body">
-                    </div>
-                    <div class="r-act-grid-footer" id="r-act-grid-footer">
-                        <div>
-                            <span>N. Linha</span>
-                            <select id="${constPagination.ROW_NUMBER}" name="len-page">
-                                <option value="10">10</option>
-                                <option value="25">25</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                                <option value="1000">1000</option>
-                            </select>
-                        </div>
-                         <div>
-                            <button id="${constPagination.FIRST}" class="r-a-b"><i class="bi bi-arrow-up"></i></button>
-                            <button id="${constPagination.LAST}" class="r-a-b"><i class="bi bi-arrow-down"></i></button>
-                            <button id="${constPagination.PREVIOUS}" class="r-a-b"><i class="bi bi-arrow-left"></i></button>
-                            <button id="${constPagination.NEXT}" class="r-a-b"><i class="bi bi-arrow-right"></i></button>
-                        </div>
-                    </div>
-                </div>
-             </div>`;
-        actions.innerHTML = ACTIONS;
-        return actions.cloneNode(true);
-    }
-    function createComponentCreateOrEdit() {
-        const contentForm = document.createElement("div");
-        const CREATE_OR_EDIT = `<div class="container-r-f  js-open-close-container">
-            <div class="r-act-opt r-head" id="w-title">
-            </div>
-            <div class="r-f-items r-f-home">
-                <div class="r-f-home-round">
-                    <i id="r-f-home-icon"class="bi" ></i>
-                </div>
-                <h3 id="r-f-home-title"></h3>
-            </div>
-        </div>
-        <div autocomplete="off" class="r-f container-r-f r-display-none js-open-close-container">
-           
-        <div class="r-facede-action top">
-            <div class="r-window-name r-facede-action top">
-                <h3 class="${constIdBaseWindow.TITLE}"></h3>
-            </div>
-            <div class="r-head r-read-new r-facede-action top">
-               
-                <div style="z-index: 10;">
-                    <button id="${constIdBaseWindow.ACTIONS_WINDOW}" class="r-a-b r-actions-window"><i class="bi bi-nut"></i></button>
-                    <div class="r-display-inline-block r-actions-window r-actions-window-itens">
-                        <div class="r-display-inline-block">
-                            <button id="${constIdBaseWindow.MAXIMIZE_WINDOW}" class="r-a-b"><i class="bi bi-arrows"></i></button>
-                            <button id="${constIdBaseWindow.RELOAD}" class="r-a-b "><i class="bi bi-arrow-repeat"></i></button>
-                            <button id="${constIdBaseWindow.ERASE_WINDOW}" class="r-a-b "><i class="bi bi-eraser"></i></button>
-                            <button id="${constIdBaseWindow.ALTER_THEME}" class="r-a-b "><i class="bi bi-circle-half"></i></button>
-                        </div>
-                        <div class="actions-view">
-                            <button id="${constIdBaseWindow.GLOBALIZATION}" class="r-a-b">
-                                <i class="bi bi-globe-americas"></i>
-                                <ol id="${constIdBaseWindow.OLLI_GLOBALIZATION}" class="${constIdBaseWindow.OLLI_GLOBALIZATION} list-vertical-buttons list-vertical-buttons-pp-left r-display-none">
-                                </ol>                        
-                            </button> 
-                            <button id="${constIdBaseWindow.ENVIROMENT}" class="r-a-b">
-                                <div class="desc-environment"><i class="bi bi-fire"></i> <span class="description"></span> </div>
-                                <ol id="${constIdBaseWindow.OLLI_ENVIROMENT}" class="${constIdBaseWindow.OLLI_ENVIROMENT} list-vertical-buttons list-vertical-buttons-pp-left r-display-none">
-                                </ol>                        
-                            </button>    
-                        </div>
-                    </div>
-                </div>
-                 <div class="r-display-inline-block">
-                        <button id="${constIdBaseWindow.FAVORITE}" class="r-a-b"><i class="bi bi-star-fill"></i></button>
-                        <button id="${constIdBaseWindow.CHAT}" class="r-a-b"><i class="bi bi-chat-dots"></i></button>
-                        <button id="${constIdBaseWindow.USER}" class="r-a-b"><i class="bi bi-person-circle"></i></button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="r-w-body">
-                <form class="r-window-work" autocomplete="off">
-                    <div class="r-head r-read-edit r-facede-action-crud" id="r-facede-action-crud">
-                        <h3 id="${constIdBaseWindow.FRAME_INFO}">                        
-                        </h3>                        
-                        <div>                        
-                            <button id="r-a-save" class="r-a-b "><i class="bi bi-box-arrow-in-down"></i></button>
-                            <button id="r-a-alter" class="r-a-b"><i class="bi bi-pen"></i></button>
-                            <button id="r-a-delete" class="r-a-b"><i class="bi bi-trash"></i></button>    
-                            <button id="r-a-reload" class="r-a-b "><i class="bi bi-arrow-repeat"></i></button>
-                            <button id="erase-window" class="r-a-b "><i class="bi bi-eraser"></i></button>
-                            <button id="r-a-menu-vertical" class="r-a-b"><i class="bi bi-arrows"></i></button>    
-                        </div>
-                    </div>
-                    <div class="r-f-work r-f-items" id="${constIdBaseWindow.FORM_RUCULA_JS}">
-                    </div>
-                </form>
-                <div class="r-vertical-actions">
-                    <ol id=${constIdBaseWindow.BUTTONS_MENU_VERTICAL_LIST} class=""> 
-                    </ol>
-                    <button id=${constIdBaseWindow.BUTTONS_MENU_VERTICAL_MOBILE} class="r-a-b actions-mobile"><i class="bi bi-arrows"></i></button>    
-                </div>
-            </div>
-            <div class="r-facede-action bottom">
-            </div>
-            <div class="r-box-show" id="r-box-show"> 
-            </div>
-        </div>
-        `;
-        contentForm.innerHTML = CREATE_OR_EDIT;
-        return contentForm.cloneNode(true);
-    }
-    function prepareEventsButtonsCrud() {
-        let rNew = document.getElementById(constIdBaseWindow.NEW);
-        let framesOn = cookie.read("frames-on");
-        if (framesOn != "false") {
-            openClose();
-        }
-        rNew.addEventListener("click", () => {
-            let value = cookie.read("frames-on") == "true";
-            document.cookie = `frames-on=${!value}`;
-            openClose();
-        });
-        function openClose() {
-            openCloseContainer();
-            rNew.classList.toggle("r-btn-new-convert-close");
-            rNew.classList.toggle("r-btn-new-cancel-close");
-        }
-    }
-    function openCloseContainer() {
-        let itemContainer = document.querySelectorAll(".js-open-close-container");
-        itemContainer.forEach(item => {
-            item.classList.toggle("r-display-none");
-        });
-    }
-    function closeLeftGrid(grid) {
-        if (grid == false) {
-            let rf = document.querySelector('.r-f.r-display-none');
-            if (rf != null) {
-                let buttonNew = document.getElementById(constIdBaseWindow.NEW);
-                buttonNew?.click();
-            }
-            let actions = document.getElementById("actions");
-            actions?.remove();
-            let maximizeWindow = document.getElementById(constIdBaseWindow.MAXIMIZE_WINDOW);
-            maximizeWindow?.remove();
-        }
-    }
-    function maximizeWindow() {
-        let maximize = document.getElementById(constIdBaseWindow.MAXIMIZE_WINDOW);
-        maximize?.addEventListener('click', () => {
-            let actions = document.getElementById("actions");
-            actions?.classList.toggle("r-close-grid");
-        });
-    }
-    function eraseWindow() {
-        let erase = document.getElementById(constIdBaseWindow.ERASE_WINDOW);
-        let form = windowBaseDOM.getPrincipalElementRucula();
-        erase?.addEventListener('click', () => {
-            form.reset();
-        });
-    }
-    function actionCrudpreventDefault() {
-        let facedeActionCrud = document.getElementById("r-facede-action-crud");
-        facedeActionCrud?.addEventListener('click', (e) => e.preventDefault());
-    }
-    function openActionswindow() {
-        let actions = document.getElementById(constIdBaseWindow.ACTIONS_WINDOW);
-        actions?.addEventListener('click', (e) => {
-            actions?.nextElementSibling?.classList.toggle('r-actions-window-active');
-            actions?.nextElementSibling?.classList.toggle('r-actions-window');
-        });
-    }
-    function alterTheme() {
-        let rw = document.querySelector('.r-w');
-        let actions = document.getElementById(constIdBaseWindow.ALTER_THEME);
-        let theme = cookie.read('theme');
-        if (theme == 'dark') {
-            rw?.classList.add('dark-theme');
-        }
-        actions?.addEventListener('click', (e) => {
-            rw?.classList.toggle('dark-theme');
-            if (rw?.classList.contains('dark-theme')) {
-                document.cookie = "theme=dark";
-            }
-            else {
-                document.cookie = "theme=light";
-            }
-        });
-    }
-    return {
-        createWindowBase: (id) => {
-            createWindowBase(id);
-        },
-        createNameWindow: (name) => {
-            createNameWindow(name);
-        },
-        setElementRoot: (id) => {
-            elementRoot = document.getElementById(id);
-        },
-        getElementRoot: () => {
-            return elementRoot;
-        },
-        getPrincipalElementRucula: () => {
-            return document.getElementById(constIdBaseWindow.FORM_RUCULA_JS);
-        },
-        closeLeftGrid: (grid) => closeLeftGrid(grid)
-    };
-})();
-
-let ruculaGlobal = (() => {
-    let configuration;
-    function checkLocalizations(localizations) {
-        if (localizations.length == 0) {
-            throw new Error("🌿 localization must be informed");
-        }
-    }
-    function checkEnvironments(environments) {
-        if (environments.length == 0) {
-            throw new Error("🌿 environment must be informed");
-        }
-    }
-    return {
-        initGlobalConfiguration: function (config) {
-            configuration = config;
-            ruculaGlobal.setEnviroment();
-            ruculaGlobal.setLocalization();
-        },
-        setLocalization: function (locales = 0) {
-            checkLocalizations(configuration.localizations);
-            if (typeof locales === "number") {
-                configuration.chosenLocalization = configuration.localizations[0];
-                return;
-            }
-            let loc = configuration.localizations.find(c => c.locales === locales);
-            if (loc == undefined || loc == null) {
-                throw new Error("🌿 localization not found");
-            }
-            configuration.chosenLocalization = loc;
-        },
-        setEnviroment: function (enviroment = 0) {
-            checkEnvironments(configuration.environments);
-            if (typeof enviroment === "number") {
-                configuration.chosenEnvironment = configuration.environments[0];
-                return;
-            }
-            let env = configuration.environments.find(c => c.env === enviroment);
-            if (env == undefined || env == null) {
-                throw new Error("🌿 environment not found");
-            }
-            configuration.chosenEnvironment = env;
-        },
-        getEnvironment: function () {
-            return configuration.chosenEnvironment;
-        },
-        getLocalization: function () {
-            return configuration.chosenLocalization;
-        },
-        getConfigurationGlobal: function () {
-            return configuration;
-        }
-    };
-})();
-
-class URLRucula {
-    _URL;
-    managmentObject;
-    constructor(managmentObject, URL) {
-        this._URL = URL;
-        this.managmentObject = managmentObject;
-    }
-    getURL() {
-        if (this._URL == undefined) {
-            return this.domain();
-        }
-        let URL = this._URL;
-        if (URL?.absolute?.length > 0) {
-            let url = this.path(URL.absolute);
-            return url;
-        }
-        let url = this.domain();
-        if (URL?.relative?.length > 0) {
-            let path = this.path(URL.relative);
-            url = `${url}/${path}`;
-        }
-        let params = '';
-        if (URL?.params?.length > 0) {
-            params = this.path(URL.params);
-            url = `${url}?${params}`;
-            return url;
-        }
-        return url;
-    }
-    domain(env = '') {
-        ruculaGlobal.getEnvironment();
-        let enviroment = ruculaGlobal.getEnvironment();
-        if (enviroment.port) {
-            return `${enviroment.hostname}:${enviroment.port}`;
-        }
-        return `${enviroment.hostname}`;
-    }
-    path(path) {
-        path = this.createWithParams(path);
-        path = this.createWithoutParams(path);
-        return path;
-    }
-    createWithParams(path) {
-        var regex = /([^&]+=)({([^}&]+)})/g;
-        var matches = path.matchAll(regex);
-        for (const match of matches) {
-            var propertValue = match[3];
-            var value = this.managmentObject.getPropert(propertValue);
-            path = path.replace(match[0], `${match[1]}${value}`);
-        }
-        return path;
-    }
-    createWithoutParams(path) {
-        var regex = /\/{([^}&]+)}/gm;
-        var matches = path.matchAll(regex);
-        for (const match of matches) {
-            var propertValue = match[1];
-            var value = this.managmentObject.getPropert(propertValue);
-            path = path.replace(match[0], `/${value}`);
-        }
-        return path;
-    }
-}
-
-class EventButton {
-    field;
-    managmentObject;
-    constructor(field, managmentObject) {
-        this.field = field;
-        this.managmentObject = managmentObject;
-    }
-    eventButton(pathController, buttons) {
-        let rucula = windowBaseDOM.getElementRoot();
-        buttons?.filter(b => b.type === "button")
-            .forEach((button) => {
-            let element = document?.getElementById(button.target);
-            let object = {
-                detail: {
-                    url: '',
-                    body: {}
-                }
-            };
-            let dependency = {
-                detail: {}
-            };
-            let eventButton = new CustomEvent(`${button.target}`, object);
-            let eventButtonDependency = new CustomEvent(`${button.target}.dependency`, dependency);
-            element?.addEventListener("click", () => {
-                let dependencyCount = this.managmentObject.tableDependency.dependenciesCount();
-                if (dependencyCount > 0) {
-                    this.field.focusFieldsWithDependency();
-                    rucula.dispatchEvent(eventButtonDependency);
-                    return;
-                }
-                if (button.URL) {
-                    let url = new URLRucula(this.managmentObject, button.URL);
-                    object.detail.url = url.getURL();
-                }
-                let option = button?.body;
-                if (option == undefined) {
-                    rucula.dispatchEvent(eventButton);
-                    return;
-                }
-                if (option == '') {
-                    object.detail.body = this.managmentObject.objectSeparate();
-                }
-                if (option == '.') {
-                    object.detail.body = this.managmentObject.objectFull();
-                }
-                if (['', '.', undefined].find(c => c != option) == undefined) {
-                    object.detail.body = this.managmentObject.objectUnique(option);
-                }
-                rucula.dispatchEvent(eventButton);
-            });
-        });
-    }
-    openCloseRightListButtons() {
-        const openClose = document.getElementById("r-a-menu-vertical");
-        const listRight = document.querySelector(".r-vertical-actions");
-        const openClosemobile = document.getElementById(constIdBaseWindow.BUTTONS_MENU_VERTICAL_MOBILE);
-        openClose?.addEventListener("click", () => {
-            listRight?.classList.toggle("r-display-none");
-        });
-        openClosemobile?.addEventListener("click", () => {
-            listRight?.classList.toggle("r-display-none");
-        });
-    }
-}
-
-let configWindow = (() => {
-    let _window;
-    return {
-        set: (window) => {
-            if (_window) {
-                return;
-            }
-            _window = window;
-        },
-        get: () => {
-            return _window;
-        },
-        frame: {
-            get: (identity) => {
-                return _window.frames.find(c => c.identity == identity);
-            }
-        }
-    };
-})();
-
-let defaultValues = (() => {
-    const configFrameDefault = {
-        TYPE_FRAME: constTypeFrame.BLOCK,
-        VERTICAL: true,
-        REQUERID: true
-    };
-    const configInputDefault = {
-        TYPE: constTypeInput.TEXT,
-        REQUERID_TRUE: true,
-        REQUERID_FALSE: false,
-        DISABLE: false
-    };
-    function setDefaultFrame(frame) {
-        frame.type ??= configFrameDefault.TYPE_FRAME;
-        frame.vertical ??= configFrameDefault.VERTICAL;
-        frame.requerid ??= configFrameDefault.REQUERID;
-    }
-    function setDefaultInput(field) {
-        field.type ??= configInputDefault.TYPE;
-        field.disable ??= configInputDefault.DISABLE;
-        field.requerid ??= configInputDefault.REQUERID_FALSE;
-    }
-    return {
-        setDefault: (window) => {
-            window.grid ??= true;
-            window.gridFooter ??= true;
-            window.gridSearch ??= true;
-            window.frames.forEach(frame => {
-                setDefaultFrame(frame);
-                frame.fields?.forEach(field => {
-                    setDefaultInput(field);
-                });
-            });
-        }
-    };
-})();
-
-class LayoutFrame {
-    configureLayout(window) {
-        if (window.layout.items === undefined) {
-            return;
-        }
-        let rowLength = window.layout.items.length;
-        let colLength = window.layout.items[0].length;
-        window.layout.tamplateColumns = colLength;
-        window.layout.tamplateRow = rowLength;
-        this.setGridContainer(window.layout.tamplateColumns, window.layout.tamplateRow);
-        for (let row = 1; row <= rowLength; row++) {
-            for (let col = 1; col <= colLength; col++) {
-                let item = window.frames.find(c => c.alias == window.layout.items[row - 1][col - 1]);
-                if (item == undefined) {
-                    continue;
-                }
-                if (item.layout === undefined) {
-                    item.layout = { row: { start: -1, end: -1 }, col: { start: -1, end: -1 } };
-                }
-                if (item.layout.row.start === -1) {
-                    item.layout.row.start = row;
-                }
-                if (item.layout.col.start === -1) {
-                    item.layout.col.start = col;
-                }
-                item.layout.row.end = row + 1;
-                item.layout.col.end = col + 1;
-            }
-        }
-    }
-    setGridContainer(tamplateColumns, tamplateRows) {
-        let form = windowBaseDOM.getPrincipalElementRucula();
-        form.style.gridTemplateColumns = `repeat(${tamplateColumns},1fr)`;
-        form.style.gridTemplateRows = `repeat(${tamplateRows},1fr )`;
-    }
-}
-
-let buttonsBase = (function () {
-    let buttonCreate;
-    let buttonAlter;
-    let buttonDelete;
-    let buttonsPlus;
-    let olButtonsPlus;
-    return {
-        initButtonsTypeCrudDefault: () => {
-            buttonCreate = document.getElementById(constTargetButtonCrudDefault.SAVE);
-            buttonAlter = document.getElementById(constTargetButtonCrudDefault.ALTER);
-            buttonDelete = document.getElementById(constTargetButtonCrudDefault.DELETE);
-        },
-        initButtonPlus: () => {
-            buttonsPlus = document.getElementById(constIdBaseWindow.BUTTONS_MENU_VERTICAL);
-            olButtonsPlus = document.getElementById(constIdBaseWindow.BUTTONS_MENU_VERTICAL_LIST);
-            if (olButtonsPlus.querySelectorAll("button,a").length == 0) {
-                buttonsPlus.remove();
-                olButtonsPlus.remove();
-            }
-        },
-        buttonsTypeCrud: {
-            click: {
-                create: () => buttonCreate.click(),
-                alter: () => buttonAlter.click(),
-                delete: () => buttonDelete.click()
-            },
-            remove: {
-                create: () => buttonCreate.remove(),
-                alter: () => buttonAlter.remove(),
-                delete: () => buttonDelete.remove()
-            },
-            crud: (crud) => {
-                if (crud == "" || crud == undefined) {
-                    buttonCreate.remove();
-                    buttonAlter.remove();
-                    buttonDelete.remove();
-                    return;
-                }
-                let options = "crud";
-                for (let index = 0; index < crud.length; index++) {
-                    let indexof = options.indexOf(crud[index]);
-                    options = options.replace(options[indexof], "");
-                }
-                if (options.length < 1 || (options.length == 1 && options[0] == "r")) {
-                    return;
-                }
-                for (let index = 0; index < options.length; index++) {
-                    if (options[index] == "c") {
-                        buttonCreate.remove();
-                    }
-                    if (options[index] == "u") {
-                        buttonAlter.remove();
-                    }
-                    if (options[index] == "d") {
-                        buttonDelete.remove();
-                    }
-                }
-            }
-        }
-    };
-})();
-
-let loaderManagment = (() => {
-    let loaderBkp = document.createElement('div');
-    let loaderElement = document.createElement('div');
-    loaderElement.classList.add('r-loader');
-    loaderElement.classList.add('js-r-loader');
-    loaderElement.classList.add('r-item-center');
-    let boxShow;
-    return {
-        enable: function () {
-            boxShow = document.getElementById('r-box-show');
-            boxShow?.classList.add('r-box-show-center');
-            boxShow?.appendChild(loaderElement);
-        },
-        disable: function () {
-            let loader = document.querySelector('.js-r-loader');
-            loaderBkp.appendChild(loader);
-            boxShow?.classList.remove('r-box-show-center');
-        }
-    };
-})();
-
 class RuculaLogs {
     managmentObject;
     constructor(managmentObject) {
@@ -1018,8 +968,10 @@ class RuculaLogs {
 
 class EventManagment {
     managmentObject;
-    constructor(managmentObject) {
+    windowBaseDOM;
+    constructor(managmentObject, windowBaseDOM) {
         this.managmentObject = managmentObject;
+        this.windowBaseDOM = windowBaseDOM;
     }
     getFieldDetails(event) {
         let identity = event.detail.identity;
@@ -1034,7 +986,7 @@ class EventManagment {
         };
     }
     on(event, callback, query) {
-        let rucula = windowBaseDOM.getElementRoot();
+        let rucula = this.windowBaseDOM.getElementRoot();
         if (query == undefined) {
             rucula.addEventListener(event, (e) => callback(e));
             return;
@@ -1046,73 +998,18 @@ class EventManagment {
     }
 }
 
-let paginationEvents = (function () {
-    return {
-        headerSearch: function (gridSearch) {
-            let search = document.getElementById(constPagination.FIND);
-            if (gridSearch == false) {
-                search?.remove();
-            }
-            let elementRoot = windowBaseDOM.getElementRoot();
-            let body = {
-                detail: {
-                    value: ''
-                }
-            };
-            let event = new CustomEvent('r-pagination-find', body);
-            search?.addEventListener('submit', (e) => {
-                e.preventDefault();
-                var formData = new FormData(e.target);
-                body.detail.value = String(formData.get('r-find-value'));
-                elementRoot.dispatchEvent(event);
-            });
-        },
-        fotter: function (gridFooter) {
-            if (gridFooter == false) {
-                document.getElementById('r-act-grid-footer')?.remove();
-            }
-            let elementRoot = windowBaseDOM.getElementRoot();
-            let pagination = {
-                detail: {
-                    page: ''
-                }
-            };
-            let event = new CustomEvent('r-pagination', pagination);
-            document.getElementById(constPagination.FIRST)?.addEventListener('click', () => dispatchEvent('first'));
-            document.getElementById(constPagination.LAST)?.addEventListener('click', () => dispatchEvent('last'));
-            document.getElementById(constPagination.PREVIOUS)?.addEventListener('click', () => dispatchEvent('previous'));
-            document.getElementById(constPagination.NEXT)?.addEventListener('click', () => dispatchEvent('next'));
-            function dispatchEvent(page) {
-                pagination.detail.page = page;
-                elementRoot.dispatchEvent(event);
-            }
-            let row = {
-                detail: {
-                    row: 0
-                }
-            };
-            let eventRow = new CustomEvent('r-pagination-row', row);
-            document.getElementById(constPagination.ROW_NUMBER)?.addEventListener('change', (e) => {
-                var select = e.target;
-                row.detail.row = Number(select.value);
-                elementRoot.dispatchEvent(eventRow);
-            });
-        }
-    };
-});
-
-let exportPaginationEvents = paginationEvents();
-
 class FrameElement {
     managmentObject;
     field;
     frameEvent;
     button;
-    constructor(managmentObject, field, frameEvent, button) {
+    fieldMenuContext;
+    constructor(managmentObject, field, frameEvent, button, fieldMenuContext) {
         this.managmentObject = managmentObject;
         this.field = field;
         this.frameEvent = frameEvent;
         this.button = button;
+        this.fieldMenuContext = fieldMenuContext;
     }
     createbase(frame) {
         const div = document.createElement('div');
@@ -1148,8 +1045,8 @@ class FrameElement {
 }
 
 class FrameElementBlock extends FrameElement {
-    constructor(managmentObject, field, frameEvent, button) {
-        super(managmentObject, field, frameEvent, button);
+    constructor(managmentObject, field, frameEvent, button, fieldMenuContext) {
+        super(managmentObject, field, frameEvent, button, fieldMenuContext);
     }
     create(frame) {
         this.managmentObject.configFieldBlock(frame);
@@ -1169,7 +1066,7 @@ class FrameElementBlock extends FrameElement {
             let fieldElement = this.field.create(field);
             let groupElement = this.field.createGroupOfInput(field, fieldElement);
             div.appendChild(groupElement);
-            fieldMenuContext.info.set({
+            this.fieldMenuContext.infoSet({
                 identity: field.identity,
                 field: field
             });
@@ -1251,12 +1148,14 @@ class FameLineTable {
     frameEvent;
     frameElementLine;
     callbackSetValuesDefined;
-    constructor(managmentObject, field, frameElementLine, frameEvent, callbackSetValuesDefined) {
+    fieldMenuContext;
+    constructor(managmentObject, field, frameElementLine, frameEvent, callbackSetValuesDefined, fieldMenuContext) {
         this.managmentObject = managmentObject;
         this.field = field;
         this.frameEvent = frameEvent;
         this.frameElementLine = frameElementLine;
         this.callbackSetValuesDefined = callbackSetValuesDefined;
+        this.fieldMenuContext = fieldMenuContext;
     }
     getCellActions(tr) {
         return tr.querySelector('td');
@@ -1308,7 +1207,7 @@ class FameLineTable {
                 alignItem(field, td);
             }
             tr.appendChild(td);
-            fieldMenuContext.info.set({
+            this.fieldMenuContext.infoSet({
                 identity: field.identity,
                 field: field
             });
@@ -1374,9 +1273,9 @@ class FameLineTable {
 
 class FrameElementLine extends FrameElement {
     fameLineTable;
-    constructor(managmentObject, field, frameEvent, button) {
-        super(managmentObject, field, frameEvent, button);
-        this.fameLineTable = new FameLineTable(managmentObject, field, this, frameEvent, this.setValuesDefined);
+    constructor(managmentObject, field, frameEvent, button, fieldMenuContext) {
+        super(managmentObject, field, frameEvent, button, fieldMenuContext);
+        this.fameLineTable = new FameLineTable(managmentObject, field, this, frameEvent, this.setValuesDefined, fieldMenuContext);
     }
     createTDActions(identity) {
         const div = document.createElement('div');
@@ -2108,9 +2007,11 @@ class FieldInput {
     floatLabel = ruculaGlobal.getConfigurationGlobal().floatLabel;
     field;
     input;
-    constructor(field, managmentObject) {
+    windowBaseDOM;
+    constructor(field, managmentObject, windowBaseDOM) {
         this.field = field;
         this.managmentObject = managmentObject;
+        this.windowBaseDOM = windowBaseDOM;
     }
     setWidth() {
         if (this.field.width > 0) {
@@ -2131,9 +2032,10 @@ class FieldInput {
 class FileEvent {
     input;
     field;
-    ruculaForm = windowBaseDOM.getElementRoot();
+    ruculaForm;
     managmentObject;
-    constructor(managmentObject, input, field) {
+    constructor(managmentObject, input, field, windowBaseDOM) {
+        this.ruculaForm = windowBaseDOM.getElementRoot();
         this.managmentObject = managmentObject;
         this.input = input;
         this.field = field;
@@ -2211,8 +2113,8 @@ class FieldCheckbox extends FieldInput {
         return input;
     }
     setEvents() {
-        new FileEventCommon(this.managmentObject, this.input, this.field);
-        new FileEventCheckBox(this.managmentObject, this.input, this.field);
+        new FileEventCommon(this.managmentObject, this.input, this.field, this.windowBaseDOM);
+        new FileEventCheckBox(this.managmentObject, this.input, this.field, this.windowBaseDOM);
     }
 }
 
@@ -2275,9 +2177,9 @@ class FieldCommon extends FieldInput {
         this.setEvents();
     }
     setEvents() {
-        new FileEventCommon(this.managmentObject, this.input, this.field);
+        new FileEventCommon(this.managmentObject, this.input, this.field, this.windowBaseDOM);
         if (this.field.type == constTypeInput.CURRENCY) {
-            new FileEventCurrency(this.managmentObject, this.input, this.field);
+            new FileEventCurrency(this.managmentObject, this.input, this.field, this.windowBaseDOM);
         }
     }
 }
@@ -2294,7 +2196,7 @@ class FieldRadio extends FieldInput {
         this.setEvents();
     }
     setEvents() {
-        new FileEventCommon(this.managmentObject, this.input, this.field);
+        new FileEventCommon(this.managmentObject, this.input, this.field, this.windowBaseDOM);
     }
 }
 
@@ -2326,7 +2228,7 @@ class FieldSelect extends FieldInput {
         return select;
     }
     setEvents() {
-        new FileEventSelect(this.managmentObject, this.input, this.field);
+        new FileEventSelect(this.managmentObject, this.input, this.field, this.windowBaseDOM);
     }
 }
 
@@ -2364,14 +2266,16 @@ class FieldTextArea extends FieldInput {
         return input;
     }
     setEvents() {
-        new FileEventCommon(this.managmentObject, this.input, this.field);
+        new FileEventCommon(this.managmentObject, this.input, this.field, this.windowBaseDOM);
     }
 }
 
 class Field {
     managmentObject;
-    constructor(managmentObject) {
+    windowBaseDOM;
+    constructor(managmentObject, windowBaseDOM) {
         this.managmentObject = managmentObject;
+        this.windowBaseDOM = windowBaseDOM;
     }
     createSpanLabelIsRequerid() {
         ruculaGlobal.getConfigurationGlobal().floatLabel;
@@ -2467,19 +2371,19 @@ class Field {
         let fieldStrategy = new FieldStrategy();
         this.checkTypeField(field.type);
         if (this.isSimple(field.type)) {
-            fieldStrategy.setStrategy(new FieldCommon(field, this.managmentObject));
+            fieldStrategy.setStrategy(new FieldCommon(field, this.managmentObject, this.windowBaseDOM));
         }
         if (this.isSelect(field.type)) {
-            fieldStrategy.setStrategy(new FieldSelect(field, this.managmentObject));
+            fieldStrategy.setStrategy(new FieldSelect(field, this.managmentObject, this.windowBaseDOM));
         }
         if (isCheckBox()) {
-            fieldStrategy.setStrategy(new FieldCheckbox(field, this.managmentObject));
+            fieldStrategy.setStrategy(new FieldCheckbox(field, this.managmentObject, this.windowBaseDOM));
         }
         if (this.isTextArea(field.type)) {
-            fieldStrategy.setStrategy(new FieldTextArea(field, this.managmentObject));
+            fieldStrategy.setStrategy(new FieldTextArea(field, this.managmentObject, this.windowBaseDOM));
         }
         if (isRadio()) {
-            fieldStrategy.setStrategy(new FieldRadio(field, this.managmentObject));
+            fieldStrategy.setStrategy(new FieldRadio(field, this.managmentObject, this.windowBaseDOM));
         }
         element = fieldStrategy.create();
         if (field.maxLength) {
@@ -2636,10 +2540,13 @@ class ElementLink extends ElementBase {
 }
 
 class Button {
-    popup = new Popup();
     callbackReaload;
-    constructor(callbackReaload) {
+    popup;
+    P;
+    constructor(callbackReaload, popup, P) {
         this.callbackReaload = callbackReaload;
+        this.popup = popup;
+        this.P = P;
     }
     elementStrategy;
     buttonIsNotDefault(target) {
@@ -2663,8 +2570,8 @@ class Button {
         return document.getElementById(target);
     }
     prepareLocalizations() {
-        let globalization = document.getElementById(constIdBaseWindow.GLOBALIZATION);
-        let olliGlobalization = document.getElementById(constIdBaseWindow.OLLI_GLOBALIZATION);
+        let globalization = document.getElementById(`${this.P}${constIdBaseWindow.GLOBALIZATION}`);
+        let olliGlobalization = document.getElementById(`${this.P}${constIdBaseWindow.OLLI_GLOBALIZATION}`);
         globalization?.addEventListener("click", () => {
             olliGlobalization?.classList.toggle("r-display-none");
         });
@@ -2679,8 +2586,8 @@ class Button {
         });
     }
     prepareEnviroments() {
-        let baseEnvironments = document.getElementById(constIdBaseWindow.ENVIROMENT);
-        let olliEnviroment = document.getElementById(constIdBaseWindow.OLLI_ENVIROMENT);
+        let baseEnvironments = document.getElementById(`${this.P}${constIdBaseWindow.ENVIROMENT}`);
+        let olliEnviroment = document.getElementById(`${this.P}${constIdBaseWindow.OLLI_ENVIROMENT}`);
         let description = baseEnvironments.querySelector('.description');
         let icon = baseEnvironments.querySelector('i');
         let env = cookie.read('enviroment');
@@ -2725,7 +2632,7 @@ class Button {
         }
     }
     prepareButtonsInLeftBox(button) {
-        const ListRightButtons = document.getElementById("r-a-menu-vertical-list");
+        const ListRightButtons = document.getElementById(`${this.P}r-a-menu-vertical-list`);
         let buttons = button?.filter(c => this.buttonIsNotDefault(c.target));
         if (buttons?.length == 0 || buttons == undefined) {
             document.querySelector('.r-vertical-actions')?.classList.add('r-display-none');
@@ -2758,7 +2665,136 @@ class Button {
     }
 }
 
+class FieldMenuContext {
+    constructor(popup, P) {
+        this.popup = popup;
+        this.P = P;
+    }
+    P;
+    popup;
+    fieldsInfo = [];
+    lastDetail;
+    init() {
+        let menuOInput = document.getElementById(`${this.P}${contextMenu.INPUT}`);
+        menuOInput?.addEventListener('click', () => {
+            if (this.lastDetail) {
+                this.lastDetail.remove();
+            }
+            let ol = document.createElement('ol');
+            this.lastDetail = ol;
+            let identity = menuContext.elemetInFocu().getAttribute('identity');
+            let field = this.infoGet(identity)?.field;
+            let details = `  
+            <table>
+                <tr>
+                    <td>Descrição</td>
+                    <td>${field?.description ?? ''}</td>
+                </tr>
+                <tr>
+                    <td>Propriedade</td>
+                    <td>${field?.propertDto}</td>
+                </tr>
+                <tr>
+                    <td>Obrigatório</td>
+                    <td><input type="checkbox" ${(field?.requerid ?? false) == true ? 'checked' : ''} disabled/></td>
+                </tr>
+                <tr>
+                    <td>Desabilitado</td>
+                    <td><input type="checkbox" ${(field?.disable ?? false) == true ? 'checked' : ''} disabled/></td>
+                </tr>
+                <tr>
+                    <td>Máximo</td>
+                    <td>${field?.max ?? 0}</td>
+                </tr>
+                <tr>
+                    <td>Minimo</td>
+                    <td>${field?.min ?? 0}</td>
+                </tr>
+                <tr>
+                    <td>Comprimento</td>
+                    <td>${field?.maxLength ?? 0}</td>
+                </tr>
+                <tr>
+                    <td>Informação</td>
+                    <td>${field?.information ?? ''}</td>
+                </tr>
+            </table>
+        `;
+            ol.innerHTML = details;
+            this.popup.info({
+                text: 'Detalhamento',
+                htmlBody: ol
+            });
+        });
+    }
+    infoSet(fieldInfo) {
+        this.fieldsInfo.push(fieldInfo);
+    }
+    infoGet(identity) {
+        return this.fieldsInfo.find(c => c.identity == identity);
+    }
+}
+
+class PaginationEvents {
+    windowBaseDOM;
+    constructor(windowBaseDOM) {
+        this.windowBaseDOM = windowBaseDOM;
+    }
+    headerSearch(gridSearch) {
+        let search = document.getElementById(constPagination.FIND);
+        if (gridSearch == false) {
+            search?.remove();
+        }
+        let elementRoot = this.windowBaseDOM.getElementRoot();
+        let body = {
+            detail: {
+                value: ''
+            }
+        };
+        let event = new CustomEvent('r-pagination-find', body);
+        search?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            var formData = new FormData(e.target);
+            body.detail.value = String(formData.get('r-find-value'));
+            elementRoot.dispatchEvent(event);
+        });
+    }
+    fotter(gridFooter) {
+        if (gridFooter == false) {
+            document.getElementById('r-act-grid-footer')?.remove();
+        }
+        let elementRoot = this.windowBaseDOM.getElementRoot();
+        let pagination = {
+            detail: {
+                page: ''
+            }
+        };
+        let event = new CustomEvent('r-pagination', pagination);
+        document.getElementById(constPagination.FIRST)?.addEventListener('click', () => dispatchEvent('first'));
+        document.getElementById(constPagination.LAST)?.addEventListener('click', () => dispatchEvent('last'));
+        document.getElementById(constPagination.PREVIOUS)?.addEventListener('click', () => dispatchEvent('previous'));
+        document.getElementById(constPagination.NEXT)?.addEventListener('click', () => dispatchEvent('next'));
+        function dispatchEvent(page) {
+            pagination.detail.page = page;
+            elementRoot.dispatchEvent(event);
+        }
+        let row = {
+            detail: {
+                row: 0
+            }
+        };
+        let eventRow = new CustomEvent('r-pagination-row', row);
+        document.getElementById(constPagination.ROW_NUMBER)?.addEventListener('change', (e) => {
+            var select = e.target;
+            row.detail.row = Number(select.value);
+            elementRoot.dispatchEvent(eventRow);
+        });
+    }
+}
+
 class Rucula {
+    P = `ruculajs_${Date.now()}`;
+    windowBaseDOM;
     window;
     elementRucula;
     elementFormRucula;
@@ -2773,59 +2809,66 @@ class Rucula {
     eventButton;
     frameEvent;
     config;
+    fieldMenuContext;
+    paginationEvents;
+    buttonsBase;
     constructor(config) {
         config.id ??= 'rucula-js';
         ruculaGlobal.initGlobalConfiguration(config.global);
-        windowBaseDOM.setElementRoot(config.id);
         this.window = config.window;
         this.elementRucula = document.getElementById(config.id);
-        this.popup = new Popup();
-        this.layoutFrame = new LayoutFrame();
+        this.popup = new Popup(this.P);
+        this.fieldMenuContext = new FieldMenuContext(this.popup, this.P);
+        this.windowBaseDOM = new WindowBaseDOM(this.fieldMenuContext, this.P);
+        this.windowBaseDOM.setElementRoot(config.id);
+        this.layoutFrame = new LayoutFrame(this.windowBaseDOM, this.P);
         this.fragment = new Fragment();
         this.tableDependency = new TableDependency();
         this.managmentObject = new ManagmentObject(this.fragment, this.tableDependency);
-        this.event = new EventManagment(this.managmentObject);
-        this.field = new Field(this.managmentObject);
-        this.eventButton = new EventButton(this.field, this.managmentObject);
+        this.event = new EventManagment(this.managmentObject, this.windowBaseDOM);
+        this.field = new Field(this.managmentObject, this.windowBaseDOM);
+        this.eventButton = new EventButton(this.field, this.managmentObject, this.windowBaseDOM, this.P);
         this.frameEvent = new FrameEvent(this.managmentObject);
+        this.paginationEvents = new PaginationEvents(this.windowBaseDOM);
+        this.buttonsBase = new ButtonsBase(this.P);
         this.button = new Button(() => {
             let rucula = new Rucula(config);
             rucula.create();
             this.config?.reload();
-        });
+        }, this.popup, this.P);
     }
     create() {
         this.cleanRucula();
         let eventInit = new Event('rucula.init');
         let eventLoad = new Event('rucula.load');
-        let rucula = windowBaseDOM.getElementRoot();
+        let rucula = this.windowBaseDOM.getElementRoot();
         rucula.dispatchEvent(eventInit);
         configWindow.set(this.window);
         defaultValues.setDefault(this.window);
-        windowBaseDOM.createWindowBase(this.elementRucula.id);
+        this.windowBaseDOM.createWindowBase(this.elementRucula.id);
         this.addHomeWindow();
         this.managmentObject.initObjects(this.window.frames);
-        windowBaseDOM.createNameWindow(this.window.name);
-        windowBaseDOM.closeLeftGrid(this.window.grid);
-        this.elementFormRucula = windowBaseDOM.getPrincipalElementRucula();
-        exportPaginationEvents.headerSearch(this.window.gridSearch);
-        exportPaginationEvents.fotter(this.window.gridFooter);
+        this.windowBaseDOM.createNameWindow(this.window.name);
+        this.windowBaseDOM.closeLeftGrid(this.window.grid);
+        this.elementFormRucula = this.windowBaseDOM.getPrincipalElementRucula();
+        this.paginationEvents.headerSearch(this.window.gridSearch);
+        this.paginationEvents.fotter(this.window.gridFooter);
         this.layoutFrame.configureLayout(this.window);
         this.createFrames();
         this.createButtons();
-        buttonsBase.initButtonsTypeCrudDefault();
-        buttonsBase.initButtonPlus();
-        buttonsBase.buttonsTypeCrud.crud(this.window?.crud);
+        this.buttonsBase.initButtonsTypeCrudDefault();
+        this.buttonsBase.initButtonPlus();
+        this.buttonsBase.crud(this.window?.crud);
         rucula.dispatchEvent(eventLoad);
         window.rucula = new RuculaLogs(this.managmentObject);
     }
     addHomeWindow() {
         if (this.window?.iconHome) {
-            let icon = document.getElementById("r-f-home-icon");
+            let icon = document.getElementById(`${this.P}r-f-home-icon`);
             icon?.classList.add(this.window.iconHome);
         }
         if (this.window?.messageHome) {
-            let title = document.getElementById("r-f-home-title");
+            let title = document.getElementById(`${this.P}r-f-home-title`);
             title.textContent = this.window?.messageHome;
         }
         let titles = document.querySelectorAll(`.${constIdBaseWindow.TITLE}`);
@@ -2849,20 +2892,20 @@ class Rucula {
         this.eventButton.openCloseRightListButtons();
     }
     createFrames() {
-        let frameBlock = new FrameElementBlock(this.managmentObject, this.field, this.frameEvent, this.button);
-        let frameLine = new FrameElementLine(this.managmentObject, this.field, this.frameEvent, this.button);
+        let frameBlock = new FrameElementBlock(this.managmentObject, this.field, this.frameEvent, this.button, this.fieldMenuContext);
+        let frameLine = new FrameElementLine(this.managmentObject, this.field, this.frameEvent, this.button, this.fieldMenuContext);
         this.window.frames?.forEach(frame => {
             if (frame.type == constTypeFrame.BLOCK) {
                 const block = frameBlock.create(frame);
                 this.elementFormRucula.appendChild(block);
-                eventCreated(block);
+                eventCreated(block, this.windowBaseDOM.getElementRoot());
             }
             if (frame.type == constTypeFrame.LINE) {
                 const line = frameLine.create(frame);
                 this.elementFormRucula.appendChild(line);
-                eventCreated(line);
+                eventCreated(line, this.windowBaseDOM.getElementRoot());
             }
-            function eventCreated(frameElement) {
+            function eventCreated(frameElement, elementRoot) {
                 var eventName = `frame.${frame.alias}.complete`;
                 let event = new CustomEvent(eventName, {
                     detail: {
@@ -2871,7 +2914,7 @@ class Rucula {
                         width: frameElement.offsetWidth
                     }
                 });
-                let rucula = windowBaseDOM.getElementRoot();
+                let rucula = elementRoot;
                 rucula.dispatchEvent(event);
             }
         });

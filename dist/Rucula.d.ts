@@ -4,15 +4,16 @@ import { Popup } from "./popup/popup";
 import { EventManagment } from "./Event/event";
 import { URLRucula } from "./URL/urlManagment";
 import { ManagmentObject } from "./object/ObjectManagment";
-import { TableDependency } from "./table-dependency/TableDependency";
 export declare class Rucula {
+    P: string;
+    private windowBaseDOM;
     private window;
     private elementRucula;
     private elementFormRucula;
     popup: Popup;
     event: EventManagment;
     managmentObject: ManagmentObject;
-    tableDependency: TableDependency;
+    private tableDependency;
     private button;
     private layoutFrame;
     private fragment;
@@ -20,6 +21,9 @@ export declare class Rucula {
     private eventButton;
     private frameEvent;
     private config;
+    private fieldMenuContext;
+    private paginationEvents;
+    private buttonsBase;
     constructor(config: {
         global: globalConfiguration;
         window: window;

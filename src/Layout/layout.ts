@@ -4,8 +4,10 @@ import { window } from "../entities/form/window";
 export class LayoutFrame {
 
     windowBaseDOM:WindowBaseDOM
-    constructor(windowBaseDOM:WindowBaseDOM) {
+    P:string
+    constructor(windowBaseDOM:WindowBaseDOM, P:string) {
         this.windowBaseDOM = windowBaseDOM
+        this.P = P
     }
     configureLayout(window:window){
     
