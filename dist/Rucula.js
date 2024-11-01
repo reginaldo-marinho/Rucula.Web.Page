@@ -724,7 +724,7 @@ class LoaderManagment {
         this.loaderElement.classList.add('r-item-center');
     }
     enable() {
-        this.boxShow = document.getElementById('r-box-show');
+        this.boxShow = document.getElementById(`${this.P}r-box-show`);
         this.boxShow?.classList.add('r-box-show-center');
         this.boxShow?.appendChild(this.loaderElement);
     }

@@ -11,9 +11,8 @@ export class LoaderManagment {
         this.loaderElement.classList.add(`${this.P}js-r-loader`)
         this.loaderElement.classList.add('r-item-center')
     }
-    
     enable (){
-        this.boxShow = document.getElementById('r-box-show') as HTMLDivElement
+        this.boxShow = document.getElementById(`${this.P}r-box-show`) as HTMLDivElement
         this.boxShow?.classList.add('r-box-show-center')
         this.boxShow?.appendChild(this.loaderElement)
         
