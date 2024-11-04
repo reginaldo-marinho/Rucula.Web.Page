@@ -2960,6 +2960,9 @@ class Rucula {
     getValue(config) {
         return this.managmentObject.getPropert(config);
     }
+    get p() {
+        return this.P;
+    }
 }
 
 export { Rucula };

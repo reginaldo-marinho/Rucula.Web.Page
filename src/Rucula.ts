@@ -229,4 +229,8 @@ export class Rucula{
     getValue (config:string):any {
         return this.managmentObject.getPropert(config)
     }
+
+    get p(){
+        return this.P
+    }
 }

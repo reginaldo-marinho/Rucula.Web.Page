@@ -49,4 +49,5 @@ export declare class Rucula {
     getSepareteObject(): any;
     setValue(targetPath: string, value: any): void;
     getValue(config: string): any;
+    get p(): string;
 }
