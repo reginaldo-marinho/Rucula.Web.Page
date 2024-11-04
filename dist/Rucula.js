@@ -498,8 +498,8 @@ class EventButton {
             let dependency = {
                 detail: {}
             };
-            let eventButton = new CustomEvent(`${button.target}`, object);
-            let eventButtonDependency = new CustomEvent(`${button.target}.dependency`, dependency);
+            let eventButton = new CustomEvent(`${this.P}${button.target}`, object);
+            let eventButtonDependency = new CustomEvent(`${this.P}${button.target}.dependency`, dependency);
             element?.addEventListener("click", () => {
                 let dependencyCount = this.managmentObject.tableDependency.dependenciesCount();
                 if (dependencyCount > 0) {
