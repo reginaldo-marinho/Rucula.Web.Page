@@ -34,7 +34,7 @@ export class WindowBaseDOM {
         calculateHeightRuculaWindow()
         this.prepareEventsButtonsCrud()
         this.maximizeWindow()
-        this.eraseWindow()
+        this.eraseWindow(ruculaWindow)
         this.alterTheme()
         this.openActionswindow()
         this.actionCrudpreventDefault()
@@ -128,8 +128,6 @@ export class WindowBaseDOM {
                     <div class="r-display-inline-block r-actions-window r-actions-window-itens">
                         <div class="r-display-inline-block">
                             <button id="${this.P}${constIdBaseWindow.MAXIMIZE_WINDOW}" class="r-a-b"><i class="bi bi-arrows"></i></button>
-                            <button id="${this.P}${constIdBaseWindow.RELOAD}" class="r-a-b "><i class="bi bi-arrow-repeat"></i></button>
-                            <button id="${this.P}${constIdBaseWindow.ERASE_WINDOW}" class="r-a-b "><i class="bi bi-eraser"></i></button>
                             <button id="${this.P}${constIdBaseWindow.ALTER_THEME}" class="r-a-b "><i class="bi bi-circle-half"></i></button>
                         </div>
                         <div class="actions-view">
@@ -253,13 +251,13 @@ export class WindowBaseDOM {
         })
     }
     
-    eraseWindow(){
+    eraseWindow(ruculaWindow:HTMLDivElement){
     
         let erase = document.getElementById(`${this.P}${constIdBaseWindow.ERASE_WINDOW}`)
-        let form = this.getPrincipalElementRucula()
-        
+        let form = ruculaWindow.querySelector('form.r-window-work') as HTMLFormElement
+
         erase?.addEventListener('click', () => {
-            form.reset();
+            form?.reset();
         })
     }
 

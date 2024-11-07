@@ -14,7 +14,7 @@ export declare class WindowBaseDOM {
     openCloseContainer(): void;
     closeLeftGrid(grid: boolean): void;
     maximizeWindow(): void;
-    eraseWindow(): void;
+    eraseWindow(ruculaWindow: HTMLDivElement): void;
     actionCrudpreventDefault(): void;
     openActionswindow(): void;
     alterTheme(): void;
