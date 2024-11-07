@@ -8,7 +8,7 @@ import { FrameElement } from "./FrameElement";
 import { FrameEvent } from "./FrameEvent";
 export declare class FrameElementLine extends FrameElement {
     fameLineTable: FameLineTable;
-    constructor(managmentObject: ManagmentObject, field: Field, frameEvent: FrameEvent, button: Button, fieldMenuContext: FieldMenuContext);
+    constructor(managmentObject: ManagmentObject, field: Field, frameEvent: FrameEvent, button: Button, fieldMenuContext: FieldMenuContext, P: string);
     private createTDActions;
     create(frame: frame): HTMLDivElement;
     currentLineElement?: HTMLElement;

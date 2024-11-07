@@ -541,20 +541,23 @@ class EventButton {
 }
 
 let configWindow = (() => {
-    let _window;
+    let windows = new Map();
     return {
-        set: (window) => {
-            if (_window) {
+        set: (window, P) => {
+            let mappedwindow = windows.get(P);
+            if (mappedwindow) {
                 return;
             }
-            _window = window;
+            windows.set(P, window);
         },
-        get: () => {
-            return _window;
+        get: (P) => {
+            return windows.get(P);
         },
         frame: {
-            get: (identity) => {
-                return _window.frames.find(c => c.identity == identity);
+            get: (identity, P) => {
+                let window = windows.get(P);
+                let frame = window.frames.find(c => c.identity == identity);
+                return frame;
             }
         }
     };
@@ -1082,13 +1085,15 @@ class FameLineTable {
     frameElementLine;
     callbackSetValuesDefined;
     fieldMenuContext;
-    constructor(managmentObject, field, frameElementLine, frameEvent, callbackSetValuesDefined, fieldMenuContext) {
+    P;
+    constructor(managmentObject, field, frameElementLine, frameEvent, callbackSetValuesDefined, fieldMenuContext, P) {
         this.managmentObject = managmentObject;
         this.field = field;
         this.frameEvent = frameEvent;
         this.frameElementLine = frameElementLine;
         this.callbackSetValuesDefined = callbackSetValuesDefined;
         this.fieldMenuContext = fieldMenuContext;
+        this.P = P;
     }
     getCellActions(tr) {
         return tr.querySelector('td');
@@ -1158,7 +1163,7 @@ class FameLineTable {
         return tr;
     }
     createNewRowDetail(identityObject) {
-        let frame = configWindow.frame.get(identityObject);
+        let frame = configWindow.frame.get(identityObject, this.P);
         const row = this.createRowDetail(frame);
         row.querySelector("input")?.focus();
         this.frameElementLine.eventKeyDownKeyUpLineFrame(row);
@@ -1173,7 +1178,7 @@ class FameLineTable {
         let identityInputTartget = inputTargetEvent.getAttribute("identity");
         let fragmentObject = this.managmentObject.getFragmentForIdentity(identityInputTartget);
         let field = this.managmentObject.fragment.fields_getForIdentity(identityInputTartget);
-        let frame = configWindow.frame.get(field.config.fragmentObjectIdentity);
+        let frame = configWindow.frame.get(field.config.fragmentObjectIdentity, this.P);
         moveActions(fragmentObject.config.fragmentObjectIdentity, this.getCellActions);
         let count = this.managmentObject.count(frame.identity);
         let actions = currentLineElement.querySelector('td div');
@@ -1206,9 +1211,9 @@ class FameLineTable {
 
 class FrameElementLine extends FrameElement {
     fameLineTable;
-    constructor(managmentObject, field, frameEvent, button, fieldMenuContext) {
+    constructor(managmentObject, field, frameEvent, button, fieldMenuContext, P) {
         super(managmentObject, field, frameEvent, button, fieldMenuContext);
-        this.fameLineTable = new FameLineTable(managmentObject, field, this, frameEvent, this.setValuesDefined, fieldMenuContext);
+        this.fameLineTable = new FameLineTable(managmentObject, field, this, frameEvent, this.setValuesDefined, fieldMenuContext, P);
     }
     createTDActions(identity) {
         const div = document.createElement('div');
@@ -2854,7 +2859,7 @@ class Rucula {
         let eventLoad = new Event('rucula.load');
         let rucula = this.windowBaseDOM.getElementRoot();
         rucula.dispatchEvent(eventInit);
-        configWindow.set(this.window);
+        configWindow.set(this.window, this.P);
         defaultValues.setDefault(this.window);
         this.windowBaseDOM.createWindowBase(this.elementRucula.id);
         this.addHomeWindow();
@@ -2904,7 +2909,7 @@ class Rucula {
     }
     createFrames() {
         let frameBlock = new FrameElementBlock(this.managmentObject, this.field, this.frameEvent, this.button, this.fieldMenuContext);
-        let frameLine = new FrameElementLine(this.managmentObject, this.field, this.frameEvent, this.button, this.fieldMenuContext);
+        let frameLine = new FrameElementLine(this.managmentObject, this.field, this.frameEvent, this.button, this.fieldMenuContext, this.P);
         this.window.frames?.forEach(frame => {
             if (frame.type == constTypeFrame.BLOCK) {
                 const block = frameBlock.create(frame);

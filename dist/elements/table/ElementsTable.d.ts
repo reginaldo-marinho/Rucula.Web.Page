@@ -11,7 +11,8 @@ export declare class FameLineTable {
     private frameElementLine;
     private callbackSetValuesDefined;
     private fieldMenuContext;
-    constructor(managmentObject: ManagmentObject, field: Field, frameElementLine: FrameElementLine, frameEvent: FrameEvent, callbackSetValuesDefined: any, fieldMenuContext: FieldMenuContext);
+    private P;
+    constructor(managmentObject: ManagmentObject, field: Field, frameElementLine: FrameElementLine, frameEvent: FrameEvent, callbackSetValuesDefined: any, fieldMenuContext: FieldMenuContext, P: string);
     getCellActions(tr: HTMLTableRowElement): HTMLTableCellElement;
     createHeader(frame: frame): HTMLTableSectionElement;
     createRowDetail(frame: frame): HTMLTableRowElement;
