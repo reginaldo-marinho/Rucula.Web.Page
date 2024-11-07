@@ -1182,9 +1182,6 @@ class FameLineTable {
         moveActions(fragmentObject.config.fragmentObjectIdentity, this.getCellActions);
         let count = this.managmentObject.count(frame.identity);
         let actions = currentLineElement.querySelector('td div');
-        currentLineElement.remove();
-        this.managmentObject.removeLine(frame.identity, field.config.line);
-        this.managmentObject.removeFragmentsLine(frame.identity, field.config.line);
         if (count <= 1) {
             let newLine = this.createNewRowDetail(frame.identity);
             let tdActions = this.getCellActions(newLine);
@@ -1192,6 +1189,9 @@ class FameLineTable {
             Tbody.appendChild(newLine);
             newLine?.querySelector("input")?.focus();
         }
+        currentLineElement.remove();
+        this.managmentObject.removeLine(frame.identity, field.config.line);
+        this.managmentObject.removeFragmentsLine(frame.identity, field.config.line);
         function moveActions(fragmentObject, getCellActionsCallback) {
             let actions = document.getElementById(fragmentObject);
             if (previousSibling) {
@@ -1586,7 +1586,7 @@ class ManagmentObject {
         return this.fragment.fields_getForIdentity(identity);
     }
     removeFragmentsLine(objectIDentity, line) {
-        this.fragment.fields_removeLine(objectIDentity, line, this.tableDependency.removeExpectedDependency);
+        this.fragment.fields_removeLine(objectIDentity, line);
     }
     removeFragment(identity) {
         let _fragment = this.fragment.fields_getForIdentity(identity);
@@ -1796,6 +1796,10 @@ class TableDependency {
 }
 
 class Fragment {
+    constructor(tableDependency) {
+        this.tableDependency = tableDependency;
+    }
+    tableDependency;
     objects = new Array();
     fields = new Array();
     checkIdentity(identity) {
@@ -1849,12 +1853,12 @@ class Fragment {
             this.fields.splice(index, 1);
         }
     }
-    fields_removeLine(objectIDentity, line, callbackRemoveExpectedDependency) {
+    fields_removeLine(objectIDentity, line) {
         let _fields = this.fields.filter(item => item.config.fragmentObjectIdentity == objectIDentity && item.config.line == line);
         _fields.forEach(field => {
             let indexOf = this.fields.indexOf(field);
             if (indexOf > -1) {
-                callbackRemoveExpectedDependency(field.key.identity);
+                this.tableDependency.removeExpectedDependency(field.key.identity);
                 this.fields.splice(indexOf, 1);
             }
         });
@@ -2804,6 +2808,10 @@ class MenuContext {
     }
 }
 
+function P(prefixe, text) {
+    return `${prefixe}${text}`;
+}
+
 class Rucula {
     P = `ruculajs_${Date.now()}`;
     windowBaseDOM;
@@ -2837,8 +2845,8 @@ class Rucula {
         this.windowBaseDOM = new WindowBaseDOM(this.fieldMenuContext, this.menuContext, this.P);
         this.windowBaseDOM.setElementRoot(config.id);
         this.layoutFrame = new LayoutFrame(this.windowBaseDOM, this.P);
-        this.fragment = new Fragment();
         this.tableDependency = new TableDependency();
+        this.fragment = new Fragment(this.tableDependency);
         this.managmentObject = new ManagmentObject(this.fragment, this.tableDependency);
         this.event = new EventManagment(this.managmentObject, this.windowBaseDOM);
         this.field = new Field(this.managmentObject, this.windowBaseDOM);
@@ -2963,8 +2971,9 @@ class Rucula {
     getValue(config) {
         return this.managmentObject.getPropert(config);
     }
-    get p() {
-        return this.P;
+    p(text) {
+        let newText = P(this.P, text);
+        return newText;
     }
 }
 

@@ -24,11 +24,10 @@ import { Button } from "./buttons/Button";
 import { FieldMenuContext } from "./elements/form/Field/fieldMenuContext";
 import { PaginationEvents } from "./pagination/pagination";
 import { MenuContext } from "./menu-context/menu-context";
-
+import { P as prefixe } from "./common/Prefixe";
 export class Rucula{
     
-    public  P = `ruculajs_${Date.now()}`
-
+    private P = `ruculajs_${Date.now()}`
     private windowBaseDOM!:WindowBaseDOM
     private window: window
     private elementRucula: HTMLElement
@@ -66,8 +65,8 @@ export class Rucula{
         this.windowBaseDOM = new WindowBaseDOM(this.fieldMenuContext, this.menuContext, this.P)
         this.windowBaseDOM.setElementRoot(config.id)
         this.layoutFrame = new LayoutFrame(this.windowBaseDOM,this.P)
-        this.fragment = new Fragment();
         this.tableDependency = new TableDependency();
+        this.fragment = new Fragment(this.tableDependency);
         this.managmentObject = new ManagmentObject(this.fragment, this.tableDependency);
         this.event = new EventManagment(this.managmentObject,this.windowBaseDOM);
         this.field = new Field(this.managmentObject, this.windowBaseDOM)
@@ -76,7 +75,6 @@ export class Rucula{
         this.paginationEvents = new PaginationEvents(this.windowBaseDOM)
         this.buttonsBase = new ButtonsBase(this.P)
         this.loader = new LoaderManagment(this.P)
-        
         this.button = new Button(() => {
             let rucula = new Rucula(config)
             rucula.create()
@@ -230,7 +228,8 @@ export class Rucula{
         return this.managmentObject.getPropert(config)
     }
 
-    get p(){
-        return this.P
+    p(text:string): string {
+        let newText = prefixe(this.P,text);
+        return newText
     }
 }

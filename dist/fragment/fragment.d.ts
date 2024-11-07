@@ -1,5 +1,8 @@
 import { entityConfiguration, fragmentField, fragmentObject } from "../object/ObjectAliases";
+import { TableDependency } from "../table-dependency/TableDependency";
 export declare class Fragment {
+    constructor(tableDependency: TableDependency);
+    private tableDependency;
     objects: Array<fragmentObject>;
     fields: Array<fragmentField>;
     checkIdentity(identity: string): void;
@@ -9,7 +12,7 @@ export declare class Fragment {
     objects_getForAlias(alias: string): fragmentObject;
     fields_add(field: fragmentField): void;
     fields_remove(fragment: fragmentField): void;
-    fields_removeLine(objectIDentity: string, line: number, callbackRemoveExpectedDependency: any): void;
+    fields_removeLine(objectIDentity: string, line: number): void;
     /**
  * @param {string} identity
  * @return {fragmentField}

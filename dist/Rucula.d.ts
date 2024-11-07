@@ -6,7 +6,7 @@ import { EventManagment } from "./Event/event";
 import { URLRucula } from "./URL/urlManagment";
 import { ManagmentObject } from "./object/ObjectManagment";
 export declare class Rucula {
-    P: string;
+    private P;
     private windowBaseDOM;
     private window;
     private elementRucula;
@@ -49,5 +49,5 @@ export declare class Rucula {
     getSepareteObject(): any;
     setValue(targetPath: string, value: any): void;
     getValue(config: string): any;
-    get p(): string;
+    p(text: string): string;
 }

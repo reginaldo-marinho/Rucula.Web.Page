@@ -164,10 +164,6 @@ export class FameLineTable {
         
         let actions = currentLineElement.querySelector('td div') as HTMLDivElement
         
-        currentLineElement.remove(); //! Importante! This call must be before object and fragment. Otherwise there will be unexpected errors. 
-        this.managmentObject.removeLine(frame.identity,field.config.line as number)
-        this.managmentObject.removeFragmentsLine(frame.identity,field.config.line as number)
-        
         if(count <= 1){
             
             //! IMPORTANT! Note that the unremoved fragment can be used here, which is why it was not removed before
@@ -182,6 +178,10 @@ export class FameLineTable {
             
             newLine?.querySelector("input")?.focus();
         }
+        
+        currentLineElement.remove(); //! Importante! This call must be before object and fragment. Otherwise there will be unexpected errors. 
+        this.managmentObject.removeLine(frame.identity,field.config.line as number)
+        this.managmentObject.removeFragmentsLine(frame.identity,field.config.line as number)
         
         function moveActions(fragmentObject:string,getCellActionsCallback:any){
             

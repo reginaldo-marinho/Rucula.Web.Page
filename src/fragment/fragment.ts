@@ -1,7 +1,13 @@
 import { entityConfiguration, fragmentField, fragmentObject } from "../object/ObjectAliases";
+import { TableDependency } from "../table-dependency/TableDependency";
 
 export class Fragment {
+    
+    constructor(tableDependency:TableDependency) {
+        this.tableDependency = tableDependency
+    }
 
+    private tableDependency:TableDependency
     objects: Array<fragmentObject> = new Array<fragmentObject>();
     fields: Array<fragmentField> = new Array<fragmentField>();
     
@@ -80,7 +86,7 @@ export class Fragment {
             this.fields.splice(index,1)
         }
     }
-    fields_removeLine(objectIDentity:string, line:number, callbackRemoveExpectedDependency:any){
+    fields_removeLine(objectIDentity:string, line:number, ){
         
         let _fields = this.fields.filter(item => item.config.fragmentObjectIdentity == objectIDentity && item.config.line == line)
 
@@ -89,7 +95,7 @@ export class Fragment {
             let indexOf = this.fields.indexOf(field)
 
             if(indexOf > -1){
-                callbackRemoveExpectedDependency(field.key.identity)
+                this.tableDependency.removeExpectedDependency(field.key.identity)
                 this.fields.splice(indexOf,1)
             }
         })

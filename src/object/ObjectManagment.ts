@@ -380,7 +380,7 @@ export class ManagmentObject {
     }
 
     removeFragmentsLine(objectIDentity:string, line:number){
-        this.fragment.fields_removeLine(objectIDentity,line, this.tableDependency.removeExpectedDependency)
+        this.fragment.fields_removeLine(objectIDentity,line)
     }
 
     removeFragment(identity:string) {

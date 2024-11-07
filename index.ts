@@ -52,7 +52,7 @@ import { callbackYesNo } from "./src/popup/callback";
         }
     })
 
-    rucula.event.on('r-a-save',(e:CustomEvent) => {
+    rucula.event.on(rucula.p('r-a-save'),(e:CustomEvent) => {
 
         rucula.popup.info({
             text:"Registrando...", 
@@ -68,11 +68,11 @@ import { callbackYesNo } from "./src/popup/callback";
         );
     })
 
-    rucula.event.on('r-a-alter',(e:CustomEvent) => {
+    rucula.event.on(rucula.p('r-a-alter'),(e:CustomEvent) => {
         rucula.popup.sucess({text:"Informações Alteradas"})
     })
         
-    rucula.event.on('r-a-delete',(e:CustomEvent) => {
+    rucula.event.on(rucula.p('r-a-delete'),(e:CustomEvent) => {
         rucula.popup.warning({text:"O registro será excluido permanentemente, deseja continuar?"},resultOption as callbackYesNo)
     })
   
@@ -101,6 +101,6 @@ import { callbackYesNo } from "./src/popup/callback";
     })
     
     rucula.create();
-    rucula.setValue('ordemDeServico.dataAbertura','2024-12-01')
+    rucula.setValue('ordemDeServico.dataAbertura','2024-08-01')
     rucula.setValue('ordemDeServico.status',true)
 })()
