@@ -13,9 +13,9 @@ export class FrameElementLine extends FrameElement{
     
     public fameLineTable:FameLineTable
 
-    constructor(managmentObject:ManagmentObject, field:Field, frameEvent:FrameEvent,button:Button,fieldMenuContext:FieldMenuContext) {
+    constructor(managmentObject:ManagmentObject, field:Field, frameEvent:FrameEvent,button:Button,fieldMenuContext:FieldMenuContext,P:string) {
         super(managmentObject, field, frameEvent, button,fieldMenuContext);
-        this.fameLineTable = new FameLineTable(managmentObject,field,this,frameEvent,this.setValuesDefined,fieldMenuContext)
+        this.fameLineTable = new FameLineTable(managmentObject,field,this,frameEvent,this.setValuesDefined,fieldMenuContext,P)
     }    
 
     private createTDActions(identity:string){

@@ -16,14 +16,16 @@ export class FameLineTable {
     private frameElementLine:FrameElementLine
     private callbackSetValuesDefined:any
     private fieldMenuContext:FieldMenuContext
+    private P:string
 
-    constructor(managmentObject:ManagmentObject,field:Field, frameElementLine:FrameElementLine, frameEvent:FrameEvent, callbackSetValuesDefined:any, fieldMenuContext:FieldMenuContext) {
+    constructor(managmentObject:ManagmentObject,field:Field, frameElementLine:FrameElementLine, frameEvent:FrameEvent, callbackSetValuesDefined:any, fieldMenuContext:FieldMenuContext,P:string) {
         this.managmentObject = managmentObject
         this.field = field
         this.frameEvent = frameEvent
         this.frameElementLine = frameElementLine
         this.callbackSetValuesDefined = callbackSetValuesDefined
         this.fieldMenuContext = fieldMenuContext
+        this.P = P
     }
 
     getCellActions(tr:HTMLTableRowElement){
@@ -128,7 +130,7 @@ export class FameLineTable {
     
     createNewRowDetail(identityObject: string){
 
-        let frame = configWindow.frame.get(identityObject)
+        let frame = configWindow.frame.get(identityObject,this.P)
 
         const row = this.createRowDetail(frame)
         
@@ -154,7 +156,7 @@ export class FameLineTable {
 
         let field = this.managmentObject.fragment.fields_getForIdentity(identityInputTartget)
             
-        let frame = configWindow.frame.get(field.config.fragmentObjectIdentity)
+        let frame = configWindow.frame.get(field.config.fragmentObjectIdentity, this.P)
         
         moveActions(fragmentObject.config.fragmentObjectIdentity,this.getCellActions)
         

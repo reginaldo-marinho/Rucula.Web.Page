@@ -92,7 +92,7 @@ export class Rucula{
         
         let rucula = this.windowBaseDOM.getElementRoot()
         rucula.dispatchEvent(eventInit)
-        configWindow.set(this.window)
+        configWindow.set(this.window, this.P)
         defaultValues.setDefault(this.window)
         this.windowBaseDOM.createWindowBase(this.elementRucula.id)
         this.addHomeWindow();
@@ -155,7 +155,7 @@ export class Rucula{
     private createFrames(){
         
         let frameBlock = new FrameElementBlock(this.managmentObject,this.field, this.frameEvent, this.button, this.fieldMenuContext);
-        let frameLine = new FrameElementLine(this.managmentObject,this.field,this.frameEvent, this.button, this.fieldMenuContext);
+        let frameLine = new FrameElementLine(this.managmentObject,this.field,this.frameEvent, this.button, this.fieldMenuContext, this.P);
 
         this.window.frames?.forEach(frame => {
             
