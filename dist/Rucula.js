@@ -1182,6 +1182,9 @@ class FameLineTable {
         moveActions(fragmentObject.config.fragmentObjectIdentity, this.getCellActions);
         let count = this.managmentObject.count(frame.identity);
         let actions = currentLineElement.querySelector('td div');
+        currentLineElement.remove();
+        this.managmentObject.removeLine(frame.identity, field.config.line);
+        this.managmentObject.removeFragmentsLine(frame.identity, field.config.line);
         if (count <= 1) {
             let newLine = this.createNewRowDetail(frame.identity);
             let tdActions = this.getCellActions(newLine);
@@ -1189,9 +1192,6 @@ class FameLineTable {
             Tbody.appendChild(newLine);
             newLine?.querySelector("input")?.focus();
         }
-        currentLineElement.remove();
-        this.managmentObject.removeLine(frame.identity, field.config.line);
-        this.managmentObject.removeFragmentsLine(frame.identity, field.config.line);
         function moveActions(fragmentObject, getCellActionsCallback) {
             let actions = document.getElementById(fragmentObject);
             if (previousSibling) {
