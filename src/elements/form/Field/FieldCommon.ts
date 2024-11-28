@@ -39,10 +39,10 @@ export class FieldCommon extends FieldInput{
 
     protected setEvents(): void {
 
-        new FileEventCommon(this.managmentObject, this.input, this.field,this.windowBaseDOM);
+        new FileEventCommon(this.managmentObject, this.input, this.field, this.ruculaForm);
 
         if(this.field.type == constTypeInput.CURRENCY){
-            new FileEventCurrency(this.managmentObject, this.input, this.field,this.windowBaseDOM);    
+            new FileEventCurrency(this.managmentObject, this.input, this.field,this.ruculaForm);    
         }
     }
 }

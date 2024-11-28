@@ -30,7 +30,7 @@ export class Rucula{
     private P = `ruculajs_${Date.now()}`
     private windowBaseDOM!:WindowBaseDOM
     private window: window
-    private elementRucula: HTMLElement
+    private globalWindow: HTMLElement
     private elementFormRucula!: HTMLFormElement
     private menuContext:MenuContext
     public popup:Popup
@@ -58,21 +58,21 @@ export class Rucula{
         ruculaGlobal.initGlobalConfiguration(config.global)
         
         this.window = config.window
-        this.elementRucula = document.getElementById(config.id)!
+        this.globalWindow = document.getElementById(config.id)!
+        
         this.popup = new Popup(this.P)
         this.menuContext = new MenuContext(this.P)
         this.fieldMenuContext= new FieldMenuContext(this.popup, this.menuContext, this.P)
-        this.windowBaseDOM = new WindowBaseDOM(this.fieldMenuContext, this.menuContext, this.P)
-        this.windowBaseDOM.setElementRoot(config.id)
-        this.layoutFrame = new LayoutFrame(this.windowBaseDOM,this.P)
+        this.windowBaseDOM = new WindowBaseDOM(this.P)
+        this.layoutFrame = new LayoutFrame(this.P)
         this.tableDependency = new TableDependency();
         this.fragment = new Fragment(this.tableDependency);
         this.managmentObject = new ManagmentObject(this.fragment, this.tableDependency);
-        this.event = new EventManagment(this.managmentObject,this.windowBaseDOM);
-        this.field = new Field(this.managmentObject, this.windowBaseDOM)
-        this.eventButton = new EventButton(this.field, this.managmentObject, this.windowBaseDOM, this.P)
+        this.event = new EventManagment(this.managmentObject,this.globalWindow);
+        this.field = new Field(this.managmentObject, this.globalWindow)
+        this.eventButton = new EventButton(this.field, this.managmentObject,this.P)
         this.frameEvent = new FrameEvent(this.managmentObject)
-        this.paginationEvents = new PaginationEvents(this.windowBaseDOM)
+        this.paginationEvents = new PaginationEvents(this.globalWindow)
         this.buttonsBase = new ButtonsBase(this.P)
         this.loader = new LoaderManagment(this.P)
         this.button = new Button(() => {
@@ -88,11 +88,12 @@ export class Rucula{
         let eventInit = new Event('rucula.init')
         let eventLoad = new Event('rucula.load')
         
-        let rucula = this.windowBaseDOM.getElementRoot()
-        rucula.dispatchEvent(eventInit)
+        this.globalWindow.dispatchEvent(eventInit)
         configWindow.set(this.window, this.P)
         defaultValues.setDefault(this.window)
-        this.windowBaseDOM.createWindowBase(this.elementRucula.id)
+        this.windowBaseDOM.createWindowBase(this.globalWindow)
+        this.menuContext.init()
+        this.fieldMenuContext.init()
         this.addHomeWindow();
         this.managmentObject.initObjects(this.window.frames)
         this.windowBaseDOM.createNameWindow(this.window.name)
@@ -100,13 +101,13 @@ export class Rucula{
         this.elementFormRucula = this.windowBaseDOM.getPrincipalElementRucula() as HTMLFormElement
         this.paginationEvents.headerSearch(this.window.gridSearch);
         this.paginationEvents.fotter(this.window.gridFooter);
-        this.layoutFrame.configureLayout(this.window)
+        this.layoutFrame.configureLayout(this.window,this.elementFormRucula)
         this.createFrames()
         this.createButtons()
         this.buttonsBase.initButtonsTypeCrudDefault();
         this.buttonsBase.initButtonPlus();
         this.buttonsBase.crud(this.window?.crud);        
-        rucula.dispatchEvent(eventLoad);
+        this.globalWindow.dispatchEvent(eventLoad);
         
         (window as any).rucula = new RuculaLogs(this.managmentObject);
     }
@@ -136,8 +137,8 @@ export class Rucula{
     }
 
     private cleanRucula(){
-        for (let index = 0; index < this.elementRucula.childNodes.length; index++) {            
-            this.elementRucula.childNodes[index].remove();
+        for (let index = 0; index < this.globalWindow.childNodes.length; index++) {            
+            this.globalWindow.childNodes[index].remove();
         }
     }
 
@@ -146,7 +147,7 @@ export class Rucula{
         if(type == "CRUD"){
             this.button.prepareButtonsInLeftBox(this.window.button)
         }
-        this.eventButton.eventButton(this.window.pathController, this.window.button)
+        this.eventButton.eventButton(this.globalWindow, this.window.pathController, this.window.button)
         this.eventButton.openCloseRightListButtons()
     }
 
@@ -161,14 +162,14 @@ export class Rucula{
 
                 const block = frameBlock.create(frame)
                 this.elementFormRucula.appendChild(block)
-                eventCreated(block,this.windowBaseDOM.getElementRoot()) 
+                eventCreated(block,this.globalWindow) 
             }
             
             if(frame.type == constTypeFrame.LINE){
                             
                 const line = frameLine.create(frame)
                 this.elementFormRucula.appendChild(line)
-                eventCreated(line,this.windowBaseDOM.getElementRoot())
+                eventCreated(line,this.globalWindow)
             }  
             
             function eventCreated(frameElement:HTMLDivElement, elementRoot: HTMLElement){

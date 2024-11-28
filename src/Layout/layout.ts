@@ -1,15 +1,12 @@
-import { WindowBaseDOM } from "../elements/window-base/WindowBase";
 import { window } from "../entities/form/window";
 
 export class LayoutFrame {
 
-    windowBaseDOM:WindowBaseDOM
     P:string
-    constructor(windowBaseDOM:WindowBaseDOM, P:string) {
-        this.windowBaseDOM = windowBaseDOM
+    constructor(P:string) {
         this.P = P
     }
-    configureLayout(window:window){
+    configureLayout(window:window,principalElementRucula:HTMLElement){
     
         if(window.layout.items === undefined){
             return
@@ -21,7 +18,11 @@ export class LayoutFrame {
         window.layout.tamplateColumns = colLength
         window.layout.tamplateRow = rowLength
 
-        this.setGridContainer(window.layout.tamplateColumns,window.layout.tamplateRow)
+        var tamplateColumns = window.layout.tamplateColumns
+        var tamplateRows = window.layout.tamplateRow
+
+        principalElementRucula.style.gridTemplateColumns = `repeat(${tamplateColumns},1fr)` 
+        principalElementRucula.style.gridTemplateRows = `repeat(${tamplateRows},1fr )`
 
         for (let row = 1; row <= rowLength; row++) {
     
@@ -51,10 +52,4 @@ export class LayoutFrame {
         }
     }
 
-    private setGridContainer(tamplateColumns:number,tamplateRows:number){
-        
-        let form = this.windowBaseDOM.getPrincipalElementRucula()
-        form.style.gridTemplateColumns = `repeat(${tamplateColumns},1fr)` 
-        form.style.gridTemplateRows = `repeat(${tamplateRows},1fr )`
-    }
 }

@@ -1,12 +1,11 @@
 import { constPagination } from "../const";
-import { WindowBaseDOM } from "../elements/window-base/WindowBase";
 
 export class PaginationEvents  {
 
     
-    windowBaseDOM:WindowBaseDOM
-    constructor(windowBaseDOM:WindowBaseDOM) {
-        this.windowBaseDOM = windowBaseDOM
+    globalWindow:HTMLElement
+    constructor(globalWindow:HTMLElement) {
+        this.globalWindow = globalWindow
     }
     
     headerSearch (gridSearch:boolean){
@@ -16,8 +15,6 @@ export class PaginationEvents  {
             if(gridSearch == false){
                 search?.remove();
             }
-
-            let elementRoot = this.windowBaseDOM.getElementRoot() 
 
             let body = {
                 detail: {
@@ -35,7 +32,7 @@ export class PaginationEvents  {
                 
                 body.detail.value = String(formData.get('r-find-value'))
 
-                elementRoot.dispatchEvent(event)
+                this.globalWindow.dispatchEvent(event)
 
             })
         }
@@ -45,8 +42,6 @@ export class PaginationEvents  {
                 document.getElementById('r-act-grid-footer')?.remove()
             }
 
-            let elementRoot = this.windowBaseDOM.getElementRoot() 
-
             let pagination = {
                 detail: {
                   page: ''
@@ -55,16 +50,16 @@ export class PaginationEvents  {
     
             let event = new CustomEvent('r-pagination', pagination)
             
-            document.getElementById(constPagination.FIRST)?.addEventListener('click',() => dispatchEvent('first'))
-            document.getElementById(constPagination.LAST)?.addEventListener('click',() => dispatchEvent('last'))
-            document.getElementById(constPagination.PREVIOUS)?.addEventListener('click',() => dispatchEvent('previous'))
-            document.getElementById(constPagination.NEXT)?.addEventListener('click',() => dispatchEvent('next'))
+            document.getElementById(constPagination.FIRST)?.addEventListener('click',() => dispatchEvent('first',this.globalWindow))
+            document.getElementById(constPagination.LAST)?.addEventListener('click',() => dispatchEvent('last',this.globalWindow))
+            document.getElementById(constPagination.PREVIOUS)?.addEventListener('click',() => dispatchEvent('previous',this.globalWindow))
+            document.getElementById(constPagination.NEXT)?.addEventListener('click',() => dispatchEvent('next',this.globalWindow))
             
             
-            function dispatchEvent(page:string){
+            function dispatchEvent(page:string,globalWindow:HTMLElement){
                 
                 pagination.detail.page = page 
-                elementRoot.dispatchEvent(event);
+                globalWindow.dispatchEvent(event);
             }      
             
             let row = {
@@ -78,7 +73,7 @@ export class PaginationEvents  {
             document.getElementById(constPagination.ROW_NUMBER)?.addEventListener('change',(e) => {
                 var select = e.target as HTMLSelectElement
                 row.detail.row = Number( select.value)
-                elementRoot.dispatchEvent(eventRow)
+                this.globalWindow.dispatchEvent(eventRow)
             });
         }
     }

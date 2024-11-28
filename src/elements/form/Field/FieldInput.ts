@@ -11,12 +11,12 @@ export abstract class FieldInput{
 
     protected field:field
     public input!: HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement
-    protected windowBaseDOM:WindowBaseDOM
+    protected ruculaForm:HTMLElement
 
-    constructor(field:field, managmentObject:ManagmentObject,windowBaseDOM:WindowBaseDOM) {
+    constructor(field:field, managmentObject:ManagmentObject, ruculaForm:HTMLElement) {
         this.field = field;
         this.managmentObject = managmentObject
-        this.windowBaseDOM = windowBaseDOM
+        this.ruculaForm = ruculaForm
     }
 
     protected abstract create():void;

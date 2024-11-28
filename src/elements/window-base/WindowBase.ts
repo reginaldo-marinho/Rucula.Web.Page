@@ -1,21 +1,14 @@
 import { cookie } from "../../common/coockie/coockie";
 import { constIdBaseWindow, constPagination } from "../../const";
-import { MenuContext } from "../../menu-context/menu-context";
-import { FieldMenuContext } from "../form/Field/fieldMenuContext";
 
 export class WindowBaseDOM {
 
-    private fieldMenuContext:FieldMenuContext
-    private menuContext:MenuContext
     private P:string
-    constructor(fieldMenuContext:FieldMenuContext,menuContext:MenuContext,prefix:string) {
-        this.fieldMenuContext = fieldMenuContext
-        this.menuContext = menuContext
+    constructor(prefix:string) {
         this.P = prefix
     }
-    private elementRoot! :HTMLElement
-    
-    createWindowBase(id:string){
+
+    createWindowBase(globalWindow:HTMLElement){
 
         const ruculaWindow = document.createElement("div");
         ruculaWindow.classList.add("r-w");
@@ -29,8 +22,7 @@ export class WindowBaseDOM {
         ruculaWindow.appendChild(contentForm.childNodes[0] as HTMLDivElement)
         ruculaWindow.appendChild(contentForm.childNodes[1] as HTMLDivElement)
             
-        const div = document.getElementById(id)
-        div?.appendChild(ruculaWindow);
+        globalWindow?.appendChild(ruculaWindow);
         calculateHeightRuculaWindow()
         this.prepareEventsButtonsCrud()
         this.maximizeWindow()
@@ -38,9 +30,6 @@ export class WindowBaseDOM {
         this.alterTheme()
         this.openActionswindow()
         this.actionCrudpreventDefault()
-        this.menuContext.init()
-        this.fieldMenuContext.init()
-        
         function calculateHeightRuculaWindow(){
             
             let offsetTop = Number(ruculaWindow.offsetTop)
@@ -301,12 +290,6 @@ export class WindowBaseDOM {
         })
     }
        
-    setElementRoot (id:string){
-            this.elementRoot = document.getElementById(id)!
-    }
-    getElementRoot() {
-           return this.elementRoot
-    }
     getPrincipalElementRucula(){
             return document.getElementById(`${this.P}${constIdBaseWindow.FORM_RUCULA_JS}`) as HTMLFormElement
     }

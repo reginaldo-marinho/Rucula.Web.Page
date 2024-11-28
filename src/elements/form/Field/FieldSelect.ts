@@ -30,6 +30,6 @@ export class FieldSelect extends FieldInput{
     }
 
     protected setEvents(): void {
-        new FileEventSelect(this.managmentObject, this.input, this.field, this.windowBaseDOM)
+        new FileEventSelect(this.managmentObject, this.input, this.field, this.ruculaForm)
     }
 }

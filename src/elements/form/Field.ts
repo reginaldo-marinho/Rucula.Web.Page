@@ -2,7 +2,6 @@ import { constGroupFormat, constInputClass, constTypeInput } from "../../const";
 import { field } from "../../entities/form/field";
 import { ruculaGlobal } from "../../global/GlobalConfig";
 import { ManagmentObject } from "../../object/ObjectManagment";
-import { WindowBaseDOM } from "../window-base/WindowBase";
 import { eventsCustom } from "./Field/EventsFieldsCustom";
 import { FieldCheckbox } from "./Field/FieldCheckbox";
 import { FieldCommon } from "./Field/FieldCommon";
@@ -16,10 +15,11 @@ export class Field  {
 
     private managmentObject:ManagmentObject
 
-    windowBaseDOM:WindowBaseDOM
-    constructor(managmentObject:ManagmentObject, windowBaseDOM:WindowBaseDOM) {
+    private ruculaForm:HTMLElement
+
+    constructor(managmentObject:ManagmentObject, ruculaForm:HTMLElement) {
         this.managmentObject = managmentObject
-        this.windowBaseDOM = windowBaseDOM
+        this.ruculaForm = ruculaForm
     }
     createSpanLabelIsRequerid():HTMLSpanElement{
 
@@ -147,23 +147,23 @@ export class Field  {
         this.checkTypeField(field.type)
         
         if(this.isSimple(field.type)){
-            fieldStrategy.setStrategy(new FieldCommon(field, this.managmentObject, this.windowBaseDOM))
+            fieldStrategy.setStrategy(new FieldCommon(field, this.managmentObject, this.ruculaForm))
         }
         
         if(this.isSelect(field.type)) {
-            fieldStrategy.setStrategy(new FieldSelect(field, this.managmentObject,  this.windowBaseDOM))
+            fieldStrategy.setStrategy(new FieldSelect(field, this.managmentObject,  this.ruculaForm))
         }
 
         if(isCheckBox()){
-            fieldStrategy.setStrategy(new FieldCheckbox(field, this.managmentObject, this.windowBaseDOM))
+            fieldStrategy.setStrategy(new FieldCheckbox(field, this.managmentObject, this.ruculaForm))
         }
 
         if(this.isTextArea(field.type)){
-            fieldStrategy.setStrategy(new FieldTextArea(field, this.managmentObject, this.windowBaseDOM))
+            fieldStrategy.setStrategy(new FieldTextArea(field, this.managmentObject, this.ruculaForm))
         }
         
         if(isRadio()) {
-            fieldStrategy.setStrategy(new FieldRadio(field, this.managmentObject,  this.windowBaseDOM))
+            fieldStrategy.setStrategy(new FieldRadio(field, this.managmentObject,  this.ruculaForm))
         }
 
         element = fieldStrategy.create();

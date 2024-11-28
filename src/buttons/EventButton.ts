@@ -10,17 +10,15 @@ export class EventButton {
     field:Field
     managmentObject: ManagmentObject
 
-    windowBaseDOM:WindowBaseDOM
     P:string
-    constructor(field:Field, managmentObject: ManagmentObject,windowBaseDOM:WindowBaseDOM,P:string) {
+    constructor(field:Field, managmentObject: ManagmentObject,P:string) {
         this.field = field
         this.managmentObject = managmentObject
-        this.windowBaseDOM = windowBaseDOM
         this.P = P
     }
-    eventButton(pathController:string, buttons:button[]){
+    eventButton(ruculaForm:HTMLElement, pathController:string, buttons:button[]){
         
-        let rucula = this.windowBaseDOM.getElementRoot()
+        let rucula = ruculaForm
 
         buttons?.filter(b => b.type === "button")
         .forEach((button) => {
