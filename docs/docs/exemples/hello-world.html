@@ -19,11 +19,11 @@
         <div id="js">
         </div>
 
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rucula-js/rucula-js@master/dist/style/style.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rucula-js/rucula-js@desenv/dist/style/style.css"/>
 
         <script type="module" >
             
-            import {Rucula} from 'https://cdn.jsdelivr.net/gh/rucula-js/rucula-js@master/dist/Rucula.js'
+            import {Rucula} from 'https://cdn.jsdelivr.net/gh/rucula-js/rucula-js@desenv/dist/Rucula.js'
             
             let config = {
                 floatLabel:true, 
@@ -31,6 +31,7 @@
                     {
                         env:"development",
                         hostname:"http://localhost",
+                        description:"Desenvolvimento",
                         port: "5016"
                     }
                 ],
@@ -93,18 +94,18 @@
                         type: "button",
                         target: "r-a-delete",
                         body:"."
-                    }
-                ]}
+                    }                   
+                ]
+            }
+    
+            let rucula = new Rucula({
+                global: config,
+                window: input,
+                id:'js'
+            });
 
-            var form = document.getElementById("js")
-
-            let rucula = new Rucula(config,input,"js");
+            rucula.create();
             
-            form?.addEventListener('r-a-save',(e) => {
-                rucula.loader.enable()
-                rucula.loader.disable()
-            })
-
         </script>
     </body>
 </html>
