@@ -244,8 +244,8 @@
     {
       "text": "Finalizar",
       "type": "button",
+      "icon":"bi bi-save",
       "target": "finalll",
-      "endPoint": "delete-os",
       "URL":{
         "params":"codigo={ordemDeServico.codigo}"
       },

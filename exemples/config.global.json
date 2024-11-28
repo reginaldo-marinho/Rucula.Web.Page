@@ -8,6 +8,12 @@
             "port": "5016"
         },
         {
+            "env":"development-docker",
+            "description":"Desenvolvimento Docker",
+            "hostname":"http://localhost",
+            "port": "5016"
+        },
+        {
             "env":"staging",
             "description":"Homologação",
             "hostname":"http://ruculaerp",
