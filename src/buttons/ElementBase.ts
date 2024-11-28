@@ -7,6 +7,6 @@ export class ElementBase{
         this.element.setAttribute("id",button.target);
     }
     addColor(color?:string){
-        if (color)this.element!.style.backgroundColor = color;
+        if (color)this.element!.style.color = color;
     }
 }

@@ -1,7 +1,7 @@
+import { ComponentIconButton } from '../Components/ComponentIconButton' ;
 import { button } from '../entities/form/button';
 import { ElementBase } from './ElementBase';
 import { ElementStrategy } from './ElementEstrategy';
-import { createIcon } from './IconElement';
 
 export class ElementButton extends ElementBase implements ElementStrategy{
 
@@ -23,12 +23,19 @@ export class ElementButton extends ElementBase implements ElementStrategy{
         _class?.forEach(item => {
             this.element.classList.add(item)
         })
- 
-        let icon = createIcon(button)
+        
+        
+        if((button.icon??="").length > 0){
+            let icon = new ComponentIconButton({
+                button:button
+            }).create();
+     
+            this.element.appendChild(icon);
+
+        }
         let span = document.createElement('span')
         span.textContent = button.text??"";
                 
-        this.element.appendChild(icon);
         this.element.appendChild(span);
 
         this.addColor(button.color);
