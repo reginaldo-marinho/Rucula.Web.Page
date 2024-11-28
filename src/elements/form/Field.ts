@@ -22,7 +22,6 @@ export class Field  {
         this.windowBaseDOM = windowBaseDOM
     }
     createSpanLabelIsRequerid():HTMLSpanElement{
-        const floatLabel = ruculaGlobal.getConfigurationGlobal().floatLabel
 
         const span = document.createElement('span'); 
         span.innerText = " *"
@@ -54,8 +53,8 @@ export class Field  {
           label.append(this.createSpanLabelIsRequerid().cloneNode(true))
         }
         
-        const floatLabel = ruculaGlobal.getConfigurationGlobal().floatLabel
-        
+        const floatLabel = ruculaGlobal?.getConfigurationGlobal()?.floatLabel
+                
         if(floatLabel == true && (this.isSimple(field.type)|| this.isTextArea(field.type)|| this.isSelect(field.type))){
             div.appendChild(element)
             div.classList.add('did-floating-label-content')

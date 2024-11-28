@@ -7,7 +7,7 @@ import { WindowBaseDOM } from "../../window-base/WindowBase";
 export abstract class FieldInput{
     
     protected managmentObject:ManagmentObject
-    protected floatLabel = ruculaGlobal.getConfigurationGlobal().floatLabel
+    protected floatLabel = ruculaGlobal?.getConfigurationGlobal()?.floatLabel
 
     protected field:field
     public input!: HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement
