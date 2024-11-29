@@ -1,10 +1,31 @@
 import assert from 'assert';
 import { ruculaGlobal } from '../global/GlobalConfig';
 import { URLRucula } from './urlManagment';
-import { exportManagmentObject } from '../exports';
+import {ManagmentObject} from  '../object/ObjectManagment'
+import { Fragment } from '../fragment/fragment';
+import { TableDependency } from '../table-dependency/TableDependency';
 
 
-let managmentObjectTest = exportManagmentObject;
+var frames:any[] = [
+    {
+      name: "frame",
+      type: "block",
+      objectDto: "frame",
+      alias: "aliasTestURL",
+      identity:"ccss",
+      fields: [
+          {
+          propertDto: "codigo",
+          description: "Codigo"
+        }
+      ]
+    },
+
+]
+
+let fragment = new Fragment(new TableDependency());
+
+let managmentObject = new ManagmentObject(fragment, new TableDependency(), frames);
 
 describe('urlManagment', function () {
 
@@ -24,25 +45,9 @@ describe('urlManagment', function () {
 
     } as any);
 
-
-    var frames:any[] = [
-          {
-            name: "frame",
-            type: "block",
-            objectDto: "frame",
-            alias: "aliasTestURL",
-            fields: [
-                {
-                propertDto: "codigo",
-                description: "Codigo"
-              }
-            ]
-          },
-    
-    ]
-     
-    managmentObjectTest.frame.initObjects(frames);
-    managmentObjectTest.object.field.setValueContextAlias("aliasTestURL.codigo","MyValueTest")
+  
+    managmentObject.configFieldBlock(frames[0]);
+    managmentObject.setValueContextAlias("aliasTestURL.codigo","MyValueTest")
 
     describe('UrlBase shold create url by controller', function () {
   
@@ -55,9 +60,11 @@ describe('urlManagment', function () {
                 }
             }
             
-            let url = new URLRucula(managmentObjectTest.object.field, button.URL);
+            let url = new URLRucula(managmentObject, button.URL);
 
             let result = url.getURL();
+
+            assert.equal(result,'http://localhost:5016?codigo=MyValueTest')
 
         })
 
@@ -68,8 +75,8 @@ describe('urlManagment', function () {
                     relative:'servico/venda/cliente?codigo={aliasCliente.codigo}',
                 }
             }
-             let result = new URLRucula(managmentObjectTest.object.field, button.URL);
+             let result = new URLRucula(managmentObject, button.URL);
 
-        })
+          })
     })    
 });
