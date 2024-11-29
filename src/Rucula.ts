@@ -63,11 +63,17 @@ export class Rucula{
         this.popup = new Popup(this.P)
         this.menuContext = new MenuContext(this.P)
         this.fieldMenuContext= new FieldMenuContext(this.popup, this.menuContext, this.P)
-        this.windowBaseDOM = new WindowBaseDOM(this.P)
+        
+        this.windowBaseDOM = new WindowBaseDOM(this.P, {
+            globalWindow:this.globalWindow,
+            openLeftGrid: this.window.grid,
+            windowName: this.window.name
+            
+        })
         this.layoutFrame = new LayoutFrame(this.P)
         this.tableDependency = new TableDependency();
         this.fragment = new Fragment(this.tableDependency);
-        this.managmentObject = new ManagmentObject(this.fragment, this.tableDependency);
+        this.managmentObject = new ManagmentObject(this.fragment, this.tableDependency,this.window.frames);
         this.event = new EventManagment(this.managmentObject,this.globalWindow);
         this.field = new Field(this.managmentObject, this.globalWindow)
         this.eventButton = new EventButton(this.field, this.managmentObject,this.P)
@@ -91,13 +97,9 @@ export class Rucula{
         this.globalWindow.dispatchEvent(eventInit)
         configWindow.set(this.window, this.P)
         defaultValues.setDefault(this.window)
-        this.windowBaseDOM.createWindowBase(this.globalWindow)
         this.menuContext.init()
         this.fieldMenuContext.init()
         this.addHomeWindow();
-        this.managmentObject.initObjects(this.window.frames)
-        this.windowBaseDOM.createNameWindow(this.window.name)
-        this.windowBaseDOM.closeLeftGrid(this.window.grid)
         this.elementFormRucula = this.windowBaseDOM.getPrincipalElementRucula() as HTMLFormElement
         this.paginationEvents.headerSearch(this.window.gridSearch);
         this.paginationEvents.fotter(this.window.gridFooter);

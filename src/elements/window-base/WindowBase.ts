@@ -3,52 +3,67 @@ import { constIdBaseWindow, constPagination } from "../../const";
 
 export class WindowBaseDOM {
 
+    private ruculaWindow = document.createElement("div");
     private P:string
-    constructor(prefix:string) {
+    constructor(prefix:string, config: {
+        globalWindow:HTMLElement,
+        openLeftGrid:boolean,
+        windowName:string
+    }){
         this.P = prefix
+        this.createWindowBase(config.globalWindow)
+        this.createNameWindow(config.windowName)
+        this.closeLeftGrid(config.openLeftGrid)
     }
 
-    createWindowBase(globalWindow:HTMLElement){
+    private createWindowBase(globalWindow:HTMLElement){
 
-        const ruculaWindow = document.createElement("div");
-        ruculaWindow.classList.add("r-w");
-        ruculaWindow.classList.add(`${this.P}r-w`);
-    
-        const actions = this.componentActions();    
-        ruculaWindow.appendChild(actions)
-    
+
+        this.ruculaWindow.classList.add("r-w");
+        this.ruculaWindow.classList.add(`${this.P}r-w`);
+
+        const actions = this.componentActions();
+        this.ruculaWindow.appendChild(actions)
+
         const contentForm = this.createComponentCreateOrEdit()
-        
-        ruculaWindow.appendChild(contentForm.childNodes[0] as HTMLDivElement)
-        ruculaWindow.appendChild(contentForm.childNodes[1] as HTMLDivElement)
-            
-        globalWindow?.appendChild(ruculaWindow);
-        calculateHeightRuculaWindow()
+
+        this.ruculaWindow.appendChild(contentForm.childNodes[0] as HTMLDivElement)
+        this.ruculaWindow.appendChild(contentForm.childNodes[1] as HTMLDivElement)
+
+        globalWindow?.appendChild(this.ruculaWindow);
+
         this.prepareEventsButtonsCrud()
         this.maximizeWindow()
-        this.eraseWindow(ruculaWindow)
+        this.eraseWindow(this.ruculaWindow)
         this.alterTheme()
         this.openActionswindow()
         this.actionCrudpreventDefault()
-        function calculateHeightRuculaWindow(){
-            
-            let offsetTop = Number(ruculaWindow.offsetTop)
-            let height = Number(window.innerHeight)
-            ruculaWindow.style.height = `${height-offsetTop}px` 
-        }
+
+        let offsetTop = Number(this.ruculaWindow.offsetTop)
+        let height = Number(window.innerHeight)
+        this.ruculaWindow.style.height = `${height-offsetTop}px` // heigth
 
     }
 
-    createNameWindow(name:string){
-        let window = document.querySelector(".r-w-t") as HTMLElement
+    private createNameWindow(name:string){
+        let window = this.ruculaWindow.querySelector(".r-w-t") as HTMLElement
         window.innerHTML = name
     }
 
-    componentActions(){
+    private openCloseContainer(){
+
+        let itemContainer = document.querySelectorAll(`.${this.P}js-open-close-container`)
+
+        itemContainer.forEach(item => {
+            item.classList.toggle("r-display-none")
+        })
+    }
+    
+    private componentActions(){
         const actions = document.createElement("div");
         actions.className = "r-left-block"
 
-        const ACTIONS = 
+        const ACTIONS =
             `<div class="r-act" id="${this.P}actions">
                 <div class="r-act-opt r-head" id="${this.P}w-title">
                     <button id="${this.P}${constIdBaseWindow.NEW}" class="r-a-b r-btn-new-cancel-close"><i class="bi bi-plus-lg"></i></button>
@@ -82,18 +97,18 @@ export class WindowBaseDOM {
                         </div>
                     </div>
                 </div>
-             </div>` 
-    
-        actions.innerHTML = ACTIONS;    
+             </div>`
+
+        actions.innerHTML = ACTIONS;
 
         return actions.cloneNode(true);
     }
-    
-    createComponentCreateOrEdit(){
+
+    private createComponentCreateOrEdit(){
 
         const contentForm = document.createElement("div");
 
-        const CREATE_OR_EDIT =  
+        const CREATE_OR_EDIT =
         `<div class="container-r-f  ${this.P}js-open-close-container">
             <div class="r-act-opt r-head" id="${this.P}w-title">
             </div>
@@ -105,13 +120,13 @@ export class WindowBaseDOM {
             </div>
         </div>
         <div autocomplete="off" class="${this.P}r-f container-r-f r-display-none ${this.P}js-open-close-container">
-           
+
         <div class="r-facede-action top">
             <div class="r-window-name r-facede-action top">
                 <h3 class="${constIdBaseWindow.TITLE}"></h3>
             </div>
             <div class="r-head r-read-new r-facede-action top">
-               
+
                 <div style="z-index: 10;">
                     <button id="${this.P}${constIdBaseWindow.ACTIONS_WINDOW}" class="r-a-b r-actions-window"><i class="bi bi-nut"></i></button>
                     <div class="r-display-inline-block r-actions-window r-actions-window-itens">
@@ -123,13 +138,13 @@ export class WindowBaseDOM {
                             <button id="${this.P}${constIdBaseWindow.GLOBALIZATION}" class="r-a-b">
                                 <i class="bi bi-globe-americas"></i>
                                 <ol id="${this.P}${constIdBaseWindow.OLLI_GLOBALIZATION}" class="${constIdBaseWindow.OLLI_GLOBALIZATION} list-vertical-buttons list-vertical-buttons-pp-left r-display-none">
-                                </ol>                        
-                            </button> 
+                                </ol>
+                            </button>
                             <button id="${this.P}${constIdBaseWindow.ENVIROMENT}" class="r-a-b">
                                 <div class="desc-environment"><i class="bi bi-fire"></i> <span class="description"></span> </div>
                                 <ol id="${this.P}${constIdBaseWindow.OLLI_ENVIROMENT}" class="${constIdBaseWindow.OLLI_ENVIROMENT} list-vertical-buttons list-vertical-buttons-pp-left r-display-none">
-                                </ol>                        
-                            </button>    
+                                </ol>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -144,82 +159,73 @@ export class WindowBaseDOM {
             <div class="r-w-body">
                 <form class="r-window-work" autocomplete="off">
                     <div class="r-head r-read-edit r-facede-action-crud" id="${this.P}r-facede-action-crud">
-                        <h3 id="${this.P}${constIdBaseWindow.FRAME_INFO}">                        
-                        </h3>                        
-                        <div>                        
+                        <h3 id="${this.P}${constIdBaseWindow.FRAME_INFO}">
+                        </h3>
+                        <div>
                             <button id="${this.P}r-a-save" class="r-a-b "><i class="bi bi-box-arrow-in-down"></i></button>
                             <button id="${this.P}r-a-alter" class="r-a-b"><i class="bi bi-pen"></i></button>
-                            <button id="${this.P}r-a-delete" class="r-a-b"><i class="bi bi-trash"></i></button>    
+                            <button id="${this.P}r-a-delete" class="r-a-b"><i class="bi bi-trash"></i></button>
                             <button id="${this.P}r-a-reload" class="r-a-b "><i class="bi bi-arrow-repeat"></i></button>
                             <button id="${this.P}erase-window" class="r-a-b "><i class="bi bi-eraser"></i></button>
-                            <button id="${this.P}r-a-menu-vertical" class="r-a-b"><i class="bi bi-arrows"></i></button>    
+                            <button id="${this.P}r-a-menu-vertical" class="r-a-b"><i class="bi bi-arrows"></i></button>
                         </div>
                     </div>
                     <div class="r-f-work r-f-items" id="${this.P}${constIdBaseWindow.FORM_RUCULA_JS}">
                     </div>
                 </form>
                 <div class="r-vertical-actions ${this.P}r-vertical-actions">
-                    <ol id=${this.P}${constIdBaseWindow.BUTTONS_MENU_VERTICAL_LIST} class=""> 
+                    <ol id=${this.P}${constIdBaseWindow.BUTTONS_MENU_VERTICAL_LIST} class="">
                     </ol>
-                    <button id=${this.P}${constIdBaseWindow.BUTTONS_MENU_VERTICAL_MOBILE} class="r-a-b actions-mobile"><i class="bi bi-arrows"></i></button>    
+                    <button id=${this.P}${constIdBaseWindow.BUTTONS_MENU_VERTICAL_MOBILE} class="r-a-b actions-mobile"><i class="bi bi-arrows"></i></button>
                 </div>
             </div>
             <div class="r-facede-action bottom">
             </div>
-            <div class="r-box-show" id="${this.P}r-box-show"> 
+            <div class="r-box-show" id="${this.P}r-box-show">
             </div>
         </div>
         `
-    
+
         contentForm.innerHTML = CREATE_OR_EDIT;
         return contentForm.cloneNode(true);
     }
-    
-    prepareEventsButtonsCrud(){
-    
+
+    private prepareEventsButtonsCrud(){
+
         let rNew = document.getElementById(`${this.P}${constIdBaseWindow.NEW}`)
-            
-        let framesOn = cookie.read("frames-on"); 
+
+        let framesOn = cookie.read("frames-on");
         if(framesOn != "false"){
             openClose()
         }
-                
+
         rNew!.addEventListener("click", () => {
-            
+
             let value = cookie.read("frames-on") == "true"
             document.cookie=`frames-on=${!value}`
             this.openCloseContainer();
             openClose()
-            
+
         })
-        
+
         function openClose(){
             rNew!.classList.toggle("r-btn-new-convert-close")
             rNew!.classList.toggle("r-btn-new-cancel-close")
         }
     }
-    
-    openCloseContainer(){
-        
-        let itemContainer = document.querySelectorAll(`.${this.P}js-open-close-container`)
-        
-        itemContainer.forEach(item => {
-            item.classList.toggle("r-display-none")
-        })
-    }
-    
-    
-    closeLeftGrid(grid:boolean){
-        
+
+
+    private closeLeftGrid(grid:boolean){
+
         if(grid == false){
-            
+
             let rf = document.querySelector(`.${this.P}r-f.r-display-none`)
-            
+
             if(rf != null){
                 let buttonNew = document.getElementById(`${this.P}${constIdBaseWindow.NEW}`);
                 buttonNew?.click()
             }
-            
+
             let actions = document.getElementById(`${this.P}actions`);
             actions?.remove()
 
@@ -232,16 +238,16 @@ export class WindowBaseDOM {
     maximizeWindow(){
 
         let maximize = document.getElementById(`${this.P}${constIdBaseWindow.MAXIMIZE_WINDOW}`);
-        
-        
+
+
         maximize?.addEventListener('click',() => {
             let actions = document.getElementById("actions");
             actions?.classList.toggle("r-close-grid");
         })
     }
-    
+
     eraseWindow(ruculaWindow:HTMLDivElement){
-    
+
         let erase = document.getElementById(`${this.P}${constIdBaseWindow.ERASE_WINDOW}`)
         let form = ruculaWindow.querySelector('form.r-window-work') as HTMLFormElement
 
@@ -254,7 +260,7 @@ export class WindowBaseDOM {
         let facedeActionCrud = document.getElementById(`${this.P}r-facede-action-crud`)
         facedeActionCrud?.addEventListener('click', (e) => e.preventDefault())
     }
-         
+
     openActionswindow(){
 
         let actions = document.getElementById(`${this.P}${constIdBaseWindow.ACTIONS_WINDOW}`)
@@ -289,7 +295,7 @@ export class WindowBaseDOM {
             }
         })
     }
-       
+
     getPrincipalElementRucula(){
             return document.getElementById(`${this.P}${constIdBaseWindow.FORM_RUCULA_JS}`) as HTMLFormElement
     }
