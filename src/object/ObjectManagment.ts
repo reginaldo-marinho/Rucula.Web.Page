@@ -11,9 +11,10 @@ export class ManagmentObject {
     public fragment:Fragment
     public tableDependency:TableDependency
 
-    constructor(fragment:Fragment,tableDependency:TableDependency) {                
+    constructor(fragment:Fragment,tableDependency:TableDependency,frames:frame[]) {                
         this.fragment = fragment
         this.tableDependency = tableDependency
+        this.initObjects(frames)
     }
 
     pathObjectBase:{parent:string, alias:string, configFrame:string, }[] = [];
@@ -22,7 +23,7 @@ export class ManagmentObject {
      * @description Creates an array of fragments of type object
      * @param {frame[]} frames
      */
-    initObjects(frames:frame[]){
+    private initObjects(frames:frame[]){
     
         this.pathObjectBase = []
         
