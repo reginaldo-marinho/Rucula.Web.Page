@@ -4,6 +4,7 @@ import { constIdBaseWindow, constPagination } from "../../const";
 export class WindowBaseDOM {
 
     private ruculaWindow = document.createElement("div");
+    private globalWindow:HTMLElement
     private P:string
     constructor(prefix:string, config: {
         globalWindow:HTMLElement,
@@ -11,6 +12,7 @@ export class WindowBaseDOM {
         windowName:string
     }){
         this.P = prefix
+        this.globalWindow = config.globalWindow
         this.createWindowBase(config.globalWindow)
         this.createNameWindow(config.windowName)
         this.closeLeftGrid(config.openLeftGrid)
@@ -192,7 +194,7 @@ export class WindowBaseDOM {
 
     private prepareEventsButtonsCrud(){
 
-        let rNew = document.getElementById(`${this.P}${constIdBaseWindow.NEW}`)
+        let rNew = this.ruculaWindow.querySelector(`#${this.P}${constIdBaseWindow.NEW}`)
 
         let framesOn = cookie.read("frames-on");
         if(framesOn != "false"){
@@ -219,17 +221,17 @@ export class WindowBaseDOM {
 
         if(grid == false){
 
-            let rf = document.querySelector(`.${this.P}r-f.r-display-none`)
+            let rf = this.globalWindow.querySelector(`.${this.P}r-f.r-display-none`)
 
             if(rf != null){
-                let buttonNew = document.getElementById(`${this.P}${constIdBaseWindow.NEW}`);
-                buttonNew?.click()
+                let buttonNew = this.globalWindow.querySelector(`#${this.P}${constIdBaseWindow.NEW}`);
+                (buttonNew as HTMLElement).click()
             }
 
-            let actions = document.getElementById(`${this.P}actions`);
+            let actions = this.globalWindow.querySelector(`#${this.P}actions`);
             actions?.remove()
 
-            let maximizeWindow = document.getElementById(`${this.P}${constIdBaseWindow.MAXIMIZE_WINDOW}`)
+            let maximizeWindow = this.globalWindow.querySelector(`#${this.P}${constIdBaseWindow.MAXIMIZE_WINDOW}`)
             maximizeWindow?.remove()
 
         }
