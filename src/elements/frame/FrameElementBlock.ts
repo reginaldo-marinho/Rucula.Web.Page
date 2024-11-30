@@ -13,9 +13,7 @@ export class FrameElementBlock extends FrameElement{
 
     }
     create(frame:frame){
-    
-        this.managmentObject.configFieldBlock(frame)
-        
+            
         const frameElement = this.createbase(frame)
         
         const div = document.createElement("div");

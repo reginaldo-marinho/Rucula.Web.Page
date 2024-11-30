@@ -46,7 +46,6 @@ describe('urlManagment', function () {
     } as any);
 
   
-    managmentObject.configFieldBlock(frames[0]);
     managmentObject.setValueContextAlias("aliasTestURL.codigo","MyValueTest")
 
     describe('UrlBase shold create url by controller', function () {

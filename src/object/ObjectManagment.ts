@@ -1,5 +1,5 @@
 import { convertValueType } from '../Helpers/Helper';
-import { constTypeFrame } from '../const';
+import { constFrameLineActions, constTypeFrame } from '../const';
 import { frame } from '../entities/form/frame';
 import { Fragment } from '../fragment/fragment';
 import { TableDependency } from '../table-dependency/TableDependency';
@@ -15,6 +15,15 @@ export class ManagmentObject {
         this.fragment = fragment
         this.tableDependency = tableDependency
         this.initObjects(frames)
+        
+        frames.forEach(frame => {
+            if(frame.type === 'block'){
+                this.configFieldBlock(frame)
+            }
+            if(frame.type === 'line'){
+                this.addLine(frame)
+            }    
+        });
     }
 
     pathObjectBase:{parent:string, alias:string, configFrame:string, }[] = [];
@@ -59,7 +68,7 @@ export class ManagmentObject {
     * @description Creates an array of fragments of type Field for Frames of type 'block'
     * @param {frame} frame
     */
-    configFieldBlock(frame:frame){
+    private configFieldBlock(frame:frame){
         
         frame.fields?.forEach(field => {
             

@@ -58,6 +58,8 @@ export class Rucula{
         ruculaGlobal.initGlobalConfiguration(config.global)
         
         this.window = config.window
+        defaultValues.setDefault(this.window)
+        
         this.globalWindow = document.getElementById(config.id)!
         
         this.popup = new Popup(this.P)
@@ -96,7 +98,6 @@ export class Rucula{
         
         this.globalWindow.dispatchEvent(eventInit)
         configWindow.set(this.window, this.P)
-        defaultValues.setDefault(this.window)
         this.menuContext.init()
         this.fieldMenuContext.init()
         this.addHomeWindow();

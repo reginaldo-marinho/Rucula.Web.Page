@@ -73,9 +73,7 @@ export class FameLineTable {
     }
 
     createRowDetail(frame:frame) {
-                    
-        this.managmentObject.addLine(frame) //! This function must be started immediately at the beginning of line creation
-        
+                            
         let tr = document.createElement('tr');
              
         const tdActions = document.createElement('td'); //? first td is used for actions line
@@ -130,7 +128,10 @@ export class FameLineTable {
     
     createNewRowDetail(identityObject: string){
 
+        
         let frame = configWindow.frame.get(identityObject,this.P)
+
+        this.managmentObject.addLine(frame) //! This function must be started immediately at the beginning of line creation
 
         const row = this.createRowDetail(frame)
         
