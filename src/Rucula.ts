@@ -193,7 +193,7 @@ export class Rucula{
         })
     }
 
-    public url = (URL?: { absolute: string; relative: string; params: string; }) => new URLRucula(this.managmentObject, URL);
+    public url = (URL: { absolute: string; relative: string; params: string; }) => new URLRucula(this.managmentObject, URL).getURL();
             
     objectUnique (alias:string) {
         return this.managmentObject.objectUnique(alias)

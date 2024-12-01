@@ -5,12 +5,14 @@ export interface button{
     type:string
     color?:string
     target:"r-a-save"|"r-a-alter"|"r-a-delete"|string
-    URL?:{
-        absolute:string
-        relative:string
-        params:string
-    },
+    URL?:buttonURL
     body?:string,
     fullWidth?:boolean,
     class?:string
+}
+
+export type buttonURL = {
+    absolute:string 
+    relative:string 
+    params:string
 }

@@ -1946,7 +1946,7 @@ let eventsCustom = (() => {
 
 class FieldInput {
     managmentObject;
-    floatLabel = ruculaGlobal.getConfigurationGlobal().floatLabel;
+    floatLabel = ruculaGlobal?.getConfigurationGlobal()?.floatLabel;
     field;
     input;
     windowBaseDOM;
@@ -2220,7 +2220,6 @@ class Field {
         this.windowBaseDOM = windowBaseDOM;
     }
     createSpanLabelIsRequerid() {
-        ruculaGlobal.getConfigurationGlobal().floatLabel;
         const span = document.createElement('span');
         span.innerText = " *";
         span.style.color = "red";
@@ -2241,7 +2240,7 @@ class Field {
             label.textContent = label.textContent;
             label.append(this.createSpanLabelIsRequerid().cloneNode(true));
         }
-        const floatLabel = ruculaGlobal.getConfigurationGlobal().floatLabel;
+        const floatLabel = ruculaGlobal?.getConfigurationGlobal()?.floatLabel;
         if (floatLabel == true && (this.isSimple(field.type) || this.isTextArea(field.type) || this.isSelect(field.type))) {
             div.appendChild(element);
             div.classList.add('did-floating-label-content');
@@ -2424,6 +2423,22 @@ function cleanFrame(blockORLine) {
     });
 }
 
+class ComponentIconButton {
+    constructor(propert) {
+        this.propert = propert;
+    }
+    propert;
+    create() {
+        let icon = document.createElement('i');
+        icon.textContent = ' ';
+        if (this.propert.button.icon === undefined || this.propert.button.icon.trim() === "") {
+            return icon;
+        }
+        this.propert.button.icon?.split(" ").forEach(item => icon.classList.add(item));
+        return icon;
+    }
+}
+
 class ElementBase {
     element;
     addDataIdAttribute(button) {
@@ -2431,16 +2446,8 @@ class ElementBase {
     }
     addColor(color) {
         if (color)
-            this.element.style.backgroundColor = color;
+            this.element.style.color = color;
     }
-}
-
-function createIcon(button) {
-    let icon = document.createElement('i');
-    if (button.icon === undefined || button.icon.trim() === "")
-        return icon;
-    button.icon?.split(" ").forEach(item => icon.classList.add(item));
-    return icon;
 }
 
 class ElementButton extends ElementBase {
@@ -2458,10 +2465,14 @@ class ElementButton extends ElementBase {
         _class?.forEach(item => {
             this.element.classList.add(item);
         });
-        let icon = createIcon(button);
+        if ((button.icon ??= "").length > 0) {
+            let icon = new ComponentIconButton({
+                button: button
+            }).create();
+            this.element.appendChild(icon);
+        }
         let span = document.createElement('span');
         span.textContent = button.text ?? "";
-        this.element.appendChild(icon);
         this.element.appendChild(span);
         this.addColor(button.color);
         this.addDataIdAttribute(button);
@@ -2476,7 +2487,12 @@ class ElementLink extends ElementBase {
         this.element.href = `${button.link}`;
         this.element.classList.add("btn-link");
         this.element.setAttribute('target', "_blank");
-        this.element.appendChild(createIcon(button));
+        if ((button.icon ??= "").length) {
+            let icon = new ComponentIconButton({
+                button: button
+            }).create();
+            this.element.appendChild(icon);
+        }
         return this.element;
     }
 }

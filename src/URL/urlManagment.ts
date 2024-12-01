@@ -1,47 +1,55 @@
+import { buttonURL } from "../entities/form/button"
 import { ruculaGlobal } from "../global/GlobalConfig"
 import { ManagmentObject } from "../object/ObjectManagment"
 
-
 export class URLRucula{
     
-    private _URL?:{absolute:string, relative:string, params:string}
-    
+    private _URL?:buttonURL
     private managmentObject: ManagmentObject    
     
-    constructor(managmentObject: ManagmentObject, URL?:{absolute:string, relative:string, params:string}){
-        this._URL = URL
+    constructor(managmentObject: ManagmentObject, URL:buttonURL){
+
+        if(URL.absolute == null) URL.absolute = ''
+        if(URL.relative == null) URL.relative = ''
+        if(URL.params == null) URL.params = ''
         
+        this._URL = URL
+    
         this.managmentObject = managmentObject
     }
 
     getURL(){
 
+        let url = ''
+
         if(this._URL == undefined){
             return this.domain()
         }
 
-        let URL = this._URL;
-
-        if(URL?.absolute?.length > 0) {
-            let url = this.path(URL.absolute)
-            return url
+        if(this._URL.absolute.length > 0) {
+            url = this.path(this._URL.absolute)
+        }
+        else{
+            url = this.domain()
         }
         
-        let url = this.domain()
-        
-        if (URL?.relative?.length > 0) {
-            let path = this.path(URL.relative);
+        if (this._URL.relative.length > 0) {
+            let path = this.path(this._URL.relative);
             url = `${url}/${path}`;
         }
         
         let params = ''
 
-        if(URL?.params?.length > 0 ){
-            params = this.path(URL.params)
+        if(this._URL.params.length > 0 ){
+            params = this.path(this._URL.params)
             url = `${url}?${params}`
             return url 
         }
 
+        if(url == ''){
+            return this.domain()
+        }
+        
         return url
     }
 
@@ -59,7 +67,7 @@ export class URLRucula{
         return `${enviroment.hostname}`
     }
 
-    path(path:string){
+    private path(path:string){
         
         path = this.createWithParams(path)
         path = this.createWithoutParams(path)
