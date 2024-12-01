@@ -258,6 +258,10 @@ input.r-i-focus-dependency {
     border: 2px solid var(--color-orange);
 }
 
+.r-g-i-i select.r-i-focus-dependency {
+    border: 2px solid var(--color-orange);
+}
+
 .r-q-b .r-g-i-i .r-label-block{
     display: block;
 }

@@ -7,7 +7,7 @@ export class URLRucula{
     private _URL?:buttonURL
     private managmentObject: ManagmentObject    
     
-    constructor(managmentObject: ManagmentObject, URL:buttonURL){
+    constructor(managmentObject: ManagmentObject, URL:buttonURL = {} as buttonURL){
 
         if(URL.absolute == null) URL.absolute = ''
         if(URL.relative == null) URL.relative = ''

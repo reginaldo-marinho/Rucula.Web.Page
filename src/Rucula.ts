@@ -25,6 +25,7 @@ import { FieldMenuContext } from "./elements/form/Field/fieldMenuContext";
 import { PaginationEvents } from "./pagination/pagination";
 import { MenuContext } from "./menu-context/menu-context";
 import { P as prefixe } from "./common/Prefixe";
+import { buttonURL } from "./entities/form/button";
 export class Rucula{
     
     private P = `ruculajs_${Date.now()}`
@@ -193,7 +194,7 @@ export class Rucula{
         })
     }
 
-    public url = (URL: { absolute: string; relative: string; params: string; }) => new URLRucula(this.managmentObject, URL).getURL();
+    public url = (URL: { absolute: string; relative: string; params: string;} = {} as buttonURL) => new URLRucula(this.managmentObject, URL);
             
     objectUnique (alias:string) {
         return this.managmentObject.objectUnique(alias)
