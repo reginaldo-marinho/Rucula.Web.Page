@@ -26,74 +26,105 @@ import { PaginationEvents } from "./pagination/pagination";
 import { MenuContext } from "./menu-context/menu-context";
 import { P as prefixe } from "./common/Prefixe";
 import { buttonURL } from "./entities/form/button";
+import { WindowAPI } from "./window/windowAPI";
+
 export class Rucula{
     
     private P = `ruculajs_${Date.now()}`
     private windowBaseDOM!:WindowBaseDOM
-    private window: window
-    private globalWindow: HTMLElement
+    private window!: window
+    private globalWindow!: HTMLElement
     private elementFormRucula!: HTMLFormElement
-    private menuContext:MenuContext
-    public popup:Popup
-    public event:EventManagment
-    public managmentObject:ManagmentObject
-    private tableDependency:TableDependency
-    private button:Button
-    private layoutFrame:LayoutFrame
-    private fragment: Fragment
-    private field:Field
-    private eventButton:EventButton
-    private frameEvent:FrameEvent
+    private menuContext!:MenuContext
+    public popup!:Popup
+    public event!:EventManagment
+    public managmentObject!:ManagmentObject
+    private tableDependency!:TableDependency
+    private button!:Button
+    private layoutFrame!:LayoutFrame
+    private fragment!: Fragment
+    private field!:Field
+    private eventButton!:EventButton
+    private frameEvent!:FrameEvent
     private config:any
-    private fieldMenuContext:FieldMenuContext
-    private paginationEvents:PaginationEvents
-    private buttonsBase:ButtonsBase
-    public loader:LoaderManagment
+    private fieldMenuContext!:FieldMenuContext
+    private paginationEvents!:PaginationEvents
+    private buttonsBase!:ButtonsBase
+    public loader!:LoaderManagment
+    
     constructor(config: {
         global:globalConfiguration, 
-        window:window, 
-        id:string|undefined,
+        urlWindow?:buttonURL,
+        window?:window, 
+        id?:string,
         reload?:() => void
     }){
+        
         config.id ??= 'rucula-js';
+        this.config = config
+
         ruculaGlobal.initGlobalConfiguration(config.global)
-        
-        this.window = config.window
-        defaultValues.setDefault(this.window)
-        
-        this.globalWindow = document.getElementById(config.id)!
+    }
+
+    async init(){
+
+        if(this.config.urlWindow){    
+            
+            let url = this.url(this.config.urlWindow).getURL()
+            var windowApi = new WindowAPI(url)
+            this.window = await windowApi.get(this.P)
+        }
+        else{
+            this.window = this.config.window
+        }
+       
+        this.globalWindow = document.getElementById(this.config.id!)!
         
         this.popup = new Popup(this.P)
         this.menuContext = new MenuContext(this.P)
         this.fieldMenuContext= new FieldMenuContext(this.popup, this.menuContext, this.P)
-        
-        this.windowBaseDOM = new WindowBaseDOM(this.P, {
-            globalWindow:this.globalWindow,
-            openLeftGrid: this.window.grid,
-            windowName: this.window.name
-            
-        })
         this.layoutFrame = new LayoutFrame(this.P)
         this.tableDependency = new TableDependency();
         this.fragment = new Fragment(this.tableDependency);
-        this.managmentObject = new ManagmentObject(this.fragment, this.tableDependency,this.window.frames);
-        this.event = new EventManagment(this.managmentObject,this.globalWindow);
-        this.field = new Field(this.managmentObject, this.globalWindow)
-        this.eventButton = new EventButton(this.field, this.managmentObject,this.P)
-        this.frameEvent = new FrameEvent(this.managmentObject)
-        this.paginationEvents = new PaginationEvents(this.globalWindow)
+        this.paginationEvents = new PaginationEvents(this.P, this.globalWindow)
+        
         this.buttonsBase = new ButtonsBase(this.P)
         this.loader = new LoaderManagment(this.P)
         this.button = new Button(() => {
-            let rucula = new Rucula(config)
-            rucula.create()
-            this.config?.reload()
-        }, this.popup,
-    this.P)
+                let rucula = new Rucula(this.config)
+                rucula.init()
+                this.config?.reload()
+        }, this.popup,this.P)
+        
+        
+        defaultValues.setDefault(this.window)
+       
+        this.windowBaseDOM = new WindowBaseDOM(this.P, {
+            globalWindow:this.globalWindow,
+            openLeftGrid: this.window?.grid ?? false,
+            windowName: this.window?.name 
+        })
+
+        if(this.window == null){
+
+            let message = 'Não foi possível carregar janela informada. Considere entrar em contato com o administrador'
+            this.popup.error( {
+                text:message
+            })
+            throw new Error(message);
+        }
+
+        this.managmentObject = new ManagmentObject(this.fragment, this.tableDependency,this.window.frames);
+        this.event = new EventManagment(this.P, this.managmentObject,this.globalWindow);
+        this.field = new Field(this.managmentObject, this.globalWindow)
+        this.eventButton = new EventButton(this.field, this.managmentObject,this.P)
+        this.frameEvent = new FrameEvent(this.managmentObject)
     }
 
     create(){
+
         this.cleanRucula();
+        
         let eventInit = new Event('rucula.init')
         let eventLoad = new Event('rucula.load')
         
@@ -106,8 +137,8 @@ export class Rucula{
         this.paginationEvents.headerSearch(this.window.gridSearch);
         this.paginationEvents.fotter(this.window.gridFooter);
         this.layoutFrame.configureLayout(this.window,this.elementFormRucula)
-        this.createFrames()
         this.createButtons()
+        this.createFrames()
         this.buttonsBase.initButtonsTypeCrudDefault();
         this.buttonsBase.initButtonPlus();
         this.buttonsBase.crud(this.window?.crud);        
@@ -166,19 +197,20 @@ export class Rucula{
 
                 const block = frameBlock.create(frame)
                 this.elementFormRucula.appendChild(block)
-                eventCreated(block,this.globalWindow) 
+                eventCreated(this.P, block,this.globalWindow) 
             }
             
             if(frame.type == constTypeFrame.LINE){
                             
                 const line = frameLine.create(frame)
                 this.elementFormRucula.appendChild(line)
-                eventCreated(line,this.globalWindow)
+                eventCreated(this.P,line,this.globalWindow)
             }  
-            
-            function eventCreated(frameElement:HTMLDivElement, elementRoot: HTMLElement){
+
+            function eventCreated(p:string, frameElement:HTMLDivElement, elementRoot: HTMLElement){
                 
-                var eventName = `frame.${frame.alias}.complete`
+
+                var eventName = `${p}frame.${frame.alias}.complete`
                 let event = new CustomEvent(eventName, {
                     detail: {
 
@@ -194,8 +226,10 @@ export class Rucula{
         })
     }
 
-    public url = (URL: { absolute: string; relative: string; params: string;} = {} as buttonURL) => new URLRucula(this.managmentObject, URL);
-            
+    public url (URL:buttonURL) {
+        return new URLRucula(this.managmentObject, URL);
+    } 
+    
     objectUnique (alias:string) {
         return this.managmentObject.objectUnique(alias)
     } 

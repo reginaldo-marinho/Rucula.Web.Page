@@ -35,6 +35,10 @@ export let defaultValues = (() => {
     return {
         setDefault:(window: window) => {
             
+            if(!window){
+                return
+            }
+            
             window.grid ??= true
             window.gridFooter ??= true
             window.gridSearch ??= true

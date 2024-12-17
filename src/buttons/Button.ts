@@ -35,10 +35,10 @@ export class  Button  {
             throw new Error("tipo do botão deve ser button ou link");
         }
         if(button.type == "button"){
-            this.elementStrategy = new  ElementButton();
+            this.elementStrategy = new  ElementButton(this.P);
         }
         if(button.type == "link"){
-            this.elementStrategy = new ElementLink();
+            this.elementStrategy = new ElementLink(this.P);
         }
         return this.elementStrategy.createElement(button);
     } 
@@ -154,7 +154,9 @@ export class  Button  {
         buttons?.forEach(b => {
                 
             const li = document.createElement("li")
-            li.appendChild(this.createButtonOrLink(b))
+            let button = this.createButtonOrLink(b)            
+            li.appendChild(button)
+
 
             ListRightButtons?.appendChild(li)  
         })

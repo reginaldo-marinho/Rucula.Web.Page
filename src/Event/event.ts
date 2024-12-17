@@ -3,9 +3,11 @@ import { ManagmentObject } from "../object/ObjectManagment"
 export class EventManagment {
 
     private managmentObject:ManagmentObject
+    private p:string
     
     private elementRoot:HTMLElement
-    constructor(managmentObject:ManagmentObject,elementRoot:HTMLElement) {
+    constructor(p:string, managmentObject:ManagmentObject,elementRoot:HTMLElement) {
+        this.p = p
         this.managmentObject =  managmentObject
         this.elementRoot = elementRoot
     }
@@ -31,7 +33,7 @@ export class EventManagment {
         let rucula = this.elementRoot
 
         if(query == undefined){
-            rucula.addEventListener(event, (e) => callback(e))
+            rucula.addEventListener(`${this.p}${event}`, (e) => callback(e))
             return
         }
 

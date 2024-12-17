@@ -6,6 +6,7 @@ export class WindowBaseDOM {
     private ruculaWindow = document.createElement("div");
     private globalWindow:HTMLElement
     private P:string
+
     constructor(prefix:string, config: {
         globalWindow:HTMLElement,
         openLeftGrid:boolean,

@@ -33,8 +33,8 @@ export class Popup {
 
     boxShowAppendChield(element:HTMLElement){
         this.boxShow = document.getElementById(`${this.prefix}r-box-show`) as HTMLElement
-        this.boxShow.appendChild(element)
-        this.boxShow.classList.add('r-box-show-center')
+        this.boxShow?.appendChild(element)
+        this.boxShow?.classList.add('r-box-show-center')
     }
 
     messageElement(config:config){

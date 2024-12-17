@@ -5,16 +5,15 @@ import { ManagmentObject } from "../object/ObjectManagment"
 export class URLRucula{
     
     private _URL?:buttonURL
-    private managmentObject: ManagmentObject    
+    private managmentObject?: ManagmentObject    
     
-    constructor(managmentObject: ManagmentObject, URL:buttonURL = {} as buttonURL){
+    constructor(managmentObject?: ManagmentObject, URL:buttonURL = {} as buttonURL){
 
         if(URL.absolute == null) URL.absolute = ''
         if(URL.relative == null) URL.relative = ''
         if(URL.params == null) URL.params = ''
         
         this._URL = URL
-    
         this.managmentObject = managmentObject
     }
 
@@ -26,22 +25,22 @@ export class URLRucula{
             return this.domain()
         }
 
-        if(this._URL.absolute.length > 0) {
-            url = this.path(this._URL.absolute)
+        if(this._URL.absolute!.length > 0) {
+            url = this.path(this._URL.absolute!)
         }
         else{
             url = this.domain()
         }
         
-        if (this._URL.relative.length > 0) {
-            let path = this.path(this._URL.relative);
+        if (this._URL.relative!.length > 0) {
+            let path = this.path(this._URL.relative!);
             url = `${url}/${path}`;
         }
         
         let params = ''
 
-        if(this._URL.params.length > 0 ){
-            params = this.path(this._URL.params)
+        if(this._URL.params!.length > 0 ){
+            params = this.path(this._URL.params!)
             url = `${url}?${params}`
             return url 
         }
@@ -84,7 +83,7 @@ export class URLRucula{
         for (const match of matches) {
             
             var propertValue = match[3]
-            var value = this.managmentObject.getPropert(propertValue)
+            var value = this.managmentObject?.getPropert(propertValue)
 
              path = path.replace(match[0],`${match[1]}${value}`)
         }
@@ -102,7 +101,7 @@ export class URLRucula{
             
             var propertValue = match[1]
 
-            var value = this.managmentObject.getPropert(propertValue)
+            var value = this.managmentObject?.getPropert(propertValue)
 
             path = path.replace(match[0],`/${value}`)
         }

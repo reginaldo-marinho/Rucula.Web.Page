@@ -14,16 +14,19 @@ export class ManagmentObject {
     constructor(fragment:Fragment,tableDependency:TableDependency,frames:frame[]) {                
         this.fragment = fragment
         this.tableDependency = tableDependency
-        this.initObjects(frames)
         
-        frames.forEach(frame => {
-            if(frame.type === 'block'){
-                this.configFieldBlock(frame)
-            }
-            if(frame.type === 'line'){
-                this.addLine(frame)
-            }    
-        });
+        if(frames.length > 0){
+            this.initObjects(frames)
+            frames.forEach(frame => {
+                if(frame.type === 'block'){
+                    this.configFieldBlock(frame)
+                }
+                if(frame.type === 'line'){
+                    this.addLine(frame)
+                }    
+            });
+        }
+        
     }
 
     pathObjectBase:{parent:string, alias:string, configFrame:string, }[] = [];

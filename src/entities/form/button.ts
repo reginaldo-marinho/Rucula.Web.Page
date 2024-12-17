@@ -12,7 +12,7 @@ export interface button{
 }
 
 export type buttonURL = {
-    absolute:string 
-    relative:string 
-    params:string
+    absolute?:string 
+    relative?:string 
+    params?:string
 }

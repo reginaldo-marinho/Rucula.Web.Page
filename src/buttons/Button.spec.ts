@@ -6,10 +6,11 @@ import {button} from '../entities/form/button'
 
 describe('ElementButton', function (){
 
+  let prefixe = 'svbnsvc_'
   
   describe('Element type button',function (){
     
-    let btn = new ElementButton(); 
+    let btn = new ElementButton(prefixe); 
 
     it('button have contain class r-b-i', function(){
 
@@ -36,7 +37,7 @@ describe('ElementButton', function (){
       }
 
       let elementSpecific = btn.createElement(specificButton)
-      expect(elementSpecific.outerHTML).toBe('<button class="r-b-i" type="button" id="finalll"><i class="bi bootstrap-icon-test"> </i><span>MyTest</span></button>') 
+      expect(elementSpecific.outerHTML).toBe('<button class="r-b-i" type="button" id="svbnsvc_finalll"><i class="bi bootstrap-icon-test"> </i><span>MyTest</span></button>') 
     }) 
 
     it('should create button without tag i(icon)', function (){
@@ -48,12 +49,12 @@ describe('ElementButton', function (){
       }
       
       let elementSpecific = btn.createElement(specificButton)
-      expect(elementSpecific.outerHTML).toBe('<button class="r-b-i" type="button" id="withoutIcon"><span>Without ICon</span></button>') 
+      expect(elementSpecific.outerHTML).toBe('<button class="r-b-i" type="button" id="svbnsvc_withoutIcon"><span>Without ICon</span></button>') 
     })
   })
   describe('Element type Link', function () {
     
-    let link = new ElementLink(); 
+    let link = new ElementLink(prefixe); 
 
     it('should create link', function (){
       

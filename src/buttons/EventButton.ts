@@ -23,8 +23,8 @@ export class EventButton {
         buttons?.filter(b => b.type === "button")
         .forEach((button) => {
             
-            let element:HTMLElement = document?.getElementById(`${this.P}${button.target}` ) as HTMLElement
-            
+            let element:HTMLElement = document?.getElementById(`${this.P}${button.target}`) as HTMLElement
+
             let object =  {
                 detail:{
                     url:'',
@@ -40,38 +40,37 @@ export class EventButton {
             let eventButtonDependency = new CustomEvent(`${this.P}${button.target}.dependency`,dependency)
             
             element?.addEventListener("click", () => {
-                                
+                
+                if(button.URL){
+                    let url = new URLRucula(this.managmentObject, button.URL);
+                    object.detail.url = url.getURL();
+                }
+
+                let optionObjectReturn = button?.body
+                
+                if(optionObjectReturn == undefined){
+                    rucula.dispatchEvent(eventButton)
+                    return
+                }
+
                 let dependencyCount = this.managmentObject.tableDependency.dependenciesCount()
                 
                 if( dependencyCount > 0){
                     this.field.focusFieldsWithDependency()
                     rucula.dispatchEvent(eventButtonDependency)
                     return;
-                }''
-                
-                if(button.URL){
-                    let url = new URLRucula(this.managmentObject, button.URL);
-                    object.detail.url = url.getURL();
                 }
-                
-                
-                let option = button?.body
-                
-                if(option == undefined){
-                    rucula.dispatchEvent(eventButton)
-                    return
-                }
-                
-                if(option  == ''){
+
+                if(optionObjectReturn  == ''){
                     object.detail.body = this.managmentObject.objectSeparate()
                 }
                 
-                if(option == '.'){
+                if(optionObjectReturn == '.'){
                     object.detail.body = this.managmentObject.objectFull()
                 }
                 
-                if(['','.',undefined].find(c=> c != option) == undefined){
-                    object.detail.body = this.managmentObject.objectUnique(option)
+                if(['','.',undefined].find(c=> c != optionObjectReturn) == undefined){
+                    object.detail.body = this.managmentObject.objectUnique(optionObjectReturn)
                 }
                 
                 rucula.dispatchEvent(eventButton)

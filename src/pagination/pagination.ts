@@ -3,14 +3,16 @@ import { constPagination } from "../const";
 export class PaginationEvents  {
 
     
-    globalWindow:HTMLElement
-    constructor(globalWindow:HTMLElement) {
+    private globalWindow:HTMLElement
+    private p:string
+    constructor(p:string, globalWindow:HTMLElement) {
+        this.p = p 
         this.globalWindow = globalWindow
     }
     
     headerSearch (gridSearch:boolean){
 
-            let search = document.getElementById(constPagination.FIND)
+            let search = document.getElementById(`${this.p}${constPagination.FIND}`)
             
             if(gridSearch == false){
                 search?.remove();
@@ -22,7 +24,7 @@ export class PaginationEvents  {
                 }
             }
 
-            let event = new CustomEvent('r-pagination-find', body)
+            let event = new CustomEvent(`${this.p}r-pagination-find`, body)
             
             search?.addEventListener('submit',(e) => {
                 
@@ -48,13 +50,12 @@ export class PaginationEvents  {
                 }
             };
     
-            let event = new CustomEvent('r-pagination', pagination)
+            let event = new CustomEvent(`${this.p}r-pagination`, pagination)
             
-            document.getElementById(constPagination.FIRST)?.addEventListener('click',() => dispatchEvent('first',this.globalWindow))
-            document.getElementById(constPagination.LAST)?.addEventListener('click',() => dispatchEvent('last',this.globalWindow))
-            document.getElementById(constPagination.PREVIOUS)?.addEventListener('click',() => dispatchEvent('previous',this.globalWindow))
-            document.getElementById(constPagination.NEXT)?.addEventListener('click',() => dispatchEvent('next',this.globalWindow))
-            
+            document.getElementById(`${this.p}${constPagination.FIRST}`)?.addEventListener('click',() => dispatchEvent('first',this.globalWindow))
+            document.getElementById(`${this.p}${constPagination.LAST}`)?.addEventListener('click',() => dispatchEvent('last',this.globalWindow))
+            document.getElementById(`${this.p}${constPagination.PREVIOUS}`)?.addEventListener('click',() => dispatchEvent('previous',this.globalWindow))
+            document.getElementById(`${this.p}${constPagination.NEXT}`)?.addEventListener('click',() => dispatchEvent('next',this.globalWindow))
             
             function dispatchEvent(page:string,globalWindow:HTMLElement){
                 
@@ -67,10 +68,10 @@ export class PaginationEvents  {
                   row: 0
                 }
             }
-    
-            let eventRow = new CustomEvent('r-pagination-row', row)
-    
-            document.getElementById(constPagination.ROW_NUMBER)?.addEventListener('change',(e) => {
+
+            let eventRow = new CustomEvent(`${this.p}r-pagination-row`, row)
+
+            document.getElementById(`${this.p}${constPagination.ROW_NUMBER}`)?.addEventListener('change',(e) => {
                 var select = e.target as HTMLSelectElement
                 row.detail.row = Number( select.value)
                 this.globalWindow.dispatchEvent(eventRow)
