@@ -6,14 +6,19 @@ import "./public/style.css"
 import "./public/normalize.css"
 import { callbackYesNo } from "./src/popup/callback";
 
-(()=> {
+(async ()=> {
     
     let rucula = new Rucula({
         global:global as any,
+        // urlWindow: {
+        //     relative: "ui?window=ordem-servico.json"
+        // },
         window: os as any,
         id:'js'
     });
     
+    await rucula.init();
+
     rucula.event.on('input.itensServico.quantidade',(e:CustomEvent) => {
 
         let _this = rucula.event.getFieldDetails(e)
@@ -52,7 +57,7 @@ import { callbackYesNo } from "./src/popup/callback";
         }
     })
 
-    rucula.event.on(rucula.p('r-a-save'),(e:CustomEvent) => {
+    rucula.event.on('r-a-save',(e:CustomEvent) => {
 
         rucula.popup.info({
             text:"Registrando...", 
@@ -66,13 +71,15 @@ import { callbackYesNo } from "./src/popup/callback";
             })
 
         );
+
+        rucula.buttonManaged.saveToAlter()
     })
 
-    rucula.event.on(rucula.p('r-a-alter'),(e:CustomEvent) => {
+    rucula.event.on('r-a-alter',(e:CustomEvent) => {
         rucula.popup.sucess({text:"Informações Alteradas"})
     })
         
-    rucula.event.on(rucula.p('r-a-delete'),(e:CustomEvent) => {
+    rucula.event.on('r-a-delete',(e:CustomEvent) => {
         rucula.popup.warning({text:"O registro será excluido permanentemente, deseja continuar?"},resultOption as callbackYesNo)
     })
   
@@ -85,22 +92,24 @@ import { callbackYesNo } from "./src/popup/callback";
                     disableadFooter:true,
                     disableadHeader:true
                 },sucess);
+                
             return
         }
     }
 
     function sucess(){
         rucula.popup.sucess({text:"Item Excluido",timeout:2000})   
+        rucula.buttonManaged.deleteToInit()
     }
-
+    
     rucula.event.on('r-pagination',(e:any) => console.log(e.detail.page))
     rucula.event.on('r-pagination-row',(e:any) => console.log(e.detail.row))
     rucula.event.on('r-pagination-find',(e:any) => console.log(e.detail.value))    
-
-    rucula.event.on('frame.cliente.complete',(e:any) => {
-    })
     
     rucula.create();
-    rucula.setValue('ordemDeServico.dataAbertura','2024-08-01')
+
+    rucula.setValue('ordemDeServico.type','grid')
+    rucula.setValue('ordemDeServico.dataAbertura','2088-08-01')
     rucula.setValue('ordemDeServico.status',true)
+
 })()

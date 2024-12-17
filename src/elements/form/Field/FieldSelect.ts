@@ -23,7 +23,14 @@ export class FieldSelect extends FieldInput{
             select.appendChild(option)
             
         })
-        this.input.value = String(this.field.value)
+        
+        if(String(this.field.value) != ''){
+            this.input.value = String(this.field.value)
+        }
+        if(String(this.field.value) === ''){
+            this.input.querySelector('select')
+            ?.setAttribute('selected','');
+        }
         this.setEvents();
         
         return select

@@ -432,6 +432,13 @@ input.r-i-focus-dependency {
     background-color: inherit;
 }
 
+.r-a-b-disable {
+    pointer-events: none;
+}
+
+.r-a-b.r-a-b-disable i {
+    color: rgb(156, 156, 156);
+}
 .r-a-cancel {
     margin-left: 5px;
     background-color: var(--color-write);
@@ -593,6 +600,7 @@ input.r-i-focus-dependency {
     text-wrap: nowrap;
 }
 
+.r-button-
 /* Console */
 .r-c {
     width: 250px;

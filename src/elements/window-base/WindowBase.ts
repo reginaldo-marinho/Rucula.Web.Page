@@ -3,9 +3,9 @@ import { constIdBaseWindow, constPagination } from "../../const";
 
 export class WindowBaseDOM {
 
+    private P:string
     private ruculaWindow = document.createElement("div");
     private globalWindow:HTMLElement
-    private P:string
 
     constructor(prefix:string, config: {
         globalWindow:HTMLElement,
@@ -27,9 +27,9 @@ export class WindowBaseDOM {
 
         const actions = this.componentActions();
         this.ruculaWindow.appendChild(actions)
-
-        const contentForm = this.createComponentCreateOrEdit()
-
+        
+        const contentForm = this.createComponentCreateOrEdit() as HTMLDivElement
+                
         this.ruculaWindow.appendChild(contentForm.childNodes[0] as HTMLDivElement)
         this.ruculaWindow.appendChild(contentForm.childNodes[1] as HTMLDivElement)
 
@@ -164,12 +164,12 @@ export class WindowBaseDOM {
                     <div class="r-head r-read-edit r-facede-action-crud" id="${this.P}r-facede-action-crud">
                         <h3 id="${this.P}${constIdBaseWindow.FRAME_INFO}">
                         </h3>
-                        <div>
-                            <button id="${this.P}r-a-save" class="r-a-b "><i class="bi bi-box-arrow-in-down"></i></button>
-                            <button id="${this.P}r-a-alter" class="r-a-b"><i class="bi bi-pen"></i></button>
-                            <button id="${this.P}r-a-delete" class="r-a-b"><i class="bi bi-trash"></i></button>
-                            <button id="${this.P}r-a-reload" class="r-a-b "><i class="bi bi-arrow-repeat"></i></button>
-                            <button id="${this.P}erase-window" class="r-a-b "><i class="bi bi-eraser"></i></button>
+                        <div id="${this.P}action-crud">
+                            <button id="${this.P}r-a-save" class="r-a-b r-a-b-disable managed"><i class="bi bi-box-arrow-in-down"></i></button>
+                            <button id="${this.P}r-a-alter" class="r-a-b r-a-b-disable managed"><i class="bi bi-pen"></i></button>
+                            <button id="${this.P}r-a-delete" class="r-a-b r-a-b-disable managed"><i class="bi bi-trash"></i></button>
+                            <button id="${this.P}r-a-reload" class="r-a-b r-a-b-disable"><i class="bi bi-arrow-repeat"></i></button>
+                            <button id="${this.P}erase-window" class="r-a-b"><i class="bi bi-eraser"></i></button>
                             <button id="${this.P}r-a-menu-vertical" class="r-a-b"><i class="bi bi-arrows"></i></button>
                         </div>
                     </div>
@@ -238,7 +238,7 @@ export class WindowBaseDOM {
         }
     }
 
-    maximizeWindow(){
+    private maximizeWindow(){
 
         let maximize = document.getElementById(`${this.P}${constIdBaseWindow.MAXIMIZE_WINDOW}`);
 
@@ -249,7 +249,7 @@ export class WindowBaseDOM {
         })
     }
 
-    eraseWindow(ruculaWindow:HTMLDivElement){
+    private eraseWindow(ruculaWindow:HTMLDivElement){
 
         let erase = document.getElementById(`${this.P}${constIdBaseWindow.ERASE_WINDOW}`)
         let form = ruculaWindow.querySelector('form.r-window-work') as HTMLFormElement
@@ -259,12 +259,12 @@ export class WindowBaseDOM {
         })
     }
 
-    actionCrudpreventDefault(){
+    private  actionCrudpreventDefault(){
         let facedeActionCrud = document.getElementById(`${this.P}r-facede-action-crud`)
         facedeActionCrud?.addEventListener('click', (e) => e.preventDefault())
     }
 
-    openActionswindow(){
+    private  openActionswindow(){
 
         let actions = document.getElementById(`${this.P}${constIdBaseWindow.ACTIONS_WINDOW}`)
 
@@ -274,7 +274,7 @@ export class WindowBaseDOM {
         })
     }
 
-    alterTheme(){
+    private alterTheme(){
 
         let rw = document.querySelector(`.${this.P}r-w`)
 
@@ -300,6 +300,6 @@ export class WindowBaseDOM {
     }
 
     getPrincipalElementRucula(){
-            return document.getElementById(`${this.P}${constIdBaseWindow.FORM_RUCULA_JS}`) as HTMLFormElement
+        return document.getElementById(`${this.P}${constIdBaseWindow.FORM_RUCULA_JS}`) as HTMLFormElement
     }
 }

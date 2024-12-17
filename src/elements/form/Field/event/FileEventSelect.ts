@@ -16,6 +16,11 @@ export class FileEventSelect extends FileEvent{
             this.dispatchEvent(constPrefixEventField.BEFORE);
             this.set()
         })
+
+        this.input.addEventListener('input',(e) => {  
+            this.dispatchEvent(constPrefixEventField.BEFORE);
+            this.set()
+        })
     }
 }
 

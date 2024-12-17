@@ -27,6 +27,7 @@ import { MenuContext } from "./menu-context/menu-context";
 import { P as prefixe } from "./common/Prefixe";
 import { buttonURL } from "./entities/form/button";
 import { WindowAPI } from "./window/windowAPI";
+import { ButtonManaged } from "./elements/window-base/buttonManaged";
 
 export class Rucula{
     
@@ -51,7 +52,8 @@ export class Rucula{
     private paginationEvents!:PaginationEvents
     private buttonsBase!:ButtonsBase
     public loader!:LoaderManagment
-    
+    public buttonManaged!:ButtonManaged
+
     constructor(config: {
         global:globalConfiguration, 
         urlWindow?:buttonURL,
@@ -133,7 +135,20 @@ export class Rucula{
         this.menuContext.init()
         this.fieldMenuContext.init()
         this.addHomeWindow();
+
         this.elementFormRucula = this.windowBaseDOM.getPrincipalElementRucula() as HTMLFormElement
+
+        let buttons =  this.globalWindow.querySelectorAll(`#${this.P}action-crud button.managed`) as NodeListOf<HTMLButtonElement>
+
+        this.buttonManaged = new  ButtonManaged(this.P,buttons)
+
+        let form = this.globalWindow.querySelector('form.r-window-work')
+        
+        form?.addEventListener('change',() => {
+                this.buttonManaged.initTosave()
+            }
+        )
+        
         this.paginationEvents.headerSearch(this.window.gridSearch);
         this.paginationEvents.fotter(this.window.gridFooter);
         this.layoutFrame.configureLayout(this.window,this.elementFormRucula)

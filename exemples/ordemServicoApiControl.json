@@ -16,8 +16,7 @@
           "propertDto": "codigo",
           "description": "Código",
           "maxLength": 40,
-          "information": "Use guuid 😃👍🏻",
-          "requerid": true
+          "information": "Use guuid 😃👍🏻"
         },
         {
           "propertDto": "dataAbertura",
@@ -59,12 +58,22 @@
             "fullWidth":true,
             "class":"r-color-Navy"
           }
+        },
+        {
+          "propertDto": "type",
+          "description": "  type",
+          "type":["select","text"],
+          "combo":[
+            {"representation":"crud","value":"crud"},
+            {
+              "representation":"grid",
+              "value":"grid"
+            }
+          ],
+          "width":80,
+          "requerid": true
         }
-      ],
-      "style":{
-        "width":"600px",
-        "height":"300px"
-      }
+      ]
     },
     {
       "name": "Cliente",
@@ -143,8 +152,7 @@
         {
           "propertDto": "descricao",
           "description": "Descrição",
-          "maxLength": 100,
-          "requerid":true
+          "maxLength": 100
         },
         {
           "propertDto": "valorUnitario",
@@ -216,7 +224,8 @@
   "layout":{
     "items":
     [
-      ["ordemDeServico","cliente","cliente"],
+      ["ordemDeServico","ordemDeServico","ordemDeServico"],
+      ["","","cliente"],
       ["testeChart1","testeChart1","endereco"],
       ["itensServico","itensServico","itensServico"],
       ["tecnicoResponsavel","tecnicoResponsavel","pagamento"]      
