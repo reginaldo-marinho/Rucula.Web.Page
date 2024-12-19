@@ -1,7 +1,6 @@
-import { enviroment } from './entities/Enviroments';
-import { globalConfiguration } from './entities/GlobalConfiguration';
-import { localization } from './entities/Localization';
-
+import { enviroment } from "../entities/global/Enviroments";
+import { globalConfiguration } from "../entities/global/GlobalConfiguration";
+import { localization } from "../entities/global/Localization";
 
 export let ruculaGlobal = (() => {
 

@@ -1,4 +1,4 @@
-import { cookie } from "../../common/coockie/coockie";
+import { cookie } from "../../common/coockie";
 import { constIdBaseWindow, constPagination } from "../../const";
 
 export class WindowBaseDOM {

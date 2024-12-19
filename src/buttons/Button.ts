@@ -4,8 +4,8 @@ import { ElementButton } from './ElementButton';
 import { ElementLink } from './ElementLink';
 import { constIdBaseWindow, constTargetButtonCrudDefault } from '../const';
 import { ruculaGlobal } from '../global/GlobalConfig';
-import { enviroment } from '../global/entities/Enviroments';
-import { cookie } from '../common/coockie/coockie';
+import { enviroment } from '../entities/global/Enviroments';
+import { cookie } from '../common/coockie';
 import { Popup } from '../popup/popup';
 import { callbackYesNo } from "../popup/callback"
 

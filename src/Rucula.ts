@@ -6,7 +6,6 @@ import { configWindow } from "./window/Window";
 import { defaultValues } from "./elements/Defaults";
 import { LayoutFrame } from "./Layout/layout";
 import { ButtonsBase } from "./buttons/buttonsBaseCrud";
-import { globalConfiguration } from "./global/entities/GlobalConfiguration";
 import { ruculaGlobal } from "./global/GlobalConfig";
 import { LoaderManagment } from "./elements/loader/loader";
 import { Popup } from "./popup/popup";
@@ -28,6 +27,7 @@ import { P as prefixe } from "./common/Prefixe";
 import { buttonURL } from "./entities/form/button";
 import { WindowAPI } from "./window/windowAPI";
 import { ButtonManaged } from "./elements/window-base/buttonManaged";
+import { globalConfiguration } from "./entities/global/GlobalConfiguration";
 
 export class Rucula{
     
