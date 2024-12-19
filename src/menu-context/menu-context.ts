@@ -26,9 +26,9 @@ export class MenuContext{
         return div
     }
 
-    private  findMenu(id:string){
+    private findMenu(id:string){
 
-        let menu = this.menusContext.find(c=> c.id == contextMenu.INPUT)!
+        let menu = this.menusContext.find(c=> c.id == id)!
 
         return menu.element
 
@@ -69,6 +69,7 @@ export class MenuContext{
         return this.elemetInFocu
     }
         init (){
+
             
             let menuInput = this.menuContextInput()
             let rw = document.querySelector(`.${this.P}r-w`)
@@ -92,7 +93,9 @@ export class MenuContext{
                     
                 }
 
+
                 if(target.nodeName == 'INPUT' || target.nodeName == 'SELECT' || target.nodeName == 'TEXTAREA'){
+                    
                     let menuActions = this.findMenu(contextMenu.INPUT)
                     menuActions.style.display = 'block';
                     menuActions.style.left = `${event.pageX}px`;

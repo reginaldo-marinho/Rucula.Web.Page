@@ -20,6 +20,7 @@ export interface field {
     radio?:string[]
     value?: string
     button?:button
+    mask?:string
 }
 
 interface checkbox {
