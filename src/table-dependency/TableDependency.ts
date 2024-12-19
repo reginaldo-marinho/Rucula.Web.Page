@@ -18,8 +18,8 @@ export class  TableDependency {
     private MAX_LENGHT:string = '2' as const;
     private MAX:string = '3' as const;
     private MIN:string = '4' as const;
+    private REGEX:string = '5' as const;
 
-    
     moveImbernateToNotResolved(identityObject:string){
 
         let dependency = this.dependencyesNotResolved.find(c=> c.identityObject == identityObject)
@@ -43,6 +43,7 @@ export class  TableDependency {
         let MAX_LENGHT = this.MAX_LENGHT
         let MAX = this.MAX
         let MIN = this.MIN
+        let REGEX = this.REGEX
         
         //! Important!! This function must be called in the fragmentField creation process
 
@@ -52,7 +53,8 @@ export class  TableDependency {
         checkMaxLength();
         checkMax();
         checkMin();
-        
+        checkRegex();
+
         function checkIsRequerid(){
             if(field.requerid)
                 valueDependency += `${REQUERID},`
@@ -61,19 +63,27 @@ export class  TableDependency {
         function checkMaxLength(){
             
             if(field.maxLength as number > 0)
-                valueDependency += `${MAX_LENGHT}:${field.maxLength},`
+                valueDependency += `${MAX_LENGHT}:_:${field.maxLength},`
         }
     
         function checkMax(){
     
             if(field.max as number > 0) 
-                valueDependency += `${MAX}:${field.max},`
+                valueDependency += `${MAX}:_:${field.max},`
         }
     
         function checkMin(){
             
             if(field.min as number > 0)
-                valueDependency += `${MIN}:${field.min},`
+                valueDependency += `${MIN}:_:${field.min},`
+        }
+    
+        function checkRegex(){
+            
+            if(field.regex){
+
+                valueDependency += `${REGEX}:_:${field.regex},`
+            }
         }
     
         valueDependency = this.removeLastComa(valueDependency)
@@ -109,6 +119,7 @@ export class  TableDependency {
         let MAX_LENGHT = this.MAX_LENGHT
         let MAX = this.MAX
         let MIN = this.MIN
+        let REGEX = this.REGEX
 
         let dependencyExpected = fragment.config.dependency
 
@@ -117,8 +128,8 @@ export class  TableDependency {
         dependencyExpected
         .split(',')
         .forEach(expected => {
-    
-            let identification = expected.split(':')[0]
+                
+            let identification = expected.split(':_:')[0]
             
             if(identification == REQUERID){
                 
@@ -131,7 +142,7 @@ export class  TableDependency {
     
             if(identification == MAX_LENGHT){
                 
-                let result = this.consistMaxLen(dependencyExpected,value);
+                let result = this.consistMaxLen(expected,value);
             
                 if(result){
                     dependencyResolved += `${MAX_LENGHT},`
@@ -140,7 +151,7 @@ export class  TableDependency {
 
             if(identification == MAX){
                 
-                let result = this.consistMax(dependencyExpected,value as string);
+                let result = this.consistMax(expected,value as string);
             
                 if(result){
                     dependencyResolved += `${MAX},`
@@ -149,19 +160,28 @@ export class  TableDependency {
             
             if(identification == MIN){
                 
-                let result = this.consistMin(dependencyExpected,value as string);
+                let result = this.consistMin(expected,value as string);
             
                 if(result){
                     dependencyResolved += `${MIN},`
                 }            
             }
+
+            if(identification == this.REGEX){
+                
+                let result = this.consistRegex(expected,value as string);
+            
+                if(result){
+                    dependencyResolved += `${REGEX},`
+                }
+            }
         })
                 
         dependencyResolved = this.removeLastComa(dependencyResolved)
 
-        let dependencyExpectedOnlyKeys = dependencyExpected.split(',').map(c => c.split(':')[0])
+        let dependencyExpectedOnlyKeys = dependencyExpected.split(',').map(c => c.split(':_:')[0])
         
-        let dependencyResolvedOnlyKeys = dependencyResolved.split(',').map(c => c.split(':')[0])
+        let dependencyResolvedOnlyKeys = dependencyResolved.split(',').map(c => c.split(':_:')[0])
         
         let existDependecy = false
 
@@ -197,7 +217,7 @@ export class  TableDependency {
     
         
     private getValueInDependency(dependencyExpected:string){
-        return dependencyExpected.split(':')[1]
+        return dependencyExpected.split(':_:')[1]
     }
         
     consistRequerid(value:string|number|boolean) {
@@ -260,6 +280,17 @@ export class  TableDependency {
         }
         
         return true
+    }
+    consistRegex(dependencyExpected:string,value:string|number){
+
+        debugger
+        let regex = this.getValueInDependency(dependencyExpected)
+
+        value = this.addValueDefault().typeString((value)) as string
+
+        let reg = new RegExp(`${regex}`)
+        
+        return reg.test(value)
     }
     
     addValueDefault(){

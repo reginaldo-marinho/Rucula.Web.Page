@@ -17,26 +17,22 @@
           "description": "Código",
           "maxLength": 40,
           "requerid":true,
-          "information": "Use guuid 😃👍🏻",
-          "value":"235dvjopa290sdvnia2sdvna9sdvp"
+          "information": "Use guuid 😃👍🏻"
         },
         {
           "propertDto": "dataAbertura",
           "description": "Data de Abertura",
           "requerid":true,
           "type": "date"
-          
         },
         {
           "propertDto": "phone",
           "description": "Phone",
-          "requerid":true,
           "mask":"(##) #########"
         },
 
         {
           "propertDto": "totalServico",
-          "requerid":true,
           "description": "Total de Serviço",
           "type": "currency"
         },

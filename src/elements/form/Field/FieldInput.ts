@@ -2,7 +2,6 @@ import { constTypeInput } from "../../../const";
 import { field } from "../../../entities/form/field";
 import { ruculaGlobal } from "../../../global/GlobalConfig";
 import { ManagmentObject } from "../../../object/ObjectManagment";
-import { WindowBaseDOM } from "../../window-base/WindowBase";
 
 export abstract class FieldInput{
     

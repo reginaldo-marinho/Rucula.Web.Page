@@ -1,3 +1,4 @@
+import { fileURLToPath } from "url";
 import { constGroupFormat, constInputClass, constTypeInput } from "../../const";
 import { field } from "../../entities/form/field";
 import { ruculaGlobal } from "../../global/GlobalConfig";
@@ -21,10 +22,15 @@ export class Field  {
         this.managmentObject = managmentObject
         this.ruculaForm = ruculaForm
     }
-    createSpanLabelIsRequerid():HTMLSpanElement{
+    createSpanLabelIsRequerid(isRegex:boolean=false):HTMLSpanElement{
 
         const span = document.createElement('span'); 
+        
         span.innerText = " *"
+        if(isRegex){
+            span.innerText = " *^"
+        }
+        
         span.style.color = "red";
     
         return span
@@ -50,7 +56,7 @@ export class Field  {
         
         if (field.requerid == true){
           label.textContent = label.textContent
-          label.append(this.createSpanLabelIsRequerid().cloneNode(true))
+          label.append(this.createSpanLabelIsRequerid(field.regex != null).cloneNode(true))
         }
         
         const floatLabel = ruculaGlobal?.getConfigurationGlobal()?.floatLabel
@@ -194,6 +200,10 @@ export class Field  {
             return field.type[0] == constTypeInput.CHECKBOX
         }
 
+        element.addEventListener('blur',() => {
+            element.classList.remove(constInputClass.FOCUS_IN_INPUT_WITH_DEPENDENCY)
+        })
+        
         return element as HTMLSelectElement|HTMLInputElement
     }
 
@@ -210,8 +220,5 @@ export class Field  {
                 input?.classList.add(constInputClass.FOCUS_IN_INPUT_WITH_DEPENDENCY)
             })
         })
-    }
-    cleanFocusDependency (input:HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement) {
-        input.classList.remove(constInputClass.FOCUS_IN_INPUT_WITH_DEPENDENCY)
     }
 }

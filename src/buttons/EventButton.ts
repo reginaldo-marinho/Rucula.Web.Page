@@ -1,7 +1,6 @@
 import { button } from '../entities/form/button';
 import { Field } from '../elements/form/Field';
-import { WindowBaseDOM } from '../elements/window-base/WindowBase';
-import { constIdBaseWindow } from '../const';
+import { constIdBaseWindow, constTargetButtonCrudDefault } from '../const';
 import { URLRucula } from '../URL/urlManagment';
 import { ManagmentObject } from '../object/ObjectManagment';
 
@@ -48,7 +47,13 @@ export class EventButton {
 
                 let optionObjectReturn = button?.body
                 
-                if(optionObjectReturn == undefined){
+                let defaultsButton = [
+                    this.P+constTargetButtonCrudDefault.SAVE,
+                    this.P+constTargetButtonCrudDefault.ALTER,
+                    this.P+constTargetButtonCrudDefault.DELETE,
+                ]
+
+                if(optionObjectReturn == undefined && defaultsButton.indexOf(button.target) > -1){
                     rucula.dispatchEvent(eventButton)
                     return
                 }
@@ -61,15 +66,15 @@ export class EventButton {
                     return;
                 }
 
-                if(optionObjectReturn  == ''){
+                if(optionObjectReturn  === ''){
                     object.detail.body = this.managmentObject.objectSeparate()
                 }
                 
-                if(optionObjectReturn == '.'){
+                if(optionObjectReturn === '.'){
                     object.detail.body = this.managmentObject.objectFull()
                 }
                 
-                if(['','.',undefined].find(c=> c != optionObjectReturn) == undefined){
+                if(optionObjectReturn && String(optionObjectReturn).length > 1){
                     object.detail.body = this.managmentObject.objectUnique(optionObjectReturn)
                 }
                 

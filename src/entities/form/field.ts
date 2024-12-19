@@ -21,6 +21,7 @@ export interface field {
     value?: string
     button?:button
     mask?:string
+    regex?:string
 }
 
 interface checkbox {
