@@ -5,6 +5,7 @@ import { ManagmentObject } from "../../object/ObjectManagment";
 import { configWindow } from "../../window/Window";
 import { Field } from "../form/Field";
 import { FieldMenuContext } from "../form/Field/fieldMenuContext";
+import { typeInputSnapshot } from "../frame/FrameElement";
 import { FrameElementLine } from "../frame/FrameElementLine";
 import { FrameEvent } from "../frame/FrameEvent";
 
@@ -72,7 +73,7 @@ export class FameLineTable {
         return thead as HTMLTableSectionElement;
     }
 
-    createRowDetail(frame:frame) {
+    createRowDetail(frame:frame, inputSnapshot?:typeInputSnapshot[]) {
                             
         let tr = document.createElement('tr');
              
@@ -107,6 +108,13 @@ export class FameLineTable {
                 identity: field.identity,
                 field: field
             })
+
+            if(inputSnapshot){
+                inputSnapshot.push({
+                    element: elementInput,
+                    value:elementInput.value
+                })
+            }
         })
 
         let rowCount = this.managmentObject.count(frame.identity)

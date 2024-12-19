@@ -37,7 +37,7 @@ export class WindowBaseDOM {
 
         this.prepareEventsButtonsCrud()
         this.maximizeWindow()
-        this.eraseWindow(this.ruculaWindow)
+        this.eraseWindow()
         this.alterTheme()
         this.openActionswindow()
         this.actionCrudpreventDefault()
@@ -249,13 +249,14 @@ export class WindowBaseDOM {
         })
     }
 
-    private eraseWindow(ruculaWindow:HTMLDivElement){
+    private eraseWindow(){
 
-        let erase = document.getElementById(`${this.P}${constIdBaseWindow.ERASE_WINDOW}`)
-        let form = ruculaWindow.querySelector('form.r-window-work') as HTMLFormElement
-
-        erase?.addEventListener('click', () => {
-            form?.reset();
+        const eraseWindow = `${this.P}${constIdBaseWindow.ERASE_WINDOW}`
+        
+        let evt = new Event(eraseWindow)
+        
+        document.getElementById(eraseWindow)?.addEventListener('click', () => {
+            this.globalWindow.dispatchEvent(evt)
         })
     }
 

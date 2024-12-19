@@ -8,6 +8,7 @@ type fragmentObject = {
         objectDto: string, //? Name of the object that represents the frame
         identity: string, //? Unique ID created for internal control
         object: any //?Object that is created dynamically and will be used later
+        objectSnapshot?: any
         getValueInObjectFragment: any 
     }
 }
@@ -23,7 +24,8 @@ type fragmentField = {
         identity: string //? Unique ID created for internal control
         propertDto:string //? Name of the propert that represents the frame
         line: number|undefined,
-        dependency:string
+        dependency:string,
+        dependencySnapshot?:string,
     }    
 }
 

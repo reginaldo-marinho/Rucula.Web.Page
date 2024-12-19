@@ -1,8 +1,9 @@
+import { clone } from "../common/cloneObject";
 import { entityConfiguration, fragmentField, fragmentObject } from "../object/ObjectAliases";
 import { TableDependency } from "../table-dependency/TableDependency";
 
 export class Fragment {
-    
+
     constructor(tableDependency:TableDependency) {
         this.tableDependency = tableDependency
     }
@@ -133,5 +134,27 @@ export class Fragment {
             c.config.alias == config.aliasOrIDentity &&
             c.config.propertDto == config.propertDto &&
             c.config.line == config.line)
+    }
+
+    snapshot(){
+        
+        for (let index = 0; index < this.objects.length; index++) {
+            this.objects[index].config.objectSnapshot = clone(this.objects[index].config.object);
+        }
+
+        for (let index = 0; index < this.fields.length; index++) {
+            this.fields[index].config.dependencySnapshot = this.fields[index].config.dependency
+        }
+    }
+
+    revertToInit(){
+        
+        for (let index = 0; index < this.objects.length; index++) {
+            this.objects[index].config.object = clone(this.objects[index].config.objectSnapshot);
+        }
+
+        for (let index = 0; index < this.fields.length; index++) {
+            this.fields[index].config.dependency = this.fields[index].config.dependencySnapshot ?? ''
+        }
     }
 }

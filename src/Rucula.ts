@@ -51,6 +51,8 @@ export class Rucula{
     private fieldMenuContext!:FieldMenuContext
     private paginationEvents!:PaginationEvents
     private buttonsBase!:ButtonsBase
+    private frameBlock!:FrameElementBlock
+    private frameLine!:FrameElementLine
     public loader!:LoaderManagment
     public buttonManaged!:ButtonManaged
 
@@ -90,41 +92,45 @@ export class Rucula{
         this.fragment = new Fragment(this.tableDependency);
         this.paginationEvents = new PaginationEvents(this.P, this.globalWindow)
         
+        
         this.buttonsBase = new ButtonsBase(this.P)
         this.loader = new LoaderManagment(this.P)
         this.button = new Button(() => {
-                let rucula = new Rucula(this.config)
+            let rucula = new Rucula(this.config)
                 rucula.init()
                 this.config?.reload()
         }, this.popup,this.P)
         
         
         defaultValues.setDefault(this.window)
-       
+        
+        
         this.windowBaseDOM = new WindowBaseDOM(this.P, {
             globalWindow:this.globalWindow,
             openLeftGrid: this.window?.grid ?? false,
             windowName: this.window?.name 
         })
-
+        
         if(this.window == null){
-
+            
             let message = 'Não foi possível carregar janela informada. Considere entrar em contato com o administrador'
             this.popup.error( {
                 text:message
             })
             throw new Error(message);
         }
-
+        
         this.managmentObject = new ManagmentObject(this.fragment, this.tableDependency,this.window.frames);
         this.event = new EventManagment(this.P, this.managmentObject,this.globalWindow);
         this.field = new Field(this.managmentObject, this.globalWindow)
         this.eventButton = new EventButton(this.field, this.managmentObject,this.P)
         this.frameEvent = new FrameEvent(this.managmentObject)
+        this.frameBlock = new FrameElementBlock(this.managmentObject,this.field, this.frameEvent, this.button, this.fieldMenuContext);
+        this.frameLine = new FrameElementLine(this.managmentObject,this.field,this.frameEvent, this.button, this.fieldMenuContext, this.P);
     }
-
+    
     create(){
-
+        
         this.cleanRucula();
         
         let eventInit = new Event('rucula.init')
@@ -148,18 +154,26 @@ export class Rucula{
                 this.buttonManaged.initTosave()
             }
         )
-        
+
         this.paginationEvents.headerSearch(this.window.gridSearch);
-        this.paginationEvents.fotter(this.window.gridFooter);
+        this.paginationEvents.fotter(this.window.gridFooter)
         this.layoutFrame.configureLayout(this.window,this.elementFormRucula)
         this.createButtons()
         this.createFrames()
-        this.buttonsBase.initButtonsTypeCrudDefault();
-        this.buttonsBase.initButtonPlus();
-        this.buttonsBase.crud(this.window?.crud);        
+        this.buttonsBase.initButtonsTypeCrudDefault()
+        this.buttonsBase.initButtonPlus()
+        this.buttonsBase.crud(this.window?.crud)      
         this.globalWindow.dispatchEvent(eventLoad);
         
-        (window as any).rucula = new RuculaLogs(this.managmentObject);
+        (window as any).rucula = new RuculaLogs(this.managmentObject)
+
+
+        this.tableDependency.snapshot()
+        this.fragment.snapshot()
+        
+        this.event.on('erase-window',() => {
+            this.revertToinit()
+        })
     }
 
     private addHomeWindow(){
@@ -203,21 +217,18 @@ export class Rucula{
 
     private createFrames(){
         
-        let frameBlock = new FrameElementBlock(this.managmentObject,this.field, this.frameEvent, this.button, this.fieldMenuContext);
-        let frameLine = new FrameElementLine(this.managmentObject,this.field,this.frameEvent, this.button, this.fieldMenuContext, this.P);
-
         this.window.frames?.forEach(frame => {
             
             if(frame.type == constTypeFrame.BLOCK){
 
-                const block = frameBlock.create(frame)
+                const block = this.frameBlock.create(frame)
                 this.elementFormRucula.appendChild(block)
                 eventCreated(this.P, block,this.globalWindow) 
             }
             
             if(frame.type == constTypeFrame.LINE){
                             
-                const line = frameLine.create(frame)
+                const line = this.frameLine.create(frame)
                 this.elementFormRucula.appendChild(line)
                 eventCreated(this.P,line,this.globalWindow)
             }  
@@ -285,5 +296,12 @@ export class Rucula{
     p(text:string): string {
         let newText = prefixe(this.P,text);
         return newText
+    }
+
+    revertToinit(){
+        this.tableDependency.revertToInit()
+        this.fragment.revertToInit()
+        this.frameBlock.revertToInit();
+        this.frameLine.revertToInit();
     }
 }

@@ -6,6 +6,8 @@ import { Field } from "../form/Field";
 import { FieldMenuContext } from "../form/Field/fieldMenuContext";
 import { FrameEvent } from "./FrameEvent";
 
+export type typeInputSnapshot = {element:HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement, value:any}
+
 export class FrameElement{
 
     protected managmentObject:ManagmentObject 
@@ -13,7 +15,8 @@ export class FrameElement{
     protected frameEvent:FrameEvent
     protected button:Button
     protected fieldMenuContext:FieldMenuContext
-    
+    protected inputValueSnapshot:typeInputSnapshot[] = []
+
     constructor(managmentObject:ManagmentObject,field:Field,frameEvent:FrameEvent, button:Button,fieldMenuContext:FieldMenuContext) {
         this.managmentObject = managmentObject
         this.field = field
@@ -63,5 +66,13 @@ export class FrameElement{
                 this.managmentObject.setValueContextIdentity(field.identity,field.type, input.value);
             }
         })
+    }
+
+    public revertToInit(){
+
+        for (let index = 0; index < this.inputValueSnapshot.length; index++) {
+            
+            this.inputValueSnapshot[index].element.value = this.inputValueSnapshot[index].value
+        }
     }
 }

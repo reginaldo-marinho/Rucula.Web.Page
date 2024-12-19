@@ -50,7 +50,7 @@ export class FrameElementLine extends FrameElement{
         
         const tbody = document.createElement('tbody')
 
-        const rowDetail = this.fameLineTable.createRowDetail(frame)
+        const rowDetail = this.fameLineTable.createRowDetail(frame, this.inputValueSnapshot)
         
         let td = this.fameLineTable.getCellActions(rowDetail)
         
@@ -60,7 +60,8 @@ export class FrameElementLine extends FrameElement{
         table.appendChild(tbody)
         frameLine.appendChild(table)
         
-        this.eventKeyDownKeyUpLineFrame(rowDetail)         
+        this.eventKeyDownKeyUpLineFrame(rowDetail)
+
         return frameLine
     }
 

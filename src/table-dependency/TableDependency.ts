@@ -5,6 +5,8 @@ type dependency = {
     identityObject:string,
     isHibernate:boolean,
     fieldsNotResolved:string[]
+    isHibernateSnapshot?:boolean,
+    fieldsNotResolvedSnapshot?:string[]
 }
 
 export class  TableDependency {
@@ -303,4 +305,37 @@ export class  TableDependency {
         return this.dependencyesNotResolved
         .filter(c=> c.fieldsNotResolved.length > 0).length
     }       
+
+
+    snapshot(){
+        
+        for (let index = 0; index < this.dependencyesNotResolved.length; index++) {
+            
+            this.dependencyesNotResolved[index].isHibernateSnapshot = this.dependencyesNotResolved[index].isHibernate
+
+            if(this.dependencyesNotResolved[index].fieldsNotResolved.length > 0){
+                this.dependencyesNotResolved[index].fieldsNotResolvedSnapshot = []
+            }
+            
+            for (let indexField = 0; indexField < this.dependencyesNotResolved[index].fieldsNotResolved.length ; indexField++) {
+
+                let value = this.dependencyesNotResolved[index].fieldsNotResolved[indexField]
+                this.dependencyesNotResolved[index].fieldsNotResolvedSnapshot?.push(value)
+            }
+        }
+    }
+
+    revertToInit(){
+        
+        for (let index = 0; index < this.dependencyesNotResolved.length; index++) {
+            
+            this.dependencyesNotResolved[index].isHibernate = this.dependencyesNotResolved[index].isHibernateSnapshot ?? false
+            
+            let value = this.dependencyesNotResolved[index].fieldsNotResolvedSnapshot
+
+            if(value){
+                this.dependencyesNotResolved[index].fieldsNotResolved = value
+            }
+        }
+    }
 }

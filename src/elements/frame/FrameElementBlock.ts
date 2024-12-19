@@ -40,6 +40,11 @@ export class FrameElementBlock extends FrameElement{
                 identity: field.identity,
                 field: field
             })
+
+            this.inputValueSnapshot.push({
+                element: fieldElement,
+                value:fieldElement.value
+            })
         })
     
         this.setValuesDefined(frame, div);

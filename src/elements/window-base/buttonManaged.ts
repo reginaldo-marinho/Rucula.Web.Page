@@ -8,7 +8,7 @@ export class ButtonManaged {
     private modes = {
         init:'init',
         delete:'delete',
-        save:'save',
+        save:'save'
     } 
     constructor(P:string,buttonsManeged:NodeListOf<HTMLButtonElement>) {
         this.P = P
@@ -34,7 +34,13 @@ export class ButtonManaged {
     deleteToInit(){
         let options = ['']
         this.set(options)
+        this.atualModel = this.modes.init
     }    
+
+    disableAll(){
+        let options = ['']
+        this.set(options)
+    }
     
     private set(options:string[]){
         

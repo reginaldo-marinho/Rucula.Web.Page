@@ -30,7 +30,7 @@ export class FieldCommon extends FieldInput{
         if(this.field.type == "currency"){
             input.type = "text";
         }
-        
+        input.value = String(this.field.value)
         this.setWidth()
         input.classList.add("r-i-control")
         
