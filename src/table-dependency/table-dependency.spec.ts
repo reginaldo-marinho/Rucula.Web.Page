@@ -26,7 +26,7 @@ describe('TableDependency', function () {
         
         let expected = table.createExpectedDependency(field,fragment as any)
         
-        assert.equal(expected,'1,2:12,3:2,4:1')
+        assert.equal(expected,'1,2:_:12,3:_:2,4:_:1')
       })
       
       it('createExpectedDependency must return true when option is 1, and value is empty, null or undefined', function () {
@@ -70,7 +70,7 @@ describe('TableDependency', function () {
 
       });
 
-      it('createExpectedDependency must return true when option is 2:2, and value is superior', function () {
+      it('createExpectedDependency must return true when option is 2:_:2, and value is superior', function () {
            
         let fragment = {
           config: {
@@ -102,7 +102,7 @@ describe('TableDependency', function () {
         assert.equal(toApply,true)
       });
 
-      it('createExpectedDependency must return true when option is 3:5, and value is superior', function () {
+      it('createExpectedDependency must return true when option is 3:_:5, and value is superior', function () {
            
         let fragment = {
           config: {
@@ -134,7 +134,7 @@ describe('TableDependency', function () {
         assert.equal(toApply,true)
       });
 
-      it('createExpectedDependency must return true when option is 4:1, and value is superior', function () {
+      it('createExpectedDependency must return true when option is 4:_:1, and value is superior', function () {
             
         let fragment = {
           config: {
