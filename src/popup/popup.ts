@@ -92,9 +92,12 @@ export class Popup {
         timeout)   
     }
 
-    closeOKOrCancel(callback:any, div:HTMLElement){
+    closeOKOrCancel(callback:any, div:HTMLElement, callbackInTimeout:boolean = false){
         
-        
+        if(callbackInTimeout){
+            callback(constYesNo.NO)
+        }
+
         let ok = div.querySelector('button.ok')
         let cancel = div.querySelector('button.cancel')
 

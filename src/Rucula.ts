@@ -172,6 +172,7 @@ export class Rucula{
         this.fragment.snapshot()
         
         this.event.on('erase-window',() => {
+            this.buttonManaged.disableAll()
             this.revertToinit()
         })
     }
