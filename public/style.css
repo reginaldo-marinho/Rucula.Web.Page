@@ -210,7 +210,7 @@ input.r-i-control[identity][disabled] {
     display: block;
     overflow: auto;
     height: 300px;
-
+    max-height:400px
 }
 .r-q-b,
 .r-q-l{
@@ -218,7 +218,8 @@ input.r-i-control[identity][disabled] {
     background-color: var(--bgc-frames);
     padding-left: 10px;
     padding-right: 10px;
-    
+    height: max-content;
+    min-height: -webkit-fill-available;
 }
 
 .r-q-b::-webkit-scrollbar-thumb,
@@ -242,7 +243,6 @@ input.r-i-control[identity][disabled] {
     justify-content: flex-start;
     align-content: flex-start;
     align-items:end;
-
 }
 
 .r-q-b .r-g-i-i{
@@ -393,6 +393,8 @@ input.r-i-focus-dependency {
     grid-column-gap: 10px;
     grid-row-gap: 10px;
     max-height: calc(100% - 55px);
+    grid-template-rows:max-content;
+
 }
 .r-vertical-actions{
     width: 200px;

@@ -19,10 +19,8 @@ export class LayoutFrame {
         window.layout.tamplateRow = rowLength
 
         var tamplateColumns = window.layout.tamplateColumns
-        var tamplateRows = window.layout.tamplateRow
-
         principalElementRucula.style.gridTemplateColumns = `repeat(${tamplateColumns},1fr)` 
-        principalElementRucula.style.gridTemplateRows = `repeat(${tamplateRows},1fr )`
+        principalElementRucula.style.gridTemplateRows = 'max-content'
 
         for (let row = 1; row <= rowLength; row++) {
     
