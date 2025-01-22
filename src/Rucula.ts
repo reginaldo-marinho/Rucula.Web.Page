@@ -1,11 +1,11 @@
 import { window } from "./entities/form/window";
 import { WindowBaseDOM } from "./elements/window-base/WindowBase";
-import { constIdBaseWindow, constTypeFrame } from "./const";
+import { constIdBaseWindow, constTypeFrame, eventRucula } from "./const";
 import { EventButton } from "./buttons/EventButton";
 import { configWindow } from "./window/Window";
 import { defaultValues } from "./elements/Defaults";
 import { LayoutFrame } from "./Layout/layout";
-import { ButtonsBase } from "./buttons/buttonsBaseCrud";
+import { DOMButtonsCheck } from "./buttons/buttonsBaseCrud";
 import { ruculaGlobal } from "./global/GlobalConfig";
 import { LoaderManagment } from "./elements/loader/loader";
 import { Popup } from "./popup/popup";
@@ -28,13 +28,14 @@ import { buttonURL } from "./entities/form/button";
 import { WindowAPI } from "./window/windowAPI";
 import { ButtonManaged } from "./elements/window-base/buttonManaged";
 import { globalConfiguration } from "./entities/global/GlobalConfiguration";
+import { frame } from "./entities/form/frame";
 
 export class Rucula{
     
     private P = `ruculajs_${Date.now()}`
     private windowBaseDOM!:WindowBaseDOM
     private window!: window
-    private globalWindow!: HTMLElement
+    public globalWindow!: HTMLElement
     private elementFormRucula!: HTMLFormElement
     private menuContext!:MenuContext
     public popup!:Popup
@@ -50,23 +51,25 @@ export class Rucula{
     private config:any
     private fieldMenuContext!:FieldMenuContext
     private paginationEvents!:PaginationEvents
-    private buttonsBase!:ButtonsBase
+    private domButtomCheck!:DOMButtonsCheck
     private frameBlock!:FrameElementBlock
     private frameLine!:FrameElementLine
     public loader!:LoaderManagment
     public buttonManaged!:ButtonManaged
-
+    private perspective?: Perspective
+     
     constructor(config: {
         global:globalConfiguration, 
         urlWindow?:buttonURL,
-        window?:window, 
+        window?:window,
+        perspective?: Perspective
         id?:string,
         reload?:() => void
     }){
         
+        this.perspective = config.perspective
         config.id ??= 'rucula-js';
         this.config = config
-
         ruculaGlobal.initGlobalConfiguration(config.global)
     }
 
@@ -82,6 +85,8 @@ export class Rucula{
             this.window = this.config.window
         }
        
+        this.configurePerspective()
+
         this.globalWindow = document.getElementById(this.config.id!)!
         
         this.popup = new Popup(this.P)
@@ -93,7 +98,7 @@ export class Rucula{
         this.paginationEvents = new PaginationEvents(this.P, this.globalWindow)
         
         
-        this.buttonsBase = new ButtonsBase(this.P)
+        this.domButtomCheck = new DOMButtonsCheck(this.P,this.window?.crud)
         this.loader = new LoaderManagment(this.P)
         this.button = new Button(() => {
             let rucula = new Rucula(this.config)
@@ -104,11 +109,12 @@ export class Rucula{
         
         defaultValues.setDefault(this.window)
         
-        
+
         this.windowBaseDOM = new WindowBaseDOM(this.P, {
             globalWindow:this.globalWindow,
             openLeftGrid: this.window?.grid ?? false,
-            windowName: this.window?.name 
+            windowName: this.window?.name,
+            type:this.window.type
         })
         
         if(this.window == null){
@@ -130,9 +136,7 @@ export class Rucula{
     }
     
     create(){
-        
-        this.cleanRucula();
-        
+                
         let eventInit = new Event('rucula.init')
         let eventLoad = new Event('rucula.load')
         
@@ -151,22 +155,27 @@ export class Rucula{
         let form = this.globalWindow.querySelector('form.r-window-work')
         
         form?.addEventListener('change',() => {
-                this.buttonManaged.initTosave()
-            }
-        )
+            this.buttonManaged.initTosave()
+        })
 
         this.paginationEvents.headerSearch(this.window.gridSearch);
         this.paginationEvents.fotter(this.window.gridFooter)
-        this.layoutFrame.configureLayout(this.window,this.elementFormRucula)
+        
         this.createButtons()
-        this.createFrames()
-        this.buttonsBase.initButtonsTypeCrudDefault()
-        this.buttonsBase.initButtonPlus()
-        this.buttonsBase.crud(this.window?.crud)      
+       
+        if(this.window.type != 'header'){
+            this.domButtomCheck.removeUnusedButtons()
+        }
+        
+        if(this.window.type == 'crud'){
+            this.layoutFrame.configureLayout(this.window,this.elementFormRucula)
+            this.createFrames()
+        }
+        
+
         this.globalWindow.dispatchEvent(eventLoad);
         
         (window as any).rucula = new RuculaLogs(this.managmentObject)
-
 
         this.tableDependency.snapshot()
         this.fragment.snapshot()
@@ -201,19 +210,13 @@ export class Rucula{
         callback()
     }
 
-    private cleanRucula(){
-        for (let index = 0; index < this.globalWindow.childNodes.length; index++) {            
-            this.globalWindow.childNodes[index].remove();
-        }
-    }
-
     private createButtons(type:string="CRUD"){
 
         if(type == "CRUD"){
             this.button.prepareButtonsInLeftBox(this.window.button)
         }
         this.eventButton.eventButton(this.globalWindow, this.window.pathController, this.window.button)
-        this.eventButton.openCloseRightListButtons()
+        this.eventButton.openCloseRightListButtonsActions()
     }
 
     private createFrames(){
@@ -269,6 +272,9 @@ export class Rucula{
         return this.managmentObject.objectSeparate()
     } 
 
+    private eventRuculaChange = new Event('ruculaChange')
+    private eventFocusOut = new Event('focusout')
+    
     setValue (targetPath:string, value: any)  {
         
         const ATTR_DISABLED = 'disabled'
@@ -281,9 +287,19 @@ export class Rucula{
         if(disabled){
             input.removeAttribute(ATTR_DISABLED)
         }
-        input.value = value
+        let onChange = input.value != value && input.getAttribute('type') === 'checkbox'
+
         input.focus({preventScroll: true}) //! This command forces the objectmanagment and tableDependecy processes to run
-        input.blur()
+        
+        input.value = value
+        
+        if(onChange){
+            input.dispatchEvent(this.eventRuculaChange)
+        }
+        
+        
+        input.dispatchEvent(this.eventFocusOut)
+
         
         if(disabled){
             input.setAttribute(ATTR_DISABLED,'')
@@ -305,4 +321,65 @@ export class Rucula{
         this.frameBlock.revertToInit();
         this.frameLine.revertToInit();
     }
+
+        private configurePerspective(){
+
+            if(this.perspective == null){
+                return
+            }
+            
+            for (let index = 0; index < this.perspective?.frame.length; index++) {
+                
+                var frameAlias = this.perspective?.frame[index]
+                
+                var frame = this.window.frames.find(c=> c.alias == frameAlias)
+
+                if(frame == null){
+                    continue
+                }
+
+                let indexof = this.window.frames.indexOf(frame)
+
+                this.window.frames.splice(indexof,1)
+            }
+
+            this.perspective?.field.sort();
+
+            let lastFrame:frame|undefined
+            for (let index = 0; index < this.perspective?.field.length; index++) {
+                
+                let field = this.perspective?.field[index].split('.')
+
+                if(lastFrame?.alias != field[0]) {
+                    let frame = this.window.frames.find(c=> c.alias == field[0])
+                    
+                    if(frame ==  null){
+                        continue
+                    }
+                    
+                    lastFrame = frame
+                } 
+
+                remove(lastFrame!, field[1])
+                
+            }
+
+            function remove(frame:frame, propert:string){
+
+                var field = frame.fields?.find(c=> c.propertDto == propert)
+
+                if(field == null){
+                    return
+                }
+
+                let indexof = frame.fields?.indexOf(field)
+
+                frame.fields?.splice(indexof!,1)
+            }
+        }
+    }
+
+export type Perspective = {
+    frame:string[],
+    field:string[]	
 }

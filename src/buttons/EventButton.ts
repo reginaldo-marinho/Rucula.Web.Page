@@ -84,19 +84,25 @@ export class EventButton {
         });
     }
     
-    openCloseRightListButtons(){
+    openCloseRightListButtonsActions(){
         
-        const openClose = document.getElementById(`${this.P}r-a-menu-vertical`) as HTMLElement
-        const listRight = document.querySelector(`.${this.P}r-vertical-actions`) as HTMLElement
+        const buttonOpenClose = document.getElementById(`${this.P}r-a-menu-vertical`) as HTMLElement
+        const buttonMobileClose = document.getElementById(`${this.P}${constIdBaseWindow.BUTTON_MENU_VERTICAL_MOBILE_CLOSE}`)
+        const buttonOpenClosemobile = document.getElementById(`${this.P}${constIdBaseWindow.BUTTONS_MENU_VERTICAL_MOBILE}`)
         
-        const openClosemobile = document.getElementById(`${this.P}${constIdBaseWindow.BUTTONS_MENU_VERTICAL_MOBILE}`)
+        const divRightListButtonsActions = document.querySelector(`.r-vertical-actions`) as HTMLElement
         
-        openClose?.addEventListener("click",() => {
-            listRight?.classList.toggle("r-display-none");
+        buttonOpenClose?.addEventListener("click",() => {
+            divRightListButtonsActions?.classList.toggle("r-display-none");
+            
         })
 
-        openClosemobile?.addEventListener("click",() => {
-            listRight?.classList.toggle("r-display-none");
+        buttonOpenClosemobile?.addEventListener("click",() => {
+            divRightListButtonsActions?.classList.toggle("r-display-block");
         })
+
+        buttonMobileClose?.addEventListener("click",() => {
+            divRightListButtonsActions?.classList.toggle("r-display-block");
+        })        
     }    
 }

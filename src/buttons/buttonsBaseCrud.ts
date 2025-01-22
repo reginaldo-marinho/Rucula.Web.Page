@@ -1,26 +1,27 @@
 import { constIdBaseWindow, constTargetButtonCrudDefault } from "../const"
 
-export class ButtonsBase {
+export class DOMButtonsCheck {
     
-    buttonCreate!:HTMLButtonElement
-    buttonAlter!:HTMLButtonElement
-    buttonDelete!:HTMLButtonElement
+    private buttonCreate!:HTMLButtonElement
+    private buttonAlter!:HTMLButtonElement
+    private buttonDelete!:HTMLButtonElement
 
-    buttonsPlus!:HTMLButtonElement
-    olButtonsPlus!:HTMLOListElement
+    private buttonsPlus!:HTMLButtonElement
+    private olButtonsPlus!:HTMLOListElement
 
-    P:string
-    constructor(P:string) {
+    private P:string
+    private crud:string
+    constructor(P:string,crud:string) {
         this.P = P
-
+        this.crud = crud
     }
-    initButtonsTypeCrudDefault(){
+    private buttonCrudDefault(){
         this.buttonCreate = document.getElementById(`${this.P}${constTargetButtonCrudDefault.SAVE}`) as HTMLButtonElement
         this.buttonAlter = document.getElementById(`${this.P}${constTargetButtonCrudDefault.ALTER}`) as HTMLButtonElement
         this.buttonDelete = document.getElementById(`${this.P}${constTargetButtonCrudDefault.DELETE}`) as HTMLButtonElement            
     }
 
-    initButtonPlus(){
+    private SpecificRightButtons (){
         this.buttonsPlus = document.getElementById(`${this.P}${constIdBaseWindow.BUTTONS_MENU_VERTICAL}`) as HTMLButtonElement
         this.olButtonsPlus = document.getElementById(`${this.P}${constIdBaseWindow.BUTTONS_MENU_VERTICAL_LIST}`) as HTMLOListElement     
 
@@ -54,9 +55,12 @@ export class ButtonsBase {
         this.buttonDelete.remove()
     } 
            
-    crud (crud:string) {
+    removeUnusedButtons () {
         
-        if(crud == "" || crud == undefined){
+        this.buttonCrudDefault();
+        this.SpecificRightButtons();
+
+        if(this.crud == "" || this.crud == undefined){
             this.buttonCreate.remove()
             this.buttonAlter.remove()
             this.buttonDelete.remove()
@@ -65,9 +69,9 @@ export class ButtonsBase {
 
         let options = "crud";
         
-        for (let index = 0; index < crud.length; index++) {
+        for (let index = 0; index < this.crud.length; index++) {
             
-            let indexof = options.indexOf(crud[index])
+            let indexof = options.indexOf(this.crud[index])
 
             options = options.replace(options[indexof],"")
         }

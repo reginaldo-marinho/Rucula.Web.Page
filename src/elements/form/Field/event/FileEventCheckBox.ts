@@ -4,6 +4,23 @@ export class FileEventCheckBox extends FileEvent{
 
     protected setEventListener(): void {
 
+        this.input.addEventListener('ruculaChange',(e) => {
+
+            //! This event is called when there is rucula.setValue(), this ensures that the value representing clicked is obtained
+
+            let element = e.target as HTMLInputElement
+            
+            if(element.value == String(this.field!.checkbox!.on)){
+                element.checked = true
+            }
+            
+            if(element.value == String(this.field!.checkbox!.off)){
+                element.checked = false
+            }
+
+            this.input.dispatchEvent(new Event('change'))
+        }) 
+
         this.input.addEventListener('change',(e) => {    
             let element = e.target as HTMLInputElement
     

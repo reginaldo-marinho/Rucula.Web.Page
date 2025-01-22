@@ -143,8 +143,8 @@ export class  Button  {
         
     prepareButtonsInLeftBox (button:button[]) {
             
-        const ListRightButtons = document.getElementById(`${this.P}r-a-menu-vertical-list`)
-        
+        const ListRightButtons = document.getElementById(`${this.P}${constIdBaseWindow.BUTTONS_MENU_VERTICAL_LIST}`)
+
         let buttons = button?.filter(c=> this.buttonIsNotDefault(c.target))
         
         if(buttons?.length == 0 || buttons == undefined){

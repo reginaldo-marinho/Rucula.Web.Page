@@ -56,10 +56,12 @@ export const constTypeFrame = {
 export const constIdBaseWindow =  {
 
     NEW: "r-a-new",
+    CLOSE_GRID:"close-grid",
     RELOAD:"r-a-reload",
     ERASE_WINDOW: "erase-window",
     ALTER_THEME: "alter-theme",
     MAXIMIZE_WINDOW: "maximize-window",
+    MAXIMIZE_GRID: "maximize-grid",
     ACTIONS_WINDOW: "r-actiond-window",
     GLOBALIZATION: "r-globalization",
     OLLI_GLOBALIZATION: "r-globalization-list",    
@@ -68,6 +70,7 @@ export const constIdBaseWindow =  {
     FORM_RUCULA_JS:"form-rucula-js",
     BUTTONS_MENU_VERTICAL: "r-a-menu-vertical",
     BUTTONS_MENU_VERTICAL_MOBILE: "r-a-menu-vertical-mobile",
+    BUTTON_MENU_VERTICAL_MOBILE_CLOSE: "r-a-mobile-close",
     BUTTONS_MENU_VERTICAL_LIST: "r-a-menu-vertical-list",
     TITLE:"r-window-title",
     FAVORITE:"r-favorite",
